@@ -6,7 +6,7 @@
         public string RewardCode { get; set; } = string.Empty;
 
         /// <summary>ID campaign đang chạy.</summary>
-        public string CampaignId { get; set; }
+        public string CampaignId { get; set; } = string.Empty;
     }
 
     // ── Response ───────────────────────────────────────────────────────────────

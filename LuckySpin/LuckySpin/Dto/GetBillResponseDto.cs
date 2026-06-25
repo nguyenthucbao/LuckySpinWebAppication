@@ -9,6 +9,6 @@ public class GetBillResponseDto
     public string StoreLocate { get; set; } = null!;
     public decimal TotalAmount { get; set; }
     public string PaymentMethod { get; set; } = null!;
-    public List<ProductDto> Products { get; set; } = new();
-    public RewardCodeDto RewardCode { get; set; } = null!;
+    public List<DbProductDto> Products { get; set; } = new();
+    public DbRewardCodeDto RewardCode { get; set; } = null!;
 }

@@ -66,7 +66,7 @@ public class BillService : IBillService
             TotalAmount = bill.TotalAmount,
             PaymentMethod = bill.PaymentMethod,
             Products = req.Products,
-            RewardCode = new RewardCodeDto
+            RewardCode = new DbRewardCodeDto
             {
                 Id = rewardCode.Id,
                 Code = rewardCode.Code,
@@ -77,7 +77,7 @@ public class BillService : IBillService
         };
     }
 
-    public async Task<RewardCodeDto> GenerateCodeOnBillAsync(Bill bill)
+    public async Task<DbRewardCodeDto> GenerateCodeOnBillAsync(Bill bill)
     {
         int spinCount = Math.Max(1, (int)(bill.TotalAmount / AmountPerSpin));
 
@@ -91,7 +91,7 @@ public class BillService : IBillService
             CreatedAt = DateTime.UtcNow
         };
 
-        return new RewardCodeDto
+        return new DbRewardCodeDto
         {
             Id = rewardCode.Id,
             Code = rewardCode.Code,

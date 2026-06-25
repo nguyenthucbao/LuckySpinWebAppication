@@ -11,6 +11,6 @@ namespace LuckySpin.DTO
         public string StoreLocate { get; set; }
         public decimal TotalAmount { get; set; }
         public string PaymentMethod { get; set; }
-        public List<ProductDto> Products { get; set; }
+        public List<DbProductDto> Products { get; set; }
     }
 }

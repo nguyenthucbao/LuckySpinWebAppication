@@ -1,0 +1,276 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using LuckySpin.Models;
+using LuckySpin.Dto;
+
+namespace LuckySpin.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AdminController : ControllerBase
+    {
+        private readonly LuckySpinContext _context;
+
+        public AdminController(LuckySpinContext context)
+        {
+            _context = context;
+        }
+
+        // ===== Campaign CRUD =====
+        [HttpGet("Campaigns")]
+        public async Task<ActionResult<IEnumerable<Campaign>>> GetCampaigns()
+        {
+            return await _context.Campaigns.ToListAsync();
+        }
+
+        [HttpGet("Campaigns/{id}")]
+        public async Task<ActionResult<Campaign>> GetCampaign(string id)
+        {
+            var campaign = await _context.Campaigns.FindAsync(id);
+            if (campaign == null) return NotFound();
+            return campaign;
+        }
+
+        [HttpPost("Campaigns")]
+        public async Task<ActionResult<Campaign>> CreateCampaign(Campaign campaign)
+        {
+            campaign.Id = campaign.Id ?? Guid.NewGuid().ToString();
+            _context.Campaigns.Add(campaign);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetCampaign), new { id = campaign.Id }, campaign);
+        }
+
+        [HttpPut("Campaigns/{id}")]
+        public async Task<IActionResult> UpdateCampaign(string id, Campaign campaign)
+        {
+            if (id != campaign.Id) return BadRequest();
+            _context.Entry(campaign).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CampaignExists(id)) return NotFound();
+                throw;
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("Campaigns/{id}")]
+        public async Task<IActionResult> DeleteCampaign(string id)
+        {
+            var campaign = await _context.Campaigns.FindAsync(id);
+            if (campaign == null) return NotFound();
+            _context.Campaigns.Remove(campaign);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        private bool CampaignExists(string id) => _context.Campaigns.Any(e => e.Id == id);
+
+        // ===== Prize CRUD =====
+        [HttpGet("Prizes")]
+        public async Task<ActionResult<IEnumerable<Prize>>> GetPrizes()
+        {
+            return await _context.Prizes.ToListAsync();
+        }
+
+        [HttpGet("Prizes/{id}")]
+        public async Task<ActionResult<Prize>> GetPrize(string id)
+        {
+            var prize = await _context.Prizes.FindAsync(id);
+            if (prize == null) return NotFound();
+            return prize;
+        }
+
+        [HttpPost("Prizes")]
+        public async Task<ActionResult<Prize>> CreatePrize(Prize prize)
+        {
+            prize.Id = prize.Id ?? Guid.NewGuid().ToString();
+            _context.Prizes.Add(prize);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetPrize), new { id = prize.Id }, prize);
+        }
+
+        [HttpPut("Prizes/{id}")]
+        public async Task<IActionResult> UpdatePrize(string id, Prize prize)
+        {
+            if (id != prize.Id) return BadRequest();
+            _context.Entry(prize).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PrizeExists(id)) return NotFound();
+                throw;
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("Prizes/{id}")]
+        public async Task<IActionResult> DeletePrize(string id)
+        {
+            var prize = await _context.Prizes.FindAsync(id);
+            if (prize == null) return NotFound();
+            _context.Prizes.Remove(prize);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        private bool PrizeExists(string id) => _context.Prizes.Any(e => e.Id == id);
+
+        // ===== AddCampaignToStore =====
+        public class AddCampaignToStoreResultDto
+        {
+            public string StoreId { get; set; } = null!;
+            public string CampaignId { get; set; } = null!;
+            public int CreatedCount { get; set; }
+            public List<string> CreatedIds { get; set; } = new();
+        }
+
+        //[HttpPost("AddCampaignToStore")]
+        //public async Task<ActionResult<AddCampaignToStoreResultDto>> AddCampaignToStore([FromQuery] string Storeid, [FromQuery] string Campaignid)
+        //{
+        //    if (string.IsNullOrWhiteSpace(Storeid) || string.IsNullOrWhiteSpace(Campaignid))
+        //        return BadRequest("Storeid and Campaignid are required.");
+
+        //    var store = await _context.Stores.FindAsync(Storeid);
+        //    if (store == null) return NotFound($"Store '{Storeid}' not found.");
+
+        //    var campaign = await _context.Campaigns.Include(c => c.Prizes).FirstOrDefaultAsync(c => c.Id == Campaignid);
+        //    if (campaign == null) return NotFound($"Campaign '{Campaignid}' not found.");
+
+        //    var result = new AddCampaignToStoreResultDto { StoreId = Storeid, CampaignId = Campaignid };
+
+        //    foreach (var prize in campaign.Prizes)
+        //    {
+        //        // Skip existing mapping if present
+        //        var exists = await _context.StoreCampaignPrizes.AnyAsync(scp => scp.StoreId == Storeid && scp.PrizeId == prize.Id);
+        //        if (exists) continue;
+
+        //        var scp = new StoreCampaignPrize
+        //        {
+        //            Id = Guid.NewGuid().ToString(),
+        //            StoreId = Storeid,
+        //            PrizeId = prize.Id,
+        //            ProbabilityWeight = prize.ProbabilityWeight,
+        //            IsActive = true
+        //        };
+        //        _context.StoreCampaignPrizes.Add(scp);
+        //        result.CreatedIds.Add(scp.Id);
+        //    }
+
+        //    result.CreatedCount = result.CreatedIds.Count;
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(result);
+        //}
+
+
+
+
+
+
+
+        // ===== Export StoreCampaignPrizes for debugging =====
+
+
+        [HttpPost("AddCampaignToStore")]
+        public async Task<ActionResult<AddCampaignToStoreResultDto>> AddCampaignToStore(
+        [FromQuery] string Storeid,
+        [FromQuery] string Campaignid)
+        {
+            if (string.IsNullOrWhiteSpace(Storeid) || string.IsNullOrWhiteSpace(Campaignid))
+                return BadRequest("Storeid and Campaignid are required.");
+
+            var store = await _context.Stores.FindAsync(Storeid);
+            if (store == null) return NotFound($"Store '{Storeid}' not found.");
+
+            var campaign = await _context.Campaigns
+                .Include(c => c.Prizes)
+                .FirstOrDefaultAsync(c => c.Id == Campaignid);
+            if (campaign == null) return NotFound($"Campaign '{Campaignid}' not found.");
+
+            if (!campaign.Prizes.Any())
+                return BadRequest($"Campaign '{Campaignid}' has no prizes.");
+
+            // 1 query lấy toàn bộ prize đã được link
+            var prizeIds = campaign.Prizes.Select(p => p.Id).ToList();
+            var existingPrizeIds = await _context.StoreCampaignPrizes
+                .Where(scp => scp.StoreId == Storeid && prizeIds.Contains(scp.PrizeId))
+                .Select(scp => scp.PrizeId)
+                .ToHashSetAsync();
+
+            var result = new AddCampaignToStoreResultDto { StoreId = Storeid, CampaignId = Campaignid };
+
+            foreach (var prize in campaign.Prizes)
+            {
+                if (existingPrizeIds.Contains(prize.Id)) continue;
+
+                var scp = new StoreCampaignPrize
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    StoreId = Storeid,
+                    PrizeId = prize.Id,
+                    ProbabilityWeight = prize.ProbabilityWeight,
+                    IsActive = true
+                };
+                _context.StoreCampaignPrizes.Add(scp);
+                result.CreatedIds.Add(scp.Id);
+            }
+
+            result.CreatedCount = result.CreatedIds.Count;
+
+            if (result.CreatedCount == 0)
+                return Ok(result);
+
+            //await _context.SaveChangesAsync();
+
+            return Ok(result);
+        }
+
+
+
+        [HttpGet("StoreCampaignPrizes")]
+        public async Task<ActionResult<IEnumerable<StoreCampaignPrizeDto>>> GetStoreCampaignPrizes()
+        {
+            var list = await _context.StoreCampaignPrizes
+                .Include(s => s.Prize)
+                .Include(s => s.Store)
+                .Select(s => new StoreCampaignPrizeDto
+                {
+                    Id = s.Id,
+                    StoreId = s.StoreId,
+                    PrizeId = s.PrizeId,
+                    ProbabilityWeight = s.ProbabilityWeight,
+                    IsActive = s.IsActive,
+                    Prize = s.Prize == null ? null : new PrizeDto
+                    {
+                        Id = s.Prize.Id,
+                        Name = s.Prize.Name,
+                        PrizeType = s.Prize.PrizeType,
+                        ProbabilityWeight = s.Prize.ProbabilityWeight,
+                        Quantity = s.Prize.Quantity,
+                        IsActive = s.Prize.IsActive,
+                        WinnerId = s.Prize.WinnerId
+                    },
+                    Store = s.Store == null ? null : new StoreDto
+                    {
+                        Id = s.Store.Id,
+                        StoreLocate = s.Store.StoreLocate
+                    }
+                })
+                .ToListAsync();
+
+            return Ok(list);
+        }
+    }
+}

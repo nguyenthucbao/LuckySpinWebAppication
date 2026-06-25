@@ -1,4 +1,5 @@
 using LuckySpinFE.Components;
+using LuckySpinFE.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,24 +7,29 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var app = builder.Build();
+builder.Services.AddHttpClient("LuckySpin", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiHosts:LuckySpin"]!);
+});
 
-// Configure the HTTP request pipeline.
+//builder.Services.AddScoped(sp => sp.GetService<IHttpClientFactory>().CreateClient("LuckySpin"));
+
+builder.Services.AddScoped<LuckySpinApiClient>(sp =>
+{
+    var factory = sp.GetRequiredService<IHttpClientFactory>();
+    var http = factory.CreateClient("LuckySpin");
+    return new LuckySpinApiClient(http);
+});
+
+var app = builder.Build(); 
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-builder.Services.AddScoped(sp =>
-    new HttpClient { BaseAddress = new Uri("https://localhost:PORT/") });
-
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
-
 app.UseAntiforgery();
-
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

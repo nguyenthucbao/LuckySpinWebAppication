@@ -3,20 +3,60 @@
   "WorkspaceRootPath": "D:\\Project\\.net\\LuckySpinFE\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1CFD2F61-576F-411E-8C43-AA977F01E0CA}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\components\\pages\\spin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1CFD2F61-576F-411E-8C43-AA977F01E0CA}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\components\\pages\\spin.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\components\\pages\\spintest.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\components\\pages\\spintest.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CFD2F61-576F-411E-8C43-AA977F01E0CA}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\wwwroot\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{1CFD2F61-576F-411E-8C43-AA977F01E0CA}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\wwwroot\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\services\\luckyspinapiclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\services\\luckyspinapiclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CFD2F61-576F-411E-8C43-AA977F01E0CA}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CFD2F61-576F-411E-8C43-AA977F01E0CA}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\components\\pages\\customerinfo.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\components\\pages\\customerinfo.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CFD2F61-576F-411E-8C43-AA977F01E0CA}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{1CFD2F61-576F-411E-8C43-AA977F01E0CA}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\dto\\customerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\dto\\customerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\components\\layout\\reconnectmodal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\components\\layout\\reconnectmodal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\dto\\campaigndto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\dto\\campaigndto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\dto\\storedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\dto\\storedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\components\\pages\\error.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\components\\pages\\error.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\luckyspinfe.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\luckyspinfe.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\wwwroot\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\wwwroot\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|d:\\project\\.net\\luckyspinfe\\luckyspinfe\\components\\layout\\mainlayout.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{4C91B866-1DDF-BB0E-F779-61365FD32ACB}|LuckySpinFE\\LuckySpinFE.csproj|solutionrelative:luckyspinfe\\components\\layout\\mainlayout.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,60 +65,186 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "DockedWidth": 14,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 13,
+              "Title": "MainLayout.razor.css",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Layout\\MainLayout.razor.css",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Components\\Layout\\MainLayout.razor.css",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Layout\\MainLayout.razor.css",
+              "RelativeToolTip": "LuckySpinFE\\Components\\Layout\\MainLayout.razor.css",
+              "ViewState": "AgIAAAYAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-06-25T17:23:26.749Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "app.css",
               "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\wwwroot\\app.css",
               "RelativeDocumentMoniker": "LuckySpinFE\\wwwroot\\app.css",
               "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\wwwroot\\app.css",
               "RelativeToolTip": "LuckySpinFE\\wwwroot\\app.css",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAABEBAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAGUAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-06-04T12:32:56.726Z",
+              "WhenOpened": "2026-06-25T17:23:19.386Z",
               "EditorCaption": ""
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Spin.razor",
-              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Pages\\Spin.razor",
-              "RelativeDocumentMoniker": "LuckySpinFE\\Components\\Pages\\Spin.razor",
-              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Pages\\Spin.razor",
-              "RelativeToolTip": "LuckySpinFE\\Components\\Pages\\Spin.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIoAAAA0AAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "CustomerInfo.razor",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Pages\\CustomerInfo.razor",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Components\\Pages\\CustomerInfo.razor",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Pages\\CustomerInfo.razor",
+              "RelativeToolTip": "LuckySpinFE\\Components\\Pages\\CustomerInfo.razor",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAswHgAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-06-04T12:31:28.154Z",
+              "WhenOpened": "2026-06-22T14:11:05.282Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "CustomerDto.cs",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Dto\\CustomerDto.cs",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Dto\\CustomerDto.cs",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Dto\\CustomerDto.cs",
+              "RelativeToolTip": "LuckySpinFE\\Dto\\CustomerDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-11T14:17:59.067Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LuckySpinApiClient.cs",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Services\\LuckySpinApiClient.cs",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Services\\LuckySpinApiClient.cs",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Services\\LuckySpinApiClient.cs",
+              "RelativeToolTip": "LuckySpinFE\\Services\\LuckySpinApiClient.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-05T03:40:45.294Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SpinTest.razor",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Pages\\SpinTest.razor",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Components\\Pages\\SpinTest.razor",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Pages\\SpinTest.razor",
+              "RelativeToolTip": "LuckySpinFE\\Components\\Pages\\SpinTest.razor",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAwwLUAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-04T15:10:32.46Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "StoreDto.cs",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Dto\\StoreDto.cs",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Dto\\StoreDto.cs",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Dto\\StoreDto.cs",
+              "RelativeToolTip": "LuckySpinFE\\Dto\\StoreDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-05T03:07:28.535Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Components\\Layout\\MainLayout.razor",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "LuckySpinFE\\Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-05T03:58:01.472Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CampaignDto.cs",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Dto\\CampaignDto.cs",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Dto\\CampaignDto.cs",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Dto\\CampaignDto.cs",
+              "RelativeToolTip": "LuckySpinFE\\Dto\\CampaignDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-05T06:24:55.414Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ReconnectModal.razor",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Layout\\ReconnectModal.razor",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Components\\Layout\\ReconnectModal.razor",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Layout\\ReconnectModal.razor",
+              "RelativeToolTip": "LuckySpinFE\\Components\\Layout\\ReconnectModal.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-05T03:58:18.675Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\appsettings.json",
               "RelativeDocumentMoniker": "LuckySpinFE\\appsettings.json",
               "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\appsettings.json",
               "RelativeToolTip": "LuckySpinFE\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-06-04T12:14:38.614Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-04T12:14:38.614Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 9,
+              "Title": "Error.razor",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Pages\\Error.razor",
+              "RelativeDocumentMoniker": "LuckySpinFE\\Components\\Pages\\Error.razor",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Components\\Pages\\Error.razor",
+              "RelativeToolTip": "LuckySpinFE\\Components\\Pages\\Error.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-05T03:36:52.089Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Program.cs",
               "RelativeDocumentMoniker": "LuckySpinFE\\Program.cs",
               "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\Program.cs",
               "RelativeToolTip": "LuckySpinFE\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-04T12:14:33.828Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-04T12:14:33.828Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "LuckySpinFE.csproj",
+              "DocumentMoniker": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\LuckySpinFE.csproj",
+              "RelativeDocumentMoniker": "LuckySpinFE\\LuckySpinFE.csproj",
+              "ToolTip": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\LuckySpinFE.csproj",
+              "RelativeToolTip": "LuckySpinFE\\LuckySpinFE.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-04T14:32:20.813Z"
             }
           ]
         }

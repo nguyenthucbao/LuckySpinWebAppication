@@ -31,6 +31,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Project/.net/LuckySpinFE/LuckySpinFE/Components/Pages/CustomerInfo.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDdXN0b21lckluZm8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Project/.net/LuckySpinFE/LuckySpinFE/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -45,6 +49,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Project/.net/LuckySpinFE/LuckySpinFE/Components/Pages/Spin.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTcGluLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/.net/LuckySpinFE/LuckySpinFE/Components/Pages/SpinTest.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTcGluVGVzdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project/.net/LuckySpinFE/LuckySpinFE/Components/Pages/Weather.razor]

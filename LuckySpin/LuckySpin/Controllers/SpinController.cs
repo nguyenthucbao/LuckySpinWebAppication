@@ -45,7 +45,7 @@ namespace LuckySpin.Controllers
             if (bill == null)
                 return NotFound(new { message = "Không tìm thấy hóa đơn liên kết với mã này." });
 
-            // ── 5. Lấy danh sách Store_Campaign_Prizes theo store + campaign ─────
+            // Lấy danh sách Store_Campaign_Prizes theo store + campaign
             var storePrizes = await _context.StoreCampaignPrizes
                 .Where(scp =>
                     scp.StoreId == bill.StoreId &&
@@ -69,7 +69,7 @@ namespace LuckySpin.Controllers
                     message = "Không có phần thưởng nào được cấu hình cho cửa hàng này trong campaign."
                 });
 
-            //Weighted random
+            // Weighted random
             var rng = new Random();
             int roll = rng.Next(1, 101);
 
@@ -102,6 +102,54 @@ namespace LuckySpin.Controllers
                 }
             });
         }
+
+
+
+        [HttpGet("{rewardcode}")]
+        public async Task<IActionResult> GetCampaign(string rewardcode)
+        {
+            //Validate input 
+            if (string.IsNullOrWhiteSpace(rewardcode))
+                return BadRequest(new { message = "RewardCode và CampaignId không được để trống." });
+
+
+            var rwCode = await _context.RewardCodes.FirstOrDefaultAsync(b => b.Code == rewardcode);
+            if (rwCode == null)
+                return NotFound(new { message = "Mã không hợp lệ.", rewardcode }); // thêm rewardcode vào response
+
+            var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == rwCode.BillId);
+            if (bill == null)
+                return NotFound(new { message = "Không tìm thấy bill hợp lệ.", billId = rwCode.BillId }); // thêm billId
+
+            var storeID = bill.StoreId;
+
+            var storePrizeList = await _context.StoreCampaignPrizes
+             .Where(scp => scp.StoreId == storeID)
+             .Include(scp => scp.Prize)
+             .ThenInclude(p => p.Campaign)
+             .ToListAsync();
+
+            var campaigns = storePrizeList
+                .GroupBy(scp => scp.Prize.Campaign)
+                .Select(g => new DbCampaignDto
+                {
+                    Id = g.Key.Id,
+                    Name = g.Key.CampaignName,
+                    StartAt = (DateTime)g.Key.StartDate,
+                    EndAt = (DateTime)g.Key.EndDate,
+                    Prizes = g.Select(scp => new DbPrizeDto
+                    {
+                        Name = scp.Prize.Name,
+                        PrizeType = scp.Prize.PrizeType,
+                        Quantity = (int)scp.Prize.Quantity
+                    }).ToList()
+                })
+                .ToList();
+
+            return Ok(campaigns);
+
+        }
+
 
     }
 }

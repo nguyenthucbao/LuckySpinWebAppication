@@ -45,8 +45,8 @@ wwwroot\lib\bootstrap\dist\js\bootstrap.min.js
 wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map
 wwwroot\app.css
 Components\Layout\ReconnectModal.razor.js
-C:\Users\ACER\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.8\build\..\_framework\blazor.web.js
-C:\Users\ACER\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.8\build\..\_framework\blazor.server.js
+C:\Users\ACER\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.9\build\..\_framework\blazor.web.js
+C:\Users\ACER\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.9\build\..\_framework\blazor.server.js
 D:\Project\.net\LuckySpinFE\LuckySpinFE\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 D:\Project\.net\LuckySpinFE\LuckySpinFE\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
 D:\Project\.net\LuckySpinFE\LuckySpinFE\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css
@@ -92,6 +92,6 @@ D:\Project\.net\LuckySpinFE\LuckySpinFE\wwwroot\lib\bootstrap\dist\js\bootstrap.
 D:\Project\.net\LuckySpinFE\LuckySpinFE\wwwroot\lib\bootstrap\dist\js\bootstrap.min.js
 D:\Project\.net\LuckySpinFE\LuckySpinFE\wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map
 D:\Project\.net\LuckySpinFE\LuckySpinFE\Components\Layout\ReconnectModal.razor.js
-C:\Users\ACER\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.8\_framework\blazor.web.js
-C:\Users\ACER\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.8\_framework\blazor.server.js
+C:\Users\ACER\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.9\_framework\blazor.web.js
+C:\Users\ACER\.nuget\packages\microsoft.aspnetcore.app.internal.assets\10.0.9\_framework\blazor.server.js
 D:\Project\.net\LuckySpinFE\LuckySpinFE\wwwroot\app.css

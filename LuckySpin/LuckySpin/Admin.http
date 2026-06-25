@@ -1,0 +1,95 @@
+@LuckySpin_HostAddress = http://localhost:5074
+
+### ==========================================
+### 1. Admin - Campaign CRUD
+### ==========================================
+
+### List campaigns
+GET {{LuckySpin_HostAddress}}/api/Admin/Campaigns
+Accept: application/json
+
+### Get campaign by id
+GET {{LuckySpin_HostAddress}}/api/Admin/Campaigns/{campaignId}
+Accept: application/json
+
+### Create campaign
+POST {{LuckySpin_HostAddress}}/api/Admin/Campaigns
+Content-Type: application/json
+
+{
+  "id": "CamNew",
+  "campaignName": "New Campaign",
+  "startDate": "2026-01-01T00:00:00",
+  "endDate": "2026-12-31T00:00:00"
+}
+
+### Update campaign
+PUT {{LuckySpin_HostAddress}}/api/Admin/Campaigns/CamNew
+Content-Type: application/json
+
+{
+  "id": "CamNew",
+  "campaignName": "Updated Campaign",
+  "startDate": "2026-01-01T00:00:00",
+  "endDate": "2026-12-31T00:00:00"
+}
+
+### Delete campaign
+DELETE {{LuckySpin_HostAddress}}/api/Admin/Campaigns/CamNew
+
+
+### ==========================================
+### 2. Admin - Prize CRUD
+### ==========================================
+
+### List prizes
+GET {{LuckySpin_HostAddress}}/api/Admin/Prizes
+Accept: application/json
+
+### Get prize by id
+GET {{LuckySpin_HostAddress}}/api/Admin/Prizes/{prizeId}
+Accept: application/json
+
+### Create prize
+POST {{LuckySpin_HostAddress}}/api/Admin/Prizes
+Content-Type: application/json
+
+{
+  "id": "PrizeNew",
+  "name": "Test Prize",
+  "campaignId": "Cam001",
+  "prizeType": "physical",
+  "probabilityWeight": 1,
+  "quantity": 10,
+  "isActive": true
+}
+
+### Update prize
+PUT {{LuckySpin_HostAddress}}/api/Admin/Prizes/PrizeNew
+Content-Type: application/json
+
+{
+  "id": "PrizeNew",
+  "name": "Updated Prize",
+  "campaignId": "Cam001",
+  "prizeType": "physical",
+  "probabilityWeight": 2,
+  "quantity": 5,
+  "isActive": true
+}
+
+### Delete prize
+DELETE {{LuckySpin_HostAddress}}/api/Admin/Prizes/PrizeNew
+
+
+### ==========================================
+### 3. Admin - Store Assignment & Debug
+### ==========================================
+
+### Add Campaign To Store
+# Creates StoreCampaignPrize for each prize in campaign
+POST {{LuckySpin_HostAddress}}/api/Admin/AddCampaignToStore?Storeid=S001&Campaignid=Cam001
+
+### Export StoreCampaignPrizes for debugging
+GET {{LuckySpin_HostAddress}}/api/Admin/StoreCampaignPrizes
+Accept: application/json

@@ -41,7 +41,7 @@ namespace LuckySpin.Controllers
                 StoreLocate = b.StoreLocate,
                 TotalAmount = b.TotalAmount,
                 PaymentMethod = b.PaymentMethod,
-                Products = b.Products.Select(p => new ProductDto
+                Products = b.Products.Select(p => new DbProductDto
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -71,7 +71,7 @@ namespace LuckySpin.Controllers
                 StoreLocate = bill.StoreLocate,
                 TotalAmount = bill.TotalAmount,
                 PaymentMethod = bill.PaymentMethod,
-                Products = bill.Products.Select(p => new ProductDto
+                Products = bill.Products.Select(p => new DbProductDto
                 {
                     Id = p.Id,
                     Name = p.Name,

@@ -1,0 +1,566 @@
+﻿@page "/spin-test"
+@rendermode InteractiveServer
+@using LuckySpinFE.Dto
+@inject LuckySpinFE.Services.LuckySpinApiClient ApiClient
+
+<div class="spin-page">
+
+    @* ===== FORM VIEW ===== *@
+    @if (!isSpinning && result == null)
+    {
+        <div class="card">
+            <div class="card-header">
+                <span class="spin-icon">🎰</span>
+                <h2 class="card-title">Lucky Spin</h2>
+                <p class="card-sub">Nhập mã &amp; chọn chương trình để quay</p>
+            </div>
+
+            <div class="field">
+                <label>Mã quay thưởng</label>
+                <div class="input-row">
+                    <input @bind="rewardCode" @bind:event="oninput"
+                           placeholder="Nhập mã của bạn..." />
+                    <button class="btn-find" @onclick="LoadCampaigns"
+                            disabled="@isLoadingCampaigns">
+                        @(isLoadingCampaigns ? "..." : "Tìm")
+                    </button>
+                </div>
+            </div>
+
+            @if (campaigns != null && campaigns.Count > 0)
+            {
+                <div class="field">
+                    <div class="section-label">Chọn chương trình</div>
+                    <div class="campaign-list">
+                        @foreach (var c in campaigns)
+                        {
+                            <div class="campaign-item @(selectedCampaign == c ? "selected" : "")"
+                                 @onclick="() => selectedCampaign = c">
+                                <span class="c-name">
+                                    @c.Name
+                                    @if (selectedCampaign == c)
+                                    {
+                                        <span class="check-badge">✓</span>
+                                    }
+                                </span>
+                                <span class="c-date">@c.StartAt.ToString("dd/MM/yyyy") – @c.EndAt.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else if (campaigns != null && campaigns.Count == 0)
+            {
+                <p class="empty-msg">Không tìm thấy chương trình nào cho mã này.</p>
+            }
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <p class="error-msg">⚠ @errorMessage</p>
+            }
+
+            <button class="btn-spin" @onclick="StartSpin"
+                    disabled="@(isSpinning || selectedCampaign == null)">
+                🎯 Quay ngay!
+            </button>
+        </div>
+    }
+
+    @* ===== SPINNING VIEW ===== *@
+    @if (isSpinning)
+    {
+        <div class="card">
+            <div class="card-header" style="margin-bottom:0.5rem;">
+                <h2 class="card-title">Đang quay...</h2>
+            </div>
+            <div class="spinning-view">
+                <div class="wheel-wrap">
+                    <div class="arrow">▼</div>
+                    <div class="wheel spinning">🎡</div>
+                </div>
+                <p class="spin-label">Chúc bạn may mắn!</p>
+            </div>
+        </div>
+    }
+
+    @* ===== RESULT POPUP ===== *@
+    @if (showPopup && result != null)
+    {
+        <div class="popup-overlay">
+            <div class="popup">
+                <span class="big-emoji">🎉</span>
+                <h3>Chúc mừng!</h3>
+                <div class="prize-name">@result.WonPrize?.Name</div>
+                <button class="btn-continue" @onclick="ClosePopup">Tiếp tục</button>
+            </div>
+        </div>
+    }
+
+</div>
+
+@code {
+    private string rewardCode = "";
+    private SpinResponse? result;
+    private string errorMessage = "";
+    private bool isSpinning = false;
+    private bool showPopup = false;
+    private bool isLoadingCampaigns = false;
+
+    private List<CampaignDto>? campaigns;
+    private CampaignDto? selectedCampaign;
+
+    private async Task LoadCampaigns()
+    {
+        if (string.IsNullOrWhiteSpace(rewardCode)) return;
+
+        errorMessage = "";
+        campaigns = null;
+        selectedCampaign = null;
+        isLoadingCampaigns = true;
+
+        try
+        {
+            campaigns = await ApiClient.GetCampaignsByRewardCodeAsync(rewardCode);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Lỗi tải campaign: {ex.Message}";
+        }
+        finally
+        {
+            isLoadingCampaigns = false;
+        }
+    }
+
+    private async Task StartSpin()
+    {
+        if (selectedCampaign == null) return;
+
+        isSpinning = true;
+        errorMessage = "";
+        result = null;
+
+        await Task.Delay(3000);
+
+        try
+        {
+            result = await ApiClient.SpinAsync(new SpinRequest
+            {
+                RewardCode = rewardCode,
+                CampaignId = selectedCampaign.Id
+            });
+            showPopup = true;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Lỗi: {ex.Message}";
+        }
+        finally
+        {
+            isSpinning = false;
+        }
+    }
+
+    private void ClosePopup()
+    {
+        showPopup = false;
+        result = null;
+        selectedCampaign = null;
+        rewardCode = "";
+        campaigns = null;
+    }
+}
+
+<style>
+    .spin-page {
+        height: 100vh;
+        box-sizing: border-box;
+        background: linear-gradient(135deg, #FF6B35 0%, #F7C59F 40%, #FFBE0B 70%, #FB5607 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        position: relative;
+        overflow: hidden; 
+    }
+
+        .spin-page::before,
+        .spin-page::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+
+        .spin-page::before {
+            width: 300px;
+            height: 300px;
+            background: #fff;
+            top: -80px;
+            left: -80px;
+        }
+
+        .spin-page::after {
+            width: 200px;
+            height: 200px;
+            background: #FFBE0B;
+            bottom: -40px;
+            right: -40px;
+        }
+
+    /* ===== CARD ===== */
+    .card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 2rem 2rem 1.75rem;
+        width: 100%;
+        max-width: 420px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .card-header {
+        text-align: center;
+        margin-bottom: 1.75rem;
+    }
+
+    .spin-icon {
+        font-size: 48px;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-title {
+        font-size: 26px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #FB5607, #FFBE0B);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+    }
+
+    .card-sub {
+        font-size: 13px;
+        color: #888;
+        margin-top: 4px;
+    }
+
+    /* ===== FORM ===== */
+    .field {
+        margin-bottom: 1.25rem;
+    }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+    .input-row {
+        display: flex;
+        gap: 8px;
+    }
+
+        .input-row input {
+            flex: 1;
+            height: 44px;
+            border: 1.5px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 0 14px;
+            font-size: 14px;
+            color: #222;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fafafa;
+        }
+
+            .input-row input:focus {
+                border-color: #FB5607;
+                background: #fff;
+            }
+
+    /* ===== BUTTONS ===== */
+    .btn-find {
+        height: 44px;
+        padding: 0 18px;
+        border-radius: 10px;
+        border: none;
+        background: linear-gradient(135deg, #FB5607, #FFBE0B);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: opacity 0.2s, transform 0.1s;
+    }
+
+        .btn-find:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .btn-find:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .btn-find:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+    .btn-spin {
+        width: 100%;
+        height: 52px;
+        border-radius: 14px;
+        border: none;
+        background: linear-gradient(135deg, #FB5607 0%, #FFBE0B 100%);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.3px;
+        transition: opacity 0.2s, transform 0.15s;
+        margin-top: 1.25rem;
+    }
+
+        .btn-spin:hover:not(:disabled) {
+            opacity: 0.92;
+            transform: scale(1.01);
+        }
+
+        .btn-spin:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .btn-spin:disabled {
+            background: linear-gradient(135deg, #ccc, #e0e0e0);
+            color: #999;
+            cursor: not-allowed;
+        }
+
+    /* ===== CAMPAIGN LIST ===== */
+    .section-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #FB5607;
+        margin-bottom: 8px;
+    }
+
+        .section-label::before {
+            content: "";
+            display: inline-block;
+            width: 3px;
+            height: 14px;
+            background: linear-gradient(to bottom, #FB5607, #FFBE0B);
+            border-radius: 2px;
+        }
+
+    .campaign-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .campaign-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 10px 14px;
+        border: 1.5px solid #e5e5e5;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: border-color 0.2s, background 0.2s;
+        background: #fafafa;
+    }
+
+        .campaign-item:hover {
+            border-color: #FFBE0B;
+            background: #fffdf5;
+        }
+
+        .campaign-item.selected {
+            border-color: #FB5607;
+            background: #fff8f5;
+        }
+
+        .campaign-item .c-name {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #222;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+    .check-badge {
+        font-size: 11px;
+        background: #FB5607;
+        color: #fff;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .campaign-item .c-date {
+        font-size: 11.5px;
+        color: #aaa;
+    }
+
+    /* ===== MESSAGES ===== */
+    .error-msg {
+        font-size: 12.5px;
+        color: #e24b4b;
+        margin-top: 4px;
+    }
+
+    .empty-msg {
+        text-align: center;
+        font-size: 13px;
+        color: #aaa;
+        padding: 12px 0;
+    }
+
+    /* ===== SPIN WHEEL ===== */
+    .spinning-view {
+        text-align: center;
+        padding: 1rem 0 0.5rem;
+    }
+
+    .wheel-wrap {
+        display: inline-block;
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .arrow {
+        position: absolute;
+        top: -22px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 22px;
+        color: #FB5607;
+    }
+
+    .wheel {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 4px solid #FFBE0B;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        background: linear-gradient(135deg, #fff3e0, #fff8f0);
+    }
+
+        .wheel.spinning {
+            animation: spinWheel 0.6s linear infinite;
+        }
+
+    @@keyframes spinWheel {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .spin-label {
+        font-size: 14px;
+        color: #FB5607;
+        font-weight: 600;
+        animation: pulse 1s ease-in-out infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.4;
+        }
+    }
+
+    /* ===== POPUP ===== */
+    .popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
+
+    .popup {
+        background: #fff;
+        border-radius: 20px;
+        padding: 2rem 1.75rem;
+        text-align: center;
+        width: 300px;
+        animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @@keyframes popIn {
+        from {
+            transform: scale(0.7);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .big-emoji {
+        font-size: 52px;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .popup h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 10px;
+    }
+
+    .prize-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #FB5607;
+        background: #fff8f0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin-bottom: 1.25rem;
+    }
+
+    .btn-continue {
+        width: 100%;
+        height: 44px;
+        border-radius: 10px;
+        border: none;
+        background: linear-gradient(135deg, #FB5607, #FFBE0B);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+</style>
+

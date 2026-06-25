@@ -13,5 +13,5 @@ public class PostBillRequest
     [RegularExpression("^(online|direct|delivery)$",
         ErrorMessage = "PaymentMethod phải là: online, direct, hoặc delivery")]
     public string PaymentMethod { get; set; } = null!;
-    public List<ProductDto> Products { get; set; } = new();
+    public List<DbProductDto> Products { get; set; } = new();
 }

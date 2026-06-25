@@ -1,4 +1,7 @@
-﻿namespace LuckySpin.Dto
+﻿using LuckySpin.DTO;
+using LuckySpin.Models;
+
+namespace LuckySpin.Dto
 {
     public class GetStoresInfoDto
     {
@@ -7,5 +10,7 @@
         public decimal StoreAmount { get; set; }
         public int StoreSpinCount { get; set; }
         public int StoreUsedSpinCount { get; set; }
+        public List<BillWithProductsDto> BillWithProducts { get; set; }
+        public List<DbCampaignDto> Campaigns { get; set; }
     }
 }
