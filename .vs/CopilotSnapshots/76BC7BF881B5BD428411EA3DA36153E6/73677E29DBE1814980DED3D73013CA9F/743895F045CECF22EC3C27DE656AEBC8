@@ -1,0 +1,93 @@
+﻿@LuckySpin_HostAddress = http://localhost:5074
+
+GET {{LuckySpin_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+GET {{LuckySpin_HostAddress}}/api/prize
+Accept: application/json
+###########################################################################
+
+### In bill
+GET {{LuckySpin_HostAddress}}/api/bills
+Accept: application/json
+
+### Xóa bill
+DELETE {{LuckySpin_HostAddress}}/api/bills/Bill001
+Accept: application/json
+
+### Test tạo bill mới
+POST {{LuckySpin_HostAddress}}/api/bills
+Content-Type: application/json
+{
+  "id": "Bill005",
+  "storeId": "S003",
+  "storeLocate": "Store locate 003",
+  "totalAmount": 600000.00,
+  "paymentMethod": "online",
+  "products": [
+    { "id": "Product009", "name": "product9", "quantity": 1 },
+    { "id": "Product010", "name": "product10", "quantity": 2 }
+  ]
+}
+
+### Tra cứu bill
+GET {{LuckySpin_HostAddress}}/api/bills/Bill001
+Accept: application/json
+###########################################################################
+
+### In product
+GET {{LuckySpin_HostAddress}}/api/products
+Accept: application/json
+
+###########################################################################
+
+### In store
+GET {{LuckySpin_HostAddress}}/api/stores
+Accept: application/json
+
+### Tra cưu store
+GET {{LuckySpin_HostAddress}}/api/stores/S001
+Accept: application/json
+
+###########################################################################
+
+### Nhap ma quay thuong
+POST {{LuckySpin_HostAddress}}/api/spin/spinaction
+Content-Type: application/json
+{
+  "rewardCode": "LUCKY-B318F32C",
+  "campaignId": "Cam002"
+}
+
+############################################################################
+
+### Test tạo Winner Session mới
+POST {{LuckySpin_HostAddress}}/api/WinnerSessions
+Content-Type: application/json
+
+{
+  "fullName": "Nguyen Van B",
+  "phone": "0901234456",
+  "email": "nguyenvanb@gmail.com",
+  "address": "Quan 2, TP.HCM"
+}
+
+
+### Nhan hang
+POST {{LuckySpin_HostAddress}}/api/WinnerSessions/AssignWinnerToPrize
+Content-Type: application/json
+
+{
+  "WinnerId": "Nguyen Van B",
+  "PrizeId": "0901234456",
+}
+
+
+### In
+GET {{LuckySpin_HostAddress}}/api/WinnerSessions
+Accept: application/json
+
+###############################################################
+
+

@@ -47,6 +47,42 @@ public class WinnerSessionsController : ControllerBase
         }
     }
 
+    [HttpPost("AssignWinnerToPrize")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AssignWinnerToPrize([FromBody] AssignPrizeWinnerRequest request)
+    {
+        if (request == null || string.IsNullOrWhiteSpace(request.WinnerId) || string.IsNullOrWhiteSpace(request.PrizeId))
+            return BadRequest(new { message = "WinnerId and PrizeId are required" });
+
+        try
+        {
+            // Find prize
+            var prize = await _db.Prizes.FindAsync(request.PrizeId);
+            if (prize == null)
+                return NotFound(new { message = "Prize not found", prize_id = request.PrizeId });
+
+            // Optional: verify winner exists
+            var winner = await _db.WinnerSessions.FindAsync(request.WinnerId);
+            if (winner == null)
+                return NotFound(new { message = "Winner session not found", winner_id = request.WinnerId });
+
+            // Assign winner
+            prize.WinnerId = request.WinnerId;
+            //_db.Prizes.Update(prize);
+            //await _db.SaveChangesAsync();
+
+            return Ok(new { message = "Winner assigned to prize", prize_id = prize.Id, winner_id = prize.WinnerId });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi khi gán winner cho prize");
+            return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống khi cập nhật prize" });
+        }
+    }
+
     [HttpGet]
     [ProducesResponseType(typeof(List<GetCustomerResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

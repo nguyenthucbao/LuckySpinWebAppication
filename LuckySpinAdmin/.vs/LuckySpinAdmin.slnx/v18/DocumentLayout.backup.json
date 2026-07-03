@@ -1,0 +1,113 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinadmin\\luckyspinadmin\\components\\pages\\admindashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|solutionrelative:luckyspinadmin\\components\\pages\\admindashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinadmin\\luckyspinadmin\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|solutionrelative:luckyspinadmin\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinadmin\\luckyspinadmin\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|solutionrelative:luckyspinadmin\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinadmin\\luckyspinadmin\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|solutionrelative:luckyspinadmin\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinadmin\\luckyspinadmin\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{34AA5ADD-EFFB-7E85-50F3-B0C432953486}|LuckySpinAdmin\\LuckySpinAdmin.csproj|solutionrelative:luckyspinadmin\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 13,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Home.razor",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "LuckySpinAdmin\\Components\\Pages\\Home.razor",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "LuckySpinAdmin\\Components\\Pages\\Home.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-03T06:53:21.588Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "App.razor",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\App.razor",
+              "RelativeDocumentMoniker": "LuckySpinAdmin\\Components\\App.razor",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\App.razor",
+              "RelativeToolTip": "LuckySpinAdmin\\Components\\App.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAACTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-03T06:52:14.18Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "LuckySpinAdmin\\Components\\Layout\\NavMenu.razor",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "LuckySpinAdmin\\Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-03T06:51:29.007Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "LuckySpinAdmin\\Components\\Layout\\MainLayout.razor",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "LuckySpinAdmin\\Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-03T06:50:50.835Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AdminDashboard.razor",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\Pages\\AdminDashboard.razor",
+              "RelativeDocumentMoniker": "LuckySpinAdmin\\Components\\Pages\\AdminDashboard.razor",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinAdmin\\LuckySpinAdmin\\Components\\Pages\\AdminDashboard.razor",
+              "RelativeToolTip": "LuckySpinAdmin\\Components\\Pages\\AdminDashboard.razor",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAAAA4AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-07-03T06:49:16.897Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

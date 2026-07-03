@@ -6211,11 +6211,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+      "projectUniqueName": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
       "projectName": "LuckySpin",
-      "projectPath": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+      "projectPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
       "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
-      "outputPath": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\obj\\",
+      "outputPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -6723,6 +6723,16 @@
     }
   },
   "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
     {
       "code": "NU1901",
       "level": "Warning",

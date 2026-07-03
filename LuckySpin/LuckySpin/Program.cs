@@ -16,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<IWinnerSessionService, WinnerSessionService>();
+builder.Services.AddScoped<IStoreService, StoreService>();
 
 var app = builder.Build();
 

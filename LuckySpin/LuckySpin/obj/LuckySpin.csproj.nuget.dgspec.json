@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj": {}
+    "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj": {}
   },
   "projects": {
-    "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj": {
+    "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+        "projectUniqueName": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
         "projectName": "LuckySpin",
-        "projectPath": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+        "projectPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
         "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
-        "outputPath": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\obj\\",
+        "outputPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

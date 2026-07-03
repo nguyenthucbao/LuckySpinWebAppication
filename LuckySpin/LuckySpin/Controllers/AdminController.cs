@@ -136,57 +136,10 @@ namespace LuckySpin.Controllers
             public List<string> CreatedIds { get; set; } = new();
         }
 
-        //[HttpPost("AddCampaignToStore")]
-        //public async Task<ActionResult<AddCampaignToStoreResultDto>> AddCampaignToStore([FromQuery] string Storeid, [FromQuery] string Campaignid)
-        //{
-        //    if (string.IsNullOrWhiteSpace(Storeid) || string.IsNullOrWhiteSpace(Campaignid))
-        //        return BadRequest("Storeid and Campaignid are required.");
-
-        //    var store = await _context.Stores.FindAsync(Storeid);
-        //    if (store == null) return NotFound($"Store '{Storeid}' not found.");
-
-        //    var campaign = await _context.Campaigns.Include(c => c.Prizes).FirstOrDefaultAsync(c => c.Id == Campaignid);
-        //    if (campaign == null) return NotFound($"Campaign '{Campaignid}' not found.");
-
-        //    var result = new AddCampaignToStoreResultDto { StoreId = Storeid, CampaignId = Campaignid };
-
-        //    foreach (var prize in campaign.Prizes)
-        //    {
-        //        // Skip existing mapping if present
-        //        var exists = await _context.StoreCampaignPrizes.AnyAsync(scp => scp.StoreId == Storeid && scp.PrizeId == prize.Id);
-        //        if (exists) continue;
-
-        //        var scp = new StoreCampaignPrize
-        //        {
-        //            Id = Guid.NewGuid().ToString(),
-        //            StoreId = Storeid,
-        //            PrizeId = prize.Id,
-        //            ProbabilityWeight = prize.ProbabilityWeight,
-        //            IsActive = true
-        //        };
-        //        _context.StoreCampaignPrizes.Add(scp);
-        //        result.CreatedIds.Add(scp.Id);
-        //    }
-
-        //    result.CreatedCount = result.CreatedIds.Count;
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok(result);
-        //}
-
-
-
-
-
-
-
-        // ===== Export StoreCampaignPrizes for debugging =====
 
 
         [HttpPost("AddCampaignToStore")]
-        public async Task<ActionResult<AddCampaignToStoreResultDto>> AddCampaignToStore(
-        [FromQuery] string Storeid,
-        [FromQuery] string Campaignid)
+        public async Task<ActionResult<AddCampaignToStoreResultDto>> AddCampaignToStore([FromQuery] string Storeid, [FromQuery] string Campaignid)
         {
             if (string.IsNullOrWhiteSpace(Storeid) || string.IsNullOrWhiteSpace(Campaignid))
                 return BadRequest("Storeid and Campaignid are required.");
@@ -194,26 +147,16 @@ namespace LuckySpin.Controllers
             var store = await _context.Stores.FindAsync(Storeid);
             if (store == null) return NotFound($"Store '{Storeid}' not found.");
 
-            var campaign = await _context.Campaigns
-                .Include(c => c.Prizes)
-                .FirstOrDefaultAsync(c => c.Id == Campaignid);
+            var campaign = await _context.Campaigns.Include(c => c.Prizes).FirstOrDefaultAsync(c => c.Id == Campaignid);
             if (campaign == null) return NotFound($"Campaign '{Campaignid}' not found.");
-
-            if (!campaign.Prizes.Any())
-                return BadRequest($"Campaign '{Campaignid}' has no prizes.");
-
-            // 1 query lấy toàn bộ prize đã được link
-            var prizeIds = campaign.Prizes.Select(p => p.Id).ToList();
-            var existingPrizeIds = await _context.StoreCampaignPrizes
-                .Where(scp => scp.StoreId == Storeid && prizeIds.Contains(scp.PrizeId))
-                .Select(scp => scp.PrizeId)
-                .ToHashSetAsync();
 
             var result = new AddCampaignToStoreResultDto { StoreId = Storeid, CampaignId = Campaignid };
 
             foreach (var prize in campaign.Prizes)
             {
-                if (existingPrizeIds.Contains(prize.Id)) continue;
+                // Skip existing mapping if present
+                var exists = await _context.StoreCampaignPrizes.AnyAsync(scp => scp.StoreId == Storeid && scp.PrizeId == prize.Id);
+                if (exists) continue;
 
                 var scp = new StoreCampaignPrize
                 {
@@ -228,14 +171,68 @@ namespace LuckySpin.Controllers
             }
 
             result.CreatedCount = result.CreatedIds.Count;
-
-            if (result.CreatedCount == 0)
-                return Ok(result);
-
-            //await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return Ok(result);
         }
+
+
+        // ===== Export StoreCampaignPrizes for debugging =====
+
+
+        //[HttpPost("AddCampaignToStore")]
+        //public async Task<ActionResult<AddCampaignToStoreResultDto>> AddCampaignToStore(
+        //[FromQuery] string Storeid,
+        //[FromQuery] string Campaignid)
+        //{
+        //    if (string.IsNullOrWhiteSpace(Storeid) || string.IsNullOrWhiteSpace(Campaignid))
+        //        return BadRequest("Storeid and Campaignid are required.");
+
+        //    var store = await _context.Stores.FindAsync(Storeid);
+        //    if (store == null) return NotFound($"Store '{Storeid}' not found.");
+
+        //    var campaign = await _context.Campaigns
+        //        .Include(c => c.Prizes)
+        //        .FirstOrDefaultAsync(c => c.Id == Campaignid);
+        //    if (campaign == null) return NotFound($"Campaign '{Campaignid}' not found.");
+
+        //    if (!campaign.Prizes.Any())
+        //        return BadRequest($"Campaign '{Campaignid}' has no prizes.");
+
+        //    // 1 query lấy toàn bộ prize đã được link
+        //    var prizeIds = campaign.Prizes.Select(p => p.Id).ToList();
+        //    var existingPrizeIds = await _context.StoreCampaignPrizes
+        //        .Where(scp => scp.StoreId == Storeid && prizeIds.Contains(scp.PrizeId))
+        //        .Select(scp => scp.PrizeId)
+        //        .ToHashSetAsync();
+
+        //    var result = new AddCampaignToStoreResultDto { StoreId = Storeid, CampaignId = Campaignid };
+
+        //    foreach (var prize in campaign.Prizes)
+        //    {
+        //        if (existingPrizeIds.Contains(prize.Id)) continue;
+
+        //        var scp = new StoreCampaignPrize
+        //        {
+        //            Id = Guid.NewGuid().ToString(),
+        //            StoreId = Storeid,
+        //            PrizeId = prize.Id,
+        //            ProbabilityWeight = prize.ProbabilityWeight,
+        //            IsActive = true
+        //        };
+        //        _context.StoreCampaignPrizes.Add(scp);
+        //        result.CreatedIds.Add(scp.Id);
+        //    }
+
+        //    result.CreatedCount = result.CreatedIds.Count;
+
+        //    if (result.CreatedCount == 0)
+        //        return Ok(result);
+
+        //    //await _context.SaveChangesAsync();
+
+        //    return Ok(result);
+        //}
 
 
 

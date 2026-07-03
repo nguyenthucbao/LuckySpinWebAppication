@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tUCHt0RLolg=",
+  "dgSpecHash": "IMmFoR2UP34=",
   "success": true,
-  "projectFilePath": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+  "projectFilePath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ACER\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
@@ -133,12 +133,24 @@
   ],
   "logs": [
     {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "projectPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+      "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
       "code": "NU1901",
       "level": "Warning",
       "message": "Package 'NuGet.Packaging' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
-      "projectPath": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+      "projectPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+      "filePath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
       "libraryId": "NuGet.Packaging",
       "targetGraphs": [
         "net10.0"
@@ -148,9 +160,9 @@
       "code": "NU1901",
       "level": "Warning",
       "message": "Package 'NuGet.Protocol' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
-      "projectPath": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+      "projectPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
       "warningLevel": 1,
-      "filePath": "D:\\Project\\.net\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
+      "filePath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
       "libraryId": "NuGet.Protocol",
       "targetGraphs": [
         "net10.0"

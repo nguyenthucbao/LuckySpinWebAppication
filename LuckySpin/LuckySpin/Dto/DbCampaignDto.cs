@@ -3,6 +3,14 @@ using NuGet.Protocol;
 
 namespace LuckySpin.Dto
 {
+    public class GetCampaignInfo
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public DateTime StartAt { get; set; }
+        public DateTime EndAt { get; set; }
+    }
+
     public class DbCampaignDto
     {
         public string Id { get; set; }

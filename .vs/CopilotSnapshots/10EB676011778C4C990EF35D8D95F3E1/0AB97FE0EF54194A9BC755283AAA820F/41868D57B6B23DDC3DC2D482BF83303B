@@ -1,0 +1,31 @@
+﻿using LuckySpin.DTO;
+using LuckySpin.Models;
+
+namespace LuckySpin.Dto
+{
+    public class GetStoresInfo
+    {
+        public string Id { get; set; } = null!;
+        public string StoreLocate { get; set; } = null!;
+        public decimal StoreAmount { get; set; }
+        public int StoreSpinCount { get; set; }
+        public int StoreUsedSpinCount { get; set; }
+        public List<GetCampaignInfo> Campaigns { get; set; }
+    }
+
+    public class GetStores
+    {
+        public string Id { get; set; } = null!;
+        public string StoreLocate { get; set; } = null!;
+    }
+
+    public class GetPrizeInStore
+    {
+        public string Id { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string PrizeType { get; set; } = null!;
+        public int Quantity { get; set; }
+        public int ProbabilityWeight { get; set; }
+        public bool IsActive { get; set; }
+    }
+}

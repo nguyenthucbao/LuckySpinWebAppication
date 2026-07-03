@@ -33,16 +33,16 @@ public class WinnerSessionService : IWinnerSessionService
 
         _db.WinnerSessions.Add(winnerSession);
 
-        //try
-        //{
-        //    await _db.SaveChangesAsync();
-        //    return sessionId;
-        //}
-        //catch (DbUpdateException ex)
-        //{
-        //    var innerMessage = ex.InnerException?.Message ?? ex.Message;
-        //    throw new Exception($"Lỗi lưu Database (500): {innerMessage}");
-        //}
+        try
+        {
+            await _db.SaveChangesAsync();
+            return sessionId;
+        }
+        catch (DbUpdateException ex)
+        {
+            var innerMessage = ex.InnerException?.Message ?? ex.Message;
+            throw new Exception($"Lỗi lưu Database (500): {innerMessage}");
+        }
 
 
         return sessionId;

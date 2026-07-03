@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using LuckySpinFE.Dto
 @inject LuckySpinFE.Services.LuckySpinApiClient ApiClient
+@inject NavigationManager Nav
 
 <div class="spin-page">
 
@@ -75,8 +76,12 @@
             </div>
             <div class="spinning-view">
                 <div class="wheel-wrap">
-                    <div class="arrow">▼</div>
-                    <div class="wheel spinning">🎡</div>
+                    <div class="pointer">▼</div>
+                    <div class="wheel-outer">
+                        <div class="wheel spinning">
+                            <div class="wheel-center">🎁</div>
+                        </div>
+                    </div>
                 </div>
                 <p class="spin-label">Chúc bạn may mắn!</p>
             </div>
@@ -88,10 +93,107 @@
     {
         <div class="popup-overlay">
             <div class="popup">
-                <span class="big-emoji">🎉</span>
-                <h3>Chúc mừng!</h3>
-                <div class="prize-name">@result.WonPrize?.Name</div>
-                <button class="btn-continue" @onclick="ClosePopup">Tiếp tục</button>
+                @if (result.RemainingSpins > 0)
+                {
+                    <span class="big-emoji">🎉</span>
+                    <h3>Chúc mừng!</h3>
+                    <div class="prize-name">@result.WonPrize?.Name</div>
+                    <div class="spins-left">
+                        Số lượt quay còn lại: <strong>@result.RemainingSpins</strong>
+                    </div>
+                    <div class="popup-actions">
+                        <button class="btn-continue" @onclick="SpinAgain" disabled="@isSpinning">
+                            🎯 Quay tiếp
+                        </button>
+                        <button class="btn-secondary" @onclick="ClosePopup">Đóng</button>
+                    </div>
+                }
+                else
+                {
+                    <span class="big-emoji">🎉</span>
+                    <h3>Chúc mừng!</h3>
+                    <div class="prize-name">@result.WonPrize?.Name</div>
+                    <p class="no-spins-msg">😢 Bạn đã hết lượt quay.</p>
+                    <button class="btn-continue" @onclick="ClosePopup">Quay lại</button>
+                }
+            </div>
+        </div>
+    }
+
+    @* ===== GIỎ HÀNG PHẦN THƯỞNG (góc dưới trái) ===== *@
+    <div class="cart-fab" @onclick="ToggleCart">
+        🛒
+        @if (wonPrizes.Count > 0)
+        {
+            <span class="cart-badge">@wonPrizes.Count</span>
+        }
+    </div>
+
+    @if (showCart)
+    {
+        <div class="cart-overlay" @onclick="ToggleCart">
+            <div class="cart-panel" @onclick:stopPropagation="true">
+                <div class="cart-header">
+                    <h3>🎁 Phần thưởng đã quay</h3>
+                    <span class="cart-close" @onclick="ToggleCart">✕</span>
+                </div>
+
+                @if (wonPrizes.Count == 0)
+                {
+                    <p class="cart-empty">Bạn chưa quay được phần thưởng nào.</p>
+                }
+                else
+                {
+                    <div class="cart-list">
+                        @foreach (var p in wonPrizes)
+                        {
+                            <div class="cart-item">
+                                <span class="cart-item-name">@p.Name</span>
+                                <span class="cart-item-time">@p.WonAt.ToString("HH:mm dd/MM/yyyy")</span>
+                            </div>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(confirmError))
+                    {
+                        <p class="error-msg">⚠ @confirmError</p>
+                    }
+
+                    <button class="btn-confirm-reward" @onclick="OpenConfirmDialog" disabled="@isConfirming">
+                        ✅ Xác nhận nhận thưởng
+                    </button>
+                }
+            </div>
+        </div>
+    }
+
+    @* ===== DIALOG XÁC NHẬN ===== *@
+    @if (showConfirmDialog)
+    {
+        <div class="popup-overlay">
+            <div class="popup">
+                <span class="big-emoji">❓</span>
+                <h3>Xác nhận nhận thưởng</h3>
+                <p class="confirm-text">Bạn có chắc chắn muốn nhận toàn bộ phần thưởng đã quay không?</p>
+                <div class="popup-actions">
+                    <button class="btn-continue" @onclick="ConfirmReward" disabled="@isConfirming">
+                        @(isConfirming ? "Đang xử lý..." : "OK")
+                    </button>
+                    <button class="btn-secondary" @onclick="CloseConfirmDialog" disabled="@isConfirming">Hủy</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @* ===== THÔNG BÁO ĐANG CHUYỂN GIAO ===== *@
+    @if (showTransferMessage)
+    {
+        <div class="popup-overlay">
+            <div class="popup">
+                <span class="big-emoji">🚚</span>
+                <h3>Đang chuyển giao phần thưởng</h3>
+                <p class="confirm-text">Phần thưởng của bạn sẽ được chuyển giao trong thời gian sớm nhất.</p>
+                <button class="btn-continue" @onclick="BackToCustomerInfo">OK</button>
             </div>
         </div>
     }
@@ -99,6 +201,10 @@
 </div>
 
 @code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? CustomerId { get; set; }
+
     private string rewardCode = "";
     private SpinResponse? result;
     private string errorMessage = "";
@@ -108,6 +214,15 @@
 
     private List<CampaignDto>? campaigns;
     private CampaignDto? selectedCampaign;
+
+    // ===== Giỏ hàng phần thưởng =====
+    private record WonPrizeItem(string PrizeId, string Name, DateTime WonAt);
+    private List<WonPrizeItem> wonPrizes = new();
+    private bool showCart = false;
+    private bool showConfirmDialog = false;
+    private bool showTransferMessage = false;
+    private bool isConfirming = false;
+    private string confirmError = "";
 
     private async Task LoadCampaigns()
     {
@@ -124,7 +239,14 @@
         }
         catch (Exception ex)
         {
-            errorMessage = $"Lỗi tải campaign: {ex.Message}";
+            if (ex.Message.Contains("404"))
+            {
+                errorMessage = "Mã không hợp lệ.";
+            }
+            else
+            {
+                errorMessage = $"Lỗi tải chương trình: {ex.Message}";
+            }
         }
         finally
         {
@@ -136,6 +258,7 @@
     {
         if (selectedCampaign == null) return;
 
+        showPopup = false;
         isSpinning = true;
         errorMessage = "";
         result = null;
@@ -149,16 +272,29 @@
                 RewardCode = rewardCode,
                 CampaignId = selectedCampaign.Id
             });
+
+            if (result?.WonPrize != null && !string.IsNullOrWhiteSpace(result.WonPrize.Id))
+            {
+                wonPrizes.Add(new WonPrizeItem(result.WonPrize.Id, result.WonPrize.Name ?? "Phần thưởng", DateTime.Now));
+            }
+
             showPopup = true;
         }
         catch (Exception ex)
         {
             errorMessage = $"Lỗi: {ex.Message}";
+            result = null;
         }
         finally
         {
             isSpinning = false;
         }
+    }
+
+    private async Task SpinAgain()
+    {
+        showPopup = false;
+        await StartSpin();
     }
 
     private void ClosePopup()
@@ -169,10 +305,94 @@
         rewardCode = "";
         campaigns = null;
     }
+
+    // ===== Giỏ hàng =====
+    private void ToggleCart()
+    {
+        showCart = !showCart;
+        confirmError = "";
+    }
+
+    private void OpenConfirmDialog()
+    {
+        showConfirmDialog = true;
+    }
+
+    private void CloseConfirmDialog()
+    {
+        showConfirmDialog = false;
+    }
+
+    private async Task ConfirmReward()
+    {
+        if (string.IsNullOrWhiteSpace(CustomerId))
+        {
+            confirmError = "Không xác định được khách hàng (thiếu customerId).";
+            showConfirmDialog = false;
+            return;
+        }
+
+        isConfirming = true;
+        confirmError = "";
+
+        // Gọi API cho từng phần thưởng trong giỏ (API chỉ xử lý được 1 prize mỗi lần).
+        var succeeded = new List<WonPrizeItem>();
+        var failedNames = new List<string>();
+
+        foreach (var item in wonPrizes)
+        {
+            try
+            {
+                await ApiClient.AssignWinnerToPrizeAsync(CustomerId, item.PrizeId);
+                succeeded.Add(item);
+            }
+            catch (Exception ex)
+            {
+                failedNames.Add($"{item.Name} ({ex.Message})");
+            }
+        }
+
+        // Xóa khỏi giỏ những phần thưởng đã xác nhận thành công, giữ lại phần lỗi để thử lại
+        foreach (var s in succeeded)
+        {
+            wonPrizes.Remove(s);
+        }
+
+        showConfirmDialog = false;
+
+        if (failedNames.Count == 0)
+        {
+            showCart = false;
+            showTransferMessage = true;
+        }
+        else
+        {
+            confirmError = $"Không thể xác nhận: {string.Join(", ", failedNames)}. Vui lòng thử lại.";
+        }
+
+        isConfirming = false;
+    }
+
+    private void BackToCustomerInfo()
+    {
+        Nav.NavigateTo("https://localhost:7109/customer-info", forceLoad: true);
+    }
 }
 
 <style>
+    :global(body), :global(.page), :global(main) {
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
     .spin-page {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
         height: 100vh;
         box-sizing: border-box;
         background: linear-gradient(135deg, #FF6B35 0%, #F7C59F 40%, #FFBE0B 70%, #FB5607 100%);
@@ -180,8 +400,7 @@
         align-items: center;
         justify-content: center;
         padding: 2rem 1rem;
-        position: relative;
-        overflow: hidden; 
+        overflow: hidden;
     }
 
         .spin-page::before,
@@ -209,7 +428,6 @@
             right: -40px;
         }
 
-    /* ===== CARD ===== */
     .card {
         background: #fff;
         border-radius: 24px;
@@ -218,6 +436,8 @@
         max-width: 420px;
         position: relative;
         z-index: 1;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        box-sizing: border-box;
     }
 
     .card-header {
@@ -247,7 +467,6 @@
         margin-top: 4px;
     }
 
-    /* ===== FORM ===== */
     .field {
         margin-bottom: 1.25rem;
     }
@@ -276,6 +495,7 @@
             outline: none;
             transition: border-color 0.2s;
             background: #fafafa;
+            box-sizing: border-box;
         }
 
             .input-row input:focus {
@@ -283,7 +503,6 @@
                 background: #fff;
             }
 
-    /* ===== BUTTONS ===== */
     .btn-find {
         height: 44px;
         padding: 0 18px;
@@ -325,6 +544,7 @@
         letter-spacing: 0.3px;
         transition: opacity 0.2s, transform 0.15s;
         margin-top: 1.25rem;
+        box-shadow: 0 4px 15px rgba(251, 86, 7, 0.2);
     }
 
         .btn-spin:hover:not(:disabled) {
@@ -340,9 +560,9 @@
             background: linear-gradient(135deg, #ccc, #e0e0e0);
             color: #999;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
-    /* ===== CAMPAIGN LIST ===== */
     .section-label {
         display: flex;
         align-items: center;
@@ -380,6 +600,7 @@
         cursor: pointer;
         transition: border-color 0.2s, background 0.2s;
         background: #fafafa;
+        box-sizing: border-box;
     }
 
         .campaign-item:hover {
@@ -418,11 +639,15 @@
         color: #aaa;
     }
 
-    /* ===== MESSAGES ===== */
     .error-msg {
-        font-size: 12.5px;
+        font-size: 13px;
         color: #e24b4b;
-        margin-top: 4px;
+        margin-top: 8px;
+        font-weight: 500;
+        padding: 6px 10px;
+        background: #fff0f0;
+        border-radius: 6px;
+        border-left: 3px solid #e24b4b;
     }
 
     .empty-msg {
@@ -441,33 +666,61 @@
     .wheel-wrap {
         display: inline-block;
         position: relative;
-        margin-bottom: 1rem;
+        margin-bottom: 1.25rem;
     }
 
-    .arrow {
+    .pointer {
         position: absolute;
-        top: -22px;
+        top: -26px;
         left: 50%;
         transform: translateX(-50%);
-        font-size: 22px;
+        font-size: 26px;
         color: #FB5607;
+        filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25));
+        z-index: 2;
     }
 
-    .wheel {
-        width: 140px;
-        height: 140px;
+    .wheel-outer {
+        width: 190px;
+        height: 190px;
         border-radius: 50%;
-        border: 4px solid #FFBE0B;
+        padding: 8px;
+        background: linear-gradient(135deg, #FFBE0B, #FB5607);
+        box-shadow: 0 10px 28px rgba(251, 86, 7, 0.35), inset 0 0 0 2px rgba(255,255,255,0.4);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 40px;
-        background: linear-gradient(135deg, #fff3e0, #fff8f0);
+    }
+
+    .wheel {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        background: conic-gradient( #FB5607 0deg 45deg, #FFBE0B 45deg 90deg, #FF6B35 90deg 135deg, #F7C59F 135deg 180deg, #FB5607 180deg 225deg, #FFBE0B 225deg 270deg, #FF6B35 270deg 315deg, #F7C59F 315deg 360deg );
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 12px rgba(0,0,0,0.15);
     }
 
         .wheel.spinning {
-            animation: spinWheel 0.6s linear infinite;
+            animation: spinWheel 1s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         }
+
+    .wheel-center {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        border: 2px solid #FFBE0B;
+    }
 
     @@keyframes spinWheel {
         from {
@@ -514,6 +767,7 @@
         text-align: center;
         width: 300px;
         animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-sizing: border-box;
     }
 
     @@keyframes popIn {
@@ -541,6 +795,13 @@
         margin-bottom: 10px;
     }
 
+    .confirm-text {
+        font-size: 13.5px;
+        color: #666;
+        margin-bottom: 1.25rem;
+        line-height: 1.5;
+    }
+
     .prize-name {
         font-size: 15px;
         font-weight: 600;
@@ -548,7 +809,30 @@
         background: #fff8f0;
         border-radius: 10px;
         padding: 10px 14px;
+        margin-bottom: 0.75rem;
+    }
+
+    .spins-left {
+        font-size: 13px;
+        color: #555;
         margin-bottom: 1.25rem;
+    }
+
+        .spins-left strong {
+            color: #FB5607;
+        }
+
+    .no-spins-msg {
+        font-size: 14px;
+        color: #e24b4b;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+    }
+
+    .popup-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
 
     .btn-continue {
@@ -562,5 +846,215 @@
         font-weight: 600;
         cursor: pointer;
     }
-</style>
 
+        .btn-continue:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+    .btn-secondary {
+        width: 100%;
+        height: 40px;
+        border-radius: 10px;
+        border: 1.5px solid #e5e5e5;
+        background: #fff;
+        color: #888;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .btn-secondary:hover:not(:disabled) {
+            border-color: #ccc;
+            background: #fafafa;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+    /* ===== GIỎ HÀNG (FAB góc dưới trái) ===== */
+    .cart-fab {
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+        z-index: 900;
+        transition: transform 0.15s;
+        border: 2px solid #FFBE0B;
+    }
+
+        .cart-fab:hover {
+            transform: scale(1.06);
+        }
+
+        .cart-fab:active {
+            transform: scale(0.95);
+        }
+
+    .cart-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #FB5607;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        min-width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        border: 2px solid #fff;
+    }
+
+    .cart-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+        z-index: 950;
+    }
+
+    .cart-panel {
+        background: #fff;
+        border-radius: 20px 20px 0 0;
+        width: 100%;
+        max-width: 380px;
+        max-height: 70vh;
+        padding: 1.5rem;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        animation: slideUp 0.25s ease-out;
+        box-shadow: 0 -8px 24px rgba(0,0,0,0.2);
+    }
+
+    @@media (min-width: 460px) {
+        .cart-overlay {
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-panel {
+            border-radius: 20px;
+            max-height: 60vh;
+        }
+    }
+
+    @@keyframes slideUp {
+        from {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .cart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+        .cart-header h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222;
+            margin: 0;
+        }
+
+    .cart-close {
+        font-size: 16px;
+        color: #999;
+        cursor: pointer;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.15s;
+    }
+
+        .cart-close:hover {
+            background: #f2f2f2;
+        }
+
+    .cart-empty {
+        text-align: center;
+        font-size: 13px;
+        color: #aaa;
+        padding: 1.5rem 0;
+    }
+
+    .cart-list {
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 1rem;
+        flex: 1;
+    }
+
+    .cart-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 10px 14px;
+        background: #fff8f0;
+        border-radius: 10px;
+        border-left: 3px solid #FFBE0B;
+    }
+
+    .cart-item-name {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #222;
+    }
+
+    .cart-item-time {
+        font-size: 11.5px;
+        color: #999;
+    }
+
+    .btn-confirm-reward {
+        width: 100%;
+        height: 48px;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+
+        .btn-confirm-reward:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .btn-confirm-reward:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+</style>

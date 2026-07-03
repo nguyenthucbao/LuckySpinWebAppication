@@ -1,0 +1,330 @@
+﻿using LuckySpin.Dto;
+using LuckySpin.DTO;
+using LuckySpin.Models;
+using LuckySpin.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
+
+namespace LuckySpin.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class StoresController : ControllerBase
+    {
+        private readonly LuckySpinContext _context;
+        private readonly ILogger<StoresController> _logger;
+        private readonly IStoreService _storeService;
+
+        private readonly IStoreService _storeService;
+
+        public StoresController(LuckySpinContext context, ILogger<StoresController> logger, IStoreService storeService)
+        {
+            _context = context;
+            _logger = logger;
+            _storeService = storeService;
+        }
+
+
+
+        [HttpGet]
+        public async Task<ActionResult<GetStores>> GetStores()
+        {
+            var b = await _context.Stores.ToListAsync();
+
+            List<GetStores> store = b.Select(b => new GetStores
+            {
+                Id = b.Id,
+                StoreLocate = b.StoreLocate
+            }).ToList();
+
+            return Ok(store);
+        }
+
+
+        [HttpGet("getstorebyid/{id}")]
+        public async Task<ActionResult<GetStoresInfo>> GetStoreById(string id)
+        {
+            var store = await _context.Stores.FindAsync(id);
+            if (store == null)
+                return NotFound();
+
+
+            var bills = await _context.Bills
+                    .Include(b => b.RewardCode)
+                    .Where(b => b.StoreId == store.Id)
+                    .ToListAsync();
+
+            var rewardCodes = bills.Where(b => b.RewardCode != null).Select(b => b.RewardCode!).ToList();
+
+            var storePrizes = await _context.StoreCampaignPrizes
+                .Where(scp => scp.StoreId == store.Id)
+                .Include(scp => scp.Prize)
+                .ThenInclude(p => p.Campaign)
+                .ToListAsync();
+
+            var campaigns = storePrizes
+                .Where(scp => scp.Prize != null && scp.Prize.Campaign != null)
+                .GroupBy(scp => scp.Prize.Campaign)
+                .Select(g => new GetCampaignInfo
+                {
+                    Id = g.Key.Id,
+                    Name = g.Key.CampaignName,
+                    StartAt = g.Key.StartDate ?? DateTime.MinValue,
+                    EndAt = g.Key.EndDate ?? DateTime.MinValue
+                })
+                .ToList();
+
+            var result = new GetStoresInfo
+            {
+                Id = store.Id,
+                StoreLocate = store.StoreLocate,
+                StoreAmount = bills.Sum(x => x.TotalAmount),
+                StoreSpinCount = rewardCodes.Sum(x => x.SpinCount),
+                StoreUsedSpinCount = rewardCodes.Sum(x => x.SpinCount - x.RemainingSpins),
+                Campaigns = campaigns
+            };
+
+            return Ok(result);
+        }
+
+
+        //Delete Store
+        [HttpDelete("deletestore/{storeId}")]
+        public async Task<IActionResult> DeleteStore(string storeId)
+        {
+            try
+            {
+                var store = await _context.Stores.FindAsync(storeId);
+                if (store == null)
+                    return NotFound(new { message = "không tìm thấy store" });
+
+                // Get all campaigns linked to this store
+                var storeCampaigns = await _context.StoreCampaignPrizes
+                    .Where(scp => scp.StoreId == storeId)
+                    .Select(scp => scp.Prize.CampaignId)
+                    .Distinct()
+                    .ToListAsync();
+
+                // Remove store from all campaigns
+                foreach (var campaignId in storeCampaigns)
+                {
+                    await _storeService.RemoveStoreCampaignAsync(storeId, campaignId);
+                }
+
+                // Remove store
+                _context.Stores.Remove(store);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Đã xóa store thành công" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi xóa store");
+                return StatusCode(500, new { message = "Lỗi hệ thống khi xóa store", error = ex.Message });
+            }
+        }
+
+
+        // Lấy danh sách giải thưởng của một cửa hàng trong một chiến dịch
+        [HttpGet("{storeId}/campaigns/{campaignId}/prizes")]
+        public async Task<ActionResult<List<Prize>>> GetStoreCampaignPrizes(string storeId, string campaignId)
+        {
+            try
+            {
+                var store = await _context.Stores.FindAsync(storeId);
+                if (store == null)
+                    return NotFound(new { message = "Store not found" });
+
+                var campaign = await _context.Campaigns.FindAsync(campaignId);
+                if (campaign == null)
+                    return NotFound(new { message = "Campaign not found" });
+
+                var now = DateTime.Now;
+                var isCampaignRunning = campaign.StartDate.HasValue && 
+                                       campaign.EndDate.HasValue &&
+                                       campaign.StartDate <= now && 
+                                       now <= campaign.EndDate;
+                if (!isCampaignRunning)
+                    return BadRequest(new { message = "Campaign is not running" });
+
+                var prizes = await _context.StoreCampaignPrizes
+                    .Include(scp => scp.Prize)
+                    .Where(scp => scp.StoreId == storeId && scp.Prize != null && scp.Prize.CampaignId == campaignId)
+                    .Select(scp => new GetPrizeInStore
+                    {
+                        Id = scp.Prize!.Id,
+                        Name = scp.Prize.Name,
+                        PrizeType = scp.Prize.PrizeType,
+                        Quantity = scp.Prize.Quantity ?? 0,
+                        ProbabilityWeight = scp.ProbabilityWeight,
+                        IsActive = scp.Prize.IsActive
+                    })
+                    .ToListAsync();
+
+                return Ok(prizes);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi khi lấy danh sách giải thưởng", error = ex.Message });
+            }
+        }
+
+
+        [HttpPost("changeprobability/{scpId}/{newProbabilityWeight}")]
+        public async Task<ActionResult<List<Prize>>> ChangeProbabilityWeight(string scpId, int newProbabilityWeight)
+        {
+            try
+            {
+                var storeCampaignPrize = await _context.StoreCampaignPrizes.FindAsync(scpId);
+                storeCampaignPrize.ProbabilityWeight = newProbabilityWeight;
+
+                //_context.StoreCampaignPrizes.Update(storeCampaignPrize);
+                //await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+   
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi update");
+                return StatusCode(500, new { message = "lỗi hệ thống " });
+            }
+        }
+
+
+
+        [HttpPost("addstorecampaign/{storeId}/{campaignId}")]
+        public async Task<ActionResult<AddCampaignToStoreResultDto>> AddStoreCampaign(string storeId, string campaignId)
+        {
+            try
+            {
+                var store = await _context.Stores.FindAsync(storeId);
+                if (store == null)
+                    return NotFound(new { message = "không tìm thấy store" });
+
+                var campaign = await _context.Campaigns.Include(c => c.Prizes).FirstOrDefaultAsync(c => c.Id == campaignId);
+                if (campaign == null)
+                    return NotFound(new { message = "không tìm thấy campaign" });
+
+                // Check if campaign already exists for this store
+                var existingStoreCampaigns = await _context.StoreCampaignPrizes
+                    .Where(scp => scp.StoreId == storeId && scp.Prize.CampaignId == campaignId)
+                    .FirstOrDefaultAsync();
+                if (existingStoreCampaigns != null)
+                    return BadRequest("Campaign đã tồn tại cho cửa hàng này");
+
+                var result = new List<GetPrizeInStore>();
+
+                // Recreate StoreCampaignPrize each prize in the campaign
+                foreach (var prize in campaign.Prizes)
+                {
+                    var scp = new StoreCampaignPrize
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        StoreId = storeId,
+                        PrizeId = prize.Id,
+                        ProbabilityWeight = prize.ProbabilityWeight,
+                        IsActive = true,
+                        Prize = prize
+                    };
+
+                    result.Add(new GetPrizeInStore
+                    {
+                        Id = prize.Id,
+                        Name = prize.Name,
+                        PrizeType = prize.PrizeType,
+                        Quantity = prize.Quantity ?? 0,
+                        ProbabilityWeight = scp.ProbabilityWeight,
+                        IsActive = prize.IsActive
+                    });
+
+                    _context.StoreCampaignPrizes.Add(scp);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok(result);
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi thêm campaign");
+                return StatusCode(500, new { message = "Lỗi hệ thống khi thêm campaign", error = ex.Message });
+            }
+        }
+
+        public StoresController(LuckySpinContext context, ILogger<StoresController> logger, IStoreService storeService)
+        {
+            _context = context;
+            _logger = logger;
+            _storeService = storeService;
+        }
+
+        [HttpPost("addstore")]
+        public async Task<IActionResult> AddStore([FromBody] Store store)
+        {
+            try
+            {
+                if (store == null)
+                    return BadRequest(new { message = "Dữ liệu store không hợp lệ" });
+
+                if (string.IsNullOrWhiteSpace(store.Id))
+                    return BadRequest(new { message = "Store ID không được để trống" });
+
+                if (string.IsNullOrWhiteSpace(store.Name))
+                    return BadRequest(new { message = "Tên store không được để trống" });
+
+                // Check if store already exists
+                var existingStore = await _context.Stores.FindAsync(store.Id);
+                if (existingStore != null)
+                    return BadRequest(new { message = "Store với ID này đã tồn tại" });
+
+                // Add new store
+                _context.Stores.Add(store);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetAllStores), new { storeId = store.Id }, store);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi thêm store mới");
+                return StatusCode(500, new { message = "Lỗi hệ thống khi thêm store", error = ex.Message });
+            }
+        }
+        public async Task<IActionResult> RemoveStoreCampaign(string storeId, string campaignId)
+        {
+            try
+            {
+                var store = await _context.Stores.FindAsync(storeId);
+                if (store == null)
+                    return NotFound(new { message = "không tìm thấy store" });
+
+                var campaign = await _context.Campaigns.FindAsync(campaignId);
+                if (campaign == null)
+                    return NotFound(new { message = "không tìm thấy campaign" });
+
+                var removedCount = await _storeService.RemoveStoreCampaignAsync(storeId, campaignId);
+
+                if (removedCount == 0)
+                    return NotFound(new { message = "Campaign không tồn tại cho cửa hàng này" });
+
+                return Ok(new { message = $"Đã xóa {removedCount} giải thưởng khỏi campaign", removedCount = removedCount });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi xóa campaign khỏi store");
+                return StatusCode(500, new { message = "Lỗi hệ thống khi xóa campaign", error = ex.Message });
+            }
+        }
+
+        
+    }
+}

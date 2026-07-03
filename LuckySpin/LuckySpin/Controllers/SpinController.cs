@@ -105,21 +105,22 @@ namespace LuckySpin.Controllers
 
 
 
+        //Lấy danh sách campaign theo rewardcode
         [HttpGet("{rewardcode}")]
         public async Task<IActionResult> GetCampaign(string rewardcode)
         {
             //Validate input 
-            if (string.IsNullOrWhiteSpace(rewardcode))
-                return BadRequest(new { message = "RewardCode và CampaignId không được để trống." });
-
-
             var rwCode = await _context.RewardCodes.FirstOrDefaultAsync(b => b.Code == rewardcode);
             if (rwCode == null)
-                return NotFound(new { message = "Mã không hợp lệ.", rewardcode }); // thêm rewardcode vào response
+                return NotFound(new { message = "Mã không hợp lệ.", rewardcode });
 
             var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == rwCode.BillId);
             if (bill == null)
-                return NotFound(new { message = "Không tìm thấy bill hợp lệ.", billId = rwCode.BillId }); // thêm billId
+                return NotFound(new { message = "Không tìm thấy bill hợp lệ.", billId = rwCode.BillId });
+
+            var store = await _context.Stores.FirstOrDefaultAsync(b => b.Id == bill.StoreId);
+            if (store == null)
+                return NotFound(new { message = "Cửa hàng không tồn tại", billId = rwCode.BillId });
 
             var storeID = bill.StoreId;
 

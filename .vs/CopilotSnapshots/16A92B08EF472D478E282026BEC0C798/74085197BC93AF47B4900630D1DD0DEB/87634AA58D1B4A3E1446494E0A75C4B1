@@ -1,0 +1,122 @@
+﻿using LuckySpin.Dto;
+using LuckySpin.DTO;
+using LuckySpin.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
+
+namespace LuckySpin.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class StoresController : ControllerBase
+    {
+        private readonly LuckySpinContext _context;
+
+        public StoresController(LuckySpinContext context)
+        {
+            _context = context;
+        }
+
+        //GET: api/Stores
+        [HttpGet]
+        public async Task<ActionResult<GetStores>> GetStores()
+        {
+            var b = await _context.Stores.ToListAsync();
+
+            List<GetStores> store = b.Select(b => new GetStores
+            {
+                Id = b.Id,
+                StoreLocate = b.StoreLocate
+            }).ToList();
+
+            return Ok(store);
+        }
+
+
+        //GET: api/Stores/id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GetStoresInfoDto>> GetStoreById(string id)
+        {
+            var store = await _context.Stores.FindAsync(id);
+            if (store == null)
+                return NotFound();
+
+
+            var bills = await _context.Bills
+                    .Include(b => b.RewardCode)
+                    .Where(b => b.StoreId == store.Id)
+                    .ToListAsync();
+
+            var rewardCodes = bills.Where(b => b.RewardCode != null).Select(b => b.RewardCode!).ToList();
+
+            var storePrizes = await _context.StoreCampaignPrizes
+                .Where(scp => scp.StoreId == store.Id)
+                .Include(scp => scp.Prize)
+                .ThenInclude(p => p.Campaign)
+                .ToListAsync();
+
+            var campaigns = storePrizes
+                .Where(scp => scp.Prize != null && scp.Prize.Campaign != null)
+                .GroupBy(scp => scp.Prize.Campaign)
+                .Select(g => new GetCampaignInfo
+                {
+                    Id = g.Key.Id,
+                    Name = g.Key.CampaignName,
+                    StartAt = g.Key.StartDate ?? DateTime.MinValue,
+                    EndAt = g.Key.EndDate ?? DateTime.MinValue
+                })
+                .ToList();
+
+            var result = new GetStoresInfoDto
+            {
+                Id = store.Id,
+                StoreLocate = store.StoreLocate,
+                StoreAmount = bills.Sum(x => x.TotalAmount),
+                StoreSpinCount = rewardCodes.Sum(x => x.SpinCount),
+                StoreUsedSpinCount = rewardCodes.Sum(x => x.SpinCount - x.RemainingSpins),
+                Campaigns = campaigns
+            };
+
+            return Ok(result);
+        }
+
+        //GET: api/Stores/{storeId}/campaigns/{campaignId}/prizes
+        [HttpGet("{storeId}/campaigns/{campaignId}/prizes")]
+        public async Task<ActionResult<List<Prize>>> GetStoreCampaignPrizes(string storeId, string campaignId)
+        {
+            var store = await _context.Stores.FindAsync(storeId);
+            if (store == null)
+                return NotFound(new { message = "Store not found" });
+
+            var campaign = await _context.Campaigns.FindAsync(campaignId);
+            if (campaign == null)
+                return NotFound(new { message = "Campaign not found" });
+
+            var now = DateTime.Now;
+            var isCampaignRunning = campaign.StartDate.HasValue && 
+                                   campaign.EndDate.HasValue &&
+                                   campaign.StartDate <= now && 
+                                   now <= campaign.EndDate;
+            if (!isCampaignRunning)
+                return BadRequest(new { message = "Campaign is not running" });
+
+            var prizes = await _context.StoreCampaignPrizes
+                .Where(scp => scp.StoreId == storeId && scp.Prize!.CampaignId == campaignId)
+                .Include(scp => scp.Prize)
+                .Select(scp => scp.Prize)
+                .ToListAsync();
+
+            return Ok(prizes);
+        }
+
+
+
+
+    }
+}
