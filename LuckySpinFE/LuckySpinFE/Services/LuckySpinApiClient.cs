@@ -14,7 +14,7 @@ public class LuckySpinApiClient(HttpClient http)
 
     public async Task<List<CampaignDto>?> GetCampaignsByRewardCodeAsync(string rewardCode)
     {
-        var response = await http.GetAsync($"api/spin/{rewardCode}");
+        var response = await http.GetAsync($"api/spin/getcampaign/{rewardCode}");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<List<CampaignDto>>();
     }

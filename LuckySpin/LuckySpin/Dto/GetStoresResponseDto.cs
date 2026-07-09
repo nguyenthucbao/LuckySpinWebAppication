@@ -37,6 +37,7 @@ namespace LuckySpin.Dto
         public int PrizeQuantity { get; set; } // số phần thưởng dducocojw trao
         public int ProbabilityWeight { get; set; }
         public bool IsActive { get; set; }
+        public Prize FirstPrize { get; set; }
     }
     
 }

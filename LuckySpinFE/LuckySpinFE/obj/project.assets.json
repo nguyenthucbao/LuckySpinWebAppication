@@ -97,11 +97,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\LuckySpinFE.csproj",
+      "projectUniqueName": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinFE\\LuckySpinFE\\LuckySpinFE.csproj",
       "projectName": "LuckySpinFE",
-      "projectPath": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\LuckySpinFE.csproj",
+      "projectPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinFE\\LuckySpinFE\\LuckySpinFE.csproj",
       "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
-      "outputPath": "D:\\Project\\.net\\LuckySpinFE\\LuckySpinFE\\obj\\",
+      "outputPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinFE\\LuckySpinFE\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

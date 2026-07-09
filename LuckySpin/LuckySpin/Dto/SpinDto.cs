@@ -1,4 +1,6 @@
-﻿namespace LuckySpin.Dto
+﻿using LuckySpin.Models;
+
+namespace LuckySpin.Dto
 {
     public class SpinRequest
     {
@@ -19,6 +21,7 @@
 
         public PrizeResult WonPrize { get; set; } = null!;
     }
+
 
     public class PrizeResult
     {

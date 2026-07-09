@@ -26,6 +26,20 @@
                         @(isLoadingCampaigns ? "..." : "Tìm")
                     </button>
                 </div>
+
+                @if (remainingSpins.HasValue)
+                {
+                    @if (remainingSpins.Value > 0)
+                    {
+                        <p class="spins-remaining-msg">
+                            🎟 Số lượt quay còn lại: <strong>@remainingSpins</strong>
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="error-msg">⚠ Mã này đã hết lượt quay.</p>
+                    }
+                }
             </div>
 
             @if (campaigns != null && campaigns.Count > 0)
@@ -61,7 +75,7 @@
             }
 
             <button class="btn-spin" @onclick="StartSpin"
-                    disabled="@(isSpinning || selectedCampaign == null)">
+                    disabled="@(isSpinning || selectedCampaign == null || remainingSpins == 0)">
                 🎯 Quay ngay!
             </button>
         </div>
@@ -214,6 +228,7 @@
 
     private List<CampaignDto>? campaigns;
     private CampaignDto? selectedCampaign;
+    private int? remainingSpins;
 
     // ===== Giỏ hàng phần thưởng =====
     private record WonPrizeItem(string PrizeId, string Name, DateTime WonAt);
@@ -231,11 +246,13 @@
         errorMessage = "";
         campaigns = null;
         selectedCampaign = null;
+        remainingSpins = null;
         isLoadingCampaigns = true;
 
         try
         {
             campaigns = await ApiClient.GetCampaignsByRewardCodeAsync(rewardCode);
+            remainingSpins = campaigns.FirstOrDefault()?.RemainingSpin;
         }
         catch (Exception ex)
         {
@@ -304,6 +321,7 @@
         selectedCampaign = null;
         rewardCode = "";
         campaigns = null;
+        remainingSpins = null;
     }
 
     // ===== Giỏ hàng =====
@@ -375,7 +393,7 @@
 
     private void BackToCustomerInfo()
     {
-        Nav.NavigateTo("https://localhost:7109/customer-info", forceLoad: true);
+        Nav.NavigateTo("https://localhost:7109/spin-test", forceLoad: true);
     }
 }
 
@@ -648,6 +666,17 @@
         background: #fff0f0;
         border-radius: 6px;
         border-left: 3px solid #e24b4b;
+    }
+
+    .spins-remaining-msg {
+        font-size: 13px;
+        color: #2ecc71;
+        margin-top: 8px;
+        font-weight: 500;
+        padding: 6px 10px;
+        background: #f0fff4;
+        border-radius: 6px;
+        border-left: 3px solid #2ecc71;
     }
 
     .empty-msg {

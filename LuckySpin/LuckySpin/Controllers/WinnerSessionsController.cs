@@ -69,10 +69,10 @@ public class WinnerSessionsController : ControllerBase
             if (winner == null)
                 return NotFound(new { message = "Winner session not found", winner_id = request.WinnerId });
 
-            // Assign winner
+            // Assign winner // Gán winner cho prize
             prize.WinnerId = request.WinnerId;
-            //_db.Prizes.Update(prize);
-            //await _db.SaveChangesAsync();
+            _db.Prizes.Update(prize);
+            await _db.SaveChangesAsync();
 
             return Ok(new { message = "Winner assigned to prize", prize_id = prize.Id, winner_id = prize.WinnerId });
         }

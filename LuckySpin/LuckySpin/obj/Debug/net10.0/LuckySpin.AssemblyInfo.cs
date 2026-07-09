@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LuckySpin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8c9b61d1e6d908927a74ed0202d513e3ffda1373")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2bc25712c8c3911e0825436a3d745d0c5160bfa6")]
 [assembly: System.Reflection.AssemblyProductAttribute("LuckySpin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LuckySpin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

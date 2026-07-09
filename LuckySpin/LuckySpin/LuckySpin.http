@@ -1,11 +1,15 @@
 @LuckySpin_HostAddress = http://localhost:5074
 
-GET {{LuckySpin_HostAddress}}/weatherforecast/
-Accept: application/json
 
 ###
-GET {{LuckySpin_HostAddress}}/api/prize
+GET {{LuckySpin_HostAddress}}/api/prize/getprizes
 Accept: application/json
+
+
+###
+POST {{LuckySpin_HostAddress}}/api/prize/resetprizes
+Accept: application/json
+
 
 ########################    BILL    ###############################
 
@@ -33,14 +37,23 @@ Content-Type: application/json
 }
 
 ### Tra cứu bill
-GET {{LuckySpin_HostAddress}}/api/bills/Bill001
+GET {{LuckySpin_HostAddress}}/api/bills/Bill002
 Accept: application/json
+
+
+
+
+
 
 #######################    Product    ###################################
 
 ### In product
 GET {{LuckySpin_HostAddress}}/api/products
 Accept: application/json
+
+
+
+
 
 #######################     Store     ###################################
 
@@ -64,8 +77,8 @@ Content-Type: application/json
 DELETE {{LuckySpin_HostAddress}}/api/stores/deletestore/S001
 Accept: application/json
 
-### Get Prize in store
-GET {{LuckySpin_HostAddress}}/api/stores/S001/campaigns/Cam001/prizes
+### Get Prize in Campaign store
+GET {{LuckySpin_HostAddress}}/api/stores/S001/campaigns/Cam002/prizes
 Accept: application/json
 
 ### Change probability in Campaign prize 
@@ -73,9 +86,9 @@ POST {{LuckySpin_HostAddress}}/api/stores/changeprobability
 Content-Type: application/json
 {
     "StoreId": "S001",
-    "CampaignId": "Cam001",
-    "PrizeName": "Prizes name 001",
-    "NewProbabilityWeight": "20"
+    "CampaignId": "Cam002",
+    "PrizeName": "Prizes name 006",
+    "NewProbabilityWeight": "50"
 }
 
 ### New Campaign in store
@@ -87,15 +100,26 @@ DELETE {{LuckySpin_HostAddress}}/api/stores/removestorecampaign/S001/Cam001
 Accept: application/json
 
 
+
+
+
+
+
+
+
 #######################     Spin       ####################################
 
 ### Nhap ma quay thuong
 POST {{LuckySpin_HostAddress}}/api/spin/spinaction
 Content-Type: application/json
 {
-  "rewardCode": "LUCKY-C33A0850",
+  "rewardCode": "LUCKY-B318F32C",
   "campaignId": "Cam002"
 }
+
+
+
+
 
 #######################     Winner     ####################################
 
@@ -110,7 +134,6 @@ Content-Type: application/json
   "address": "Quan 2, TP.HCM"
 }
 
-
 ### Nhan hang
 POST {{LuckySpin_HostAddress}}/api/WinnerSessions/AssignWinnerToPrize
 Content-Type: application/json
@@ -119,7 +142,6 @@ Content-Type: application/json
   "WinnerId": "CUSTOMER-0C105D8C",
   "PrizeId": "Prize001"
 }
-
 
 ### In
 GET {{LuckySpin_HostAddress}}/api/WinnerSessions

@@ -21,11 +21,50 @@ namespace LuckySpin.Controllers
         }
 
         //GET: api/Prize
-        [HttpGet]
+        [HttpGet("getprizes")]
         public async Task<ActionResult<IEnumerable<Prize>>> GetPrizes()
         {
             return await _context.Prizes.ToListAsync();
         }
 
+
+        /// DEBUNGING
+        [HttpPost("resetprizes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ResetPrize()
+        {
+
+            await _context.Prizes
+                .ExecuteUpdateAsync(setters => setters
+                .SetProperty(p => p.WinnerId, (string)null) 
+                .SetProperty(p => p.IsActive, true));
+
+            var rewardCodes = await _context.RewardCodes
+                .Include(rc => rc.Bill)
+                .ToListAsync();
+
+            foreach (var rc in rewardCodes)
+            {
+                rc.RemainingSpins = rc.SpinCount;
+            }
+
+            await _context.WinnerSessions.ExecuteDeleteAsync();
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+   
+
+
     }
 }
+
+
+
+    
+
+

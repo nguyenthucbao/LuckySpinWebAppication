@@ -14,6 +14,7 @@ namespace LuckySpin.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class BillsController : ControllerBase
     {
         private readonly LuckySpinContext _context;
@@ -82,21 +83,7 @@ namespace LuckySpin.Controllers
             return Ok(result);
         }
 
-        // DELETE: api/Bill/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBill(string id)
-        {
-            var bill = await _context.Bills.FindAsync(id);
-            if (bill == null)
-            {
-                return NotFound();
-            }
 
-            _context.Bills.Remove(bill);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
 
         /// <summary>
         ///////////////////////////////////////////////////////////////////////////////////
@@ -125,5 +112,9 @@ namespace LuckySpin.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi" });
             }
         }
+
+
+
+
     }
 }
