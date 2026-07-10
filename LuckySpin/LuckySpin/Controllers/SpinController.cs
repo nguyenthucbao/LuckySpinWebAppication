@@ -97,55 +97,99 @@ namespace LuckySpin.Controllers
                 .ToList();
 
             if (!groupedPrizes.Any())
-                return NotFound(new { message = "Không có phần thưởng nào khả dụng tại cửa hàng này." });
+                return NotFound(new { message = "ko có phần thưởng nào khả dụng tại cửa hàng này." });
 
 
-            
 
-            
-            // Tính tổng trọng số thực tế của các nhóm giải thưởng hiện tại
-            int totalWeight = groupedPrizes.Sum(p => p.ProbabilityWeight);;
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            var spinClaimed = await _context.RewardCodes
+                .Where(r => r.Id == rewardCode.Id && r.RemainingSpins > 0)
+                .ExecuteUpdateAsync(s => s.SetProperty(r => r.RemainingSpins, r => r.RemainingSpins - 1)); /// --1 trên db
+
+            if (spinClaimed == 0)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest(new { message = "Mã quay thưởng đã hết lượt quay." });
+            }
 
             var rng = new Random();
-            // Quay số ngẫu nhiên từ 1 đến tổng trọng số 
-            int roll = rng.Next(1, totalWeight + 1);
-
+            const int maxRetries = 5;
             GroupedPrize? wonGroup = null;
-            int cumulative = 0;
 
-            foreach (var gp in groupedPrizes)
+            for (int attempt = 0; attempt < maxRetries; attempt++)
             {
-                cumulative += gp.ProbabilityWeight;
-                if (roll <= cumulative)
+                // roll lại phần thưởng acctive
+                var currentPrizes = await _context.StoreCampaignPrizes
+                    .Include(scp => scp.Prize)
+                    .Where(scp => scp.StoreId == bill.StoreId
+                               && scp.Prize != null
+                               && scp.Prize.CampaignId == request.CampaignId
+                               && scp.IsActive == true
+                               && scp.Prize.IsActive == true)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var currentGrouped = currentPrizes
+                    .GroupBy(scp => scp.Prize!.Name)
+                    .Select(g => new GroupedPrize
+                    {
+                        Name = g.Key,
+                        PrizeType = g.First().Prize!.PrizeType,
+                        Quantity = g.First().Prize!.Quantity ?? 0,
+                        PrizeQuantity = g.Count(),
+                        ProbabilityWeight = g.First().ProbabilityWeight,
+                        IsActive = g.First().Prize!.IsActive,
+                        FirstPrize = g.First().Prize
+                    })
+                    .ToList();
+
+                if (!currentGrouped.Any())
+                    break; // ko cồn phần thưởng khả dụng -> return NotFound
+
+
+                int totalWeight = currentGrouped.Sum(p => p.ProbabilityWeight);
+                int roll = rng.Next(1, totalWeight + 1);
+
+                GroupedPrize? candidate = null;
+                int cumulative = 0;
+                foreach (var gp in currentGrouped)
                 {
-                    wonGroup = gp;
+                    cumulative += gp.ProbabilityWeight;
+                    if (roll <= cumulative)
+                    {
+                        candidate = gp;
+                        break;
+                    }
+                }
+                candidate ??= currentGrouped.Last();
+
+                // Chốt phần thưởng có điều kiện: chỉ set IsActive=false nếu vẫn đang active
+                var claimed = await _context.Prizes
+                    .Where(p => p.Id == candidate.FirstPrize.Id && p.IsActive == true)
+                    .ExecuteUpdateAsync(s => s.SetProperty(p => p.IsActive, false));
+
+                if (claimed == 1)
+                {
+                    wonGroup = candidate;
                     break;
                 }
+                // claimed == 0 nghĩa là request khác vừa lấy mất phần thưởng này -> thử lại
             }
-            // Fallback
-            wonGroup ??= groupedPrizes.Last();
 
-
-
-            rewardCode.RemainingSpins -= 1;
-            wonGroup.FirstPrize.IsActive = false;    
-            try
+            if (wonGroup == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                var innerMessage = ex.InnerException?.Message ?? ex.Message;
-                throw new Exception($"Lỗi lưu Database (500): {innerMessage}");
+                // Không chốt được phần thưởng nào sau các lần thử -> hoàn tác luôn lượt quay đã trừ
+                await transaction.RollbackAsync();
+                return NotFound(new { message = "Không có phần thưởng nào khả dụng, vui lòng thử lại." });
             }
 
-
-
+            await transaction.CommitAsync();
 
             return Ok(new SpinResponse
             {
                 RewardCode = rewardCode.Code,
-                RemainingSpins = rewardCode.RemainingSpins,
+                RemainingSpins = rewardCode.RemainingSpins - 1,
                 WonPrize = new PrizeResult
                 {
                     Id = wonGroup.FirstPrize.Id,
@@ -206,7 +250,5 @@ namespace LuckySpin.Controllers
             return Ok(campaigns);
 
         }
-
-
     }
 }

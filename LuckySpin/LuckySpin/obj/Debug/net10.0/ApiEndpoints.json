@@ -165,69 +165,6 @@
     ]
   },
   {
-    "ContainingType": "LuckySpin.Controllers.ProductsController",
-    "Method": "PostProduct",
-    "RelativePath": "api/Products",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "product",
-        "Type": "LuckySpin.Models.Product",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "LuckySpin.Models.Product",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "LuckySpin.Controllers.ProductsController",
-    "Method": "PutProduct",
-    "RelativePath": "api/Products/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "product",
-        "Type": "LuckySpin.Models.Product",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "LuckySpin.Controllers.ProductsController",
-    "Method": "DeleteProduct",
-    "RelativePath": "api/Products/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "LuckySpin.Controllers.SpinController",
     "Method": "GetCampaign",
     "RelativePath": "api/Spin/getcampaign/{rewardcode}",

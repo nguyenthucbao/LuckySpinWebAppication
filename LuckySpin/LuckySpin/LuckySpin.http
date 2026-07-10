@@ -78,7 +78,7 @@ DELETE {{LuckySpin_HostAddress}}/api/stores/deletestore/S001
 Accept: application/json
 
 ### Get Prize in Campaign store
-GET {{LuckySpin_HostAddress}}/api/stores/S001/campaigns/Cam002/prizes
+GET {{LuckySpin_HostAddress}}/api/stores/S001/campaigns/Cam003/prizes
 Accept: application/json
 
 ### Change probability in Campaign prize 
@@ -92,11 +92,11 @@ Content-Type: application/json
 }
 
 ### New Campaign in store
-POST {{LuckySpin_HostAddress}}/api/stores/addstorecampaign/S001/Cam002
+POST {{LuckySpin_HostAddress}}/api/stores/addstorecampaign/S001/Cam003
 Accept: application/json
 
 ### Remove Campaign in store
-DELETE {{LuckySpin_HostAddress}}/api/stores/removestorecampaign/S001/Cam001
+DELETE {{LuckySpin_HostAddress}}/api/stores/removestorecampaign/S001/Cam003
 Accept: application/json
 
 

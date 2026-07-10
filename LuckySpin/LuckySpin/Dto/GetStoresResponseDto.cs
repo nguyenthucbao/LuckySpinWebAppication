@@ -29,6 +29,14 @@ namespace LuckySpin.Dto
         public bool IsActive { get; set; }
     }
 
+    public class AddCampaignToStoreResultDto
+    {
+        public string StoreId { get; set; } = null!;
+        public string CampaignId { get; set; } = null!;
+        public int CreatedCount { get; set; }
+        public List<string> CreatedIds { get; set; } = new();
+    }
+
     public class GroupedPrize
     {
         public string Name { get; set; } = null!;
