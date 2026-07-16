@@ -1,0 +1,914 @@
+﻿@page "/admin-test"
+@rendermode InteractiveServer
+
+<div class="admin-root min-h-screen flex" style="font-family:'Inter',sans-serif; background:#F7F5F2;">
+
+    @* ============== SIDEBAR ============== *@
+    <aside class="w-64 shrink-0 text-white flex flex-col" style="background:#1C1917;">
+        <div class="px-6 py-6 flex items-center gap-3 border-b border-white/10">
+            <div class="wheel-badge"></div>
+            <div>
+                <div class="font-bold text-[15px]" style="font-family:'Manrope',sans-serif;">LuckySpin</div>
+                <div class="text-[11px] text-white/40">Bảng quản trị</div>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-3 py-4 space-y-1">
+            <div class="nav-item active" @onclick="GoToStoreList">
+                <span class="nav-dot"></span> Quản lý cửa hàng
+            </div>
+            <div class="nav-item disabled" title="Demo chưa xây dựng">
+                <span class="nav-dot-empty"></span> Khách hàng trúng thưởng
+            </div>
+            <div class="nav-item disabled" title="Demo chưa xây dựng">
+                <span class="nav-dot-empty"></span> Báo cáo &amp; thống kê
+            </div>
+        </nav>
+
+        <div class="px-6 py-4 border-t border-white/10 text-[11px] text-white/30">
+            Demo UI · dữ liệu giả lập
+        </div>
+    </aside>
+
+    @* ============== MAIN CONTENT ============== *@
+    <main class="flex-1 px-10 py-8 overflow-y-auto">
+
+        @* ---------- BREADCRUMB ---------- *@
+        <div class="flex items-center gap-2 text-[13px] text-neutral-500 mb-6">
+            <span class="@(CurrentView == ViewState.StoreList ? "text-neutral-900 font-semibold" : "cursor-pointer hover:text-neutral-800")"
+                  @onclick="GoToStoreList">
+                Cửa hàng
+            </span>
+            @if (CurrentView is ViewState.StoreDetail or ViewState.PrizeList)
+            {
+                <span>/</span>
+                <span class="@(CurrentView == ViewState.StoreDetail ? "text-neutral-900 font-semibold" : "cursor-pointer hover:text-neutral-800")"
+                      @onclick="() => GoToStoreDetail(SelectedStoreId!)">
+                    @SelectedStore?.StoreLocate
+                </span>
+            }
+            @if (CurrentView == ViewState.PrizeList)
+            {
+                <span>/</span>
+                <span class="text-neutral-900 font-semibold">@SelectedCampaign?.CampaignName</span>
+            }
+        </div>
+
+        @* ================= VIEW 1: STORE LIST ================= *@
+        @if (CurrentView == ViewState.StoreList)
+        {
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">Danh sách cửa hàng</h1>
+                    <p class="text-[13px] text-neutral-500 mt-0.5">@Stores.Count cửa hàng đang hoạt động trong hệ thống</p>
+                </div>
+                <button class="btn-primary" @onclick="() => showAddStoreModal = true">
+                    + Thêm cửa hàng
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden">
+                <table class="w-full text-[13.5px]">
+                    <thead>
+                        <tr class="text-left text-neutral-400 text-[11.5px] uppercase tracking-wide border-b border-neutral-100">
+                            <th class="px-5 py-3 font-semibold">Cửa hàng</th>
+                            <th class="px-5 py-3 font-semibold">Địa chỉ</th>
+                            <th class="px-5 py-3 font-semibold">Chương trình</th>
+                            <th class="px-5 py-3 font-semibold">Lượt quay</th>
+                            <th class="px-5 py-3 font-semibold text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var store in Stores)
+                        {
+                            <tr class="border-b border-neutral-50 last:border-0 hover:bg-neutral-50/70 transition-colors">
+                                <td class="px-5 py-4">
+                                    <div class="flex items-center gap-3 cursor-pointer" @onclick="() => GoToStoreDetail(store.Id)">
+                                        <div class="wheel-badge-sm"></div>
+                                        <span class="font-semibold text-neutral-900">@store.Id</span>
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-neutral-600">@store.StoreLocate</td>
+                                <td class="px-5 py-4 text-neutral-600">@store.CampaignCount chương trình</td>
+                                <td class="px-5 py-4 text-neutral-600">@store.SpinCount lượt</td>
+                                <td class="px-5 py-4">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="btn-ghost" @onclick="() => GoToStoreDetail(store.Id)">Xem chi tiết</button>
+                                        <button class="btn-icon" title="Sửa địa chỉ" @onclick="() => OpenEditLocation(store)">✎</button>
+                                        <button class="btn-icon danger" title="Xóa" @onclick="() => OpenDeleteConfirm(store)">🗑</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @* ================= VIEW 2: STORE DETAIL ================= *@
+        @if (CurrentView == ViewState.StoreDetail && SelectedStore != null)
+        {
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <button class="btn-back" @onclick="GoToStoreList">← Quay lại</button>
+                    <div>
+                        <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">@SelectedStore.Id</h1>
+                        <p class="text-[13px] text-neutral-500 mt-0.5">@SelectedStore.StoreLocate</p>
+                    </div>
+                </div>
+                <button class="btn-primary" @onclick="() => showAssignCampaignModal = true">
+                    + Gán chương trình
+                </button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 mb-8">
+                <div class="metric-card">
+                    <div class="metric-label">Địa chỉ</div>
+                    <div class="metric-value text-[15px]">@SelectedStore.StoreLocate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Tổng doanh thu</div>
+                    <div class="metric-value">@SelectedStore.TotalAmount.ToString("N0") ₫</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Tổng lượt quay</div>
+                    <div class="metric-value">@SelectedStore.SpinCount</div>
+                </div>
+            </div>
+
+            <h2 class="text-[15px] font-bold text-neutral-800 mb-3" style="font-family:'Manrope',sans-serif;">Chương trình đã gán</h2>
+
+            @if (StoreCampaigns.Count == 0)
+            {
+                <div class="empty-box">Cửa hàng này chưa được gán chương trình nào. Bấm "Gán chương trình" để bắt đầu.</div>
+            }
+            else
+            {
+                <div class="space-y-2">
+                    @foreach (var c in StoreCampaigns)
+                    {
+                        <div class="campaign-row" @onclick="() => GoToPrizeList(c.Id)">
+                            <div class="flex items-center gap-3">
+                                <div class="wheel-badge-sm"></div>
+                                <div>
+                                    <div class="font-semibold text-neutral-900 text-[13.5px]">@c.CampaignName</div>
+                                    <div class="text-[11.5px] text-neutral-400">@c.StartDate.ToString("dd/MM/yyyy") – @c.EndDate.ToString("dd/MM/yyyy")</div>
+                                </div>
+                            </div>
+                            <span class="text-neutral-300 text-[16px]">›</span>
+                        </div>
+                    }
+                </div>
+            }
+        }
+
+        @* ================= VIEW 3: PRIZE MANAGEMENT ================= *@
+        @if (CurrentView == ViewState.PrizeList && SelectedCampaign != null)
+        {
+            <div class="flex items-center gap-3 mb-6">
+                <button class="btn-back" @onclick="() => GoToStoreDetail(SelectedStoreId!)">← Quay lại</button>
+                <div>
+                    <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">@SelectedCampaign.CampaignName</h1>
+                    <p class="text-[13px] text-neutral-500 mt-0.5">Quản lý tỷ lệ trúng thưởng cho từng giải</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden">
+                <table class="w-full text-[13.5px]">
+                    <thead>
+                        <tr class="text-left text-neutral-400 text-[11.5px] uppercase tracking-wide border-b border-neutral-100">
+                            <th class="px-5 py-3 font-semibold">Tên giải thưởng</th>
+                            <th class="px-5 py-3 font-semibold">Loại</th>
+                            <th class="px-5 py-3 font-semibold">Số lượng</th>
+                            <th class="px-5 py-3 font-semibold">Trạng thái</th>
+                            <th class="px-5 py-3 font-semibold">Tỷ lệ trúng (%)</th>
+                            <th class="px-5 py-3 font-semibold"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var prize in CampaignPrizes)
+                        {
+                            <tr class="border-b border-neutral-50 last:border-0">
+                                <td class="px-5 py-4 font-semibold text-neutral-900">@prize.Name</td>
+                                <td class="px-5 py-4 text-neutral-600">@prize.PrizeType</td>
+                                <td class="px-5 py-4 text-neutral-600">@prize.Quantity</td>
+                                <td class="px-5 py-4">
+                                    @if (prize.IsActive)
+                                    {
+                                        <span class="status-badge active">Đang bật</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge inactive">Đã tắt</span>
+                                    }
+                                </td>
+                                <td class="px-5 py-4">
+                                    <input type="number" min="0" max="100" step="0.1"
+                                           class="weight-input"
+                                           @bind="prize.EditedWeight" @bind:event="oninput" />
+                                </td>
+                                <td class="px-5 py-4 text-right">
+                                    <button class="btn-save" @onclick="() => SavePrizeWeight(prize)">
+                                        @(savingPrizeId == prize.Id ? "Đang lưu..." : "Lưu tỷ lệ")
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (!string.IsNullOrEmpty(saveToast))
+            {
+                <div class="toast">✓ @saveToast</div>
+            }
+        }
+    </main>
+</div>
+
+@* ============== MODAL: ADD STORE ============== *@
+@if (showAddStoreModal)
+{
+    <div class="modal-overlay" @onclick="() => showAddStoreModal = false">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Thêm cửa hàng mới</h3>
+
+            <div class="field-group">
+                <label>Mã cửa hàng</label>
+                <input @bind="newStore.Id" placeholder="VD: S005" />
+            </div>
+            <div class="field-group">
+                <label>Địa chỉ</label>
+                <input @bind="newStore.StoreLocate" placeholder="VD: 45 Nguyễn Huệ, Quận 1" />
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showAddStoreModal = false">Hủy</button>
+                <button class="btn-primary" @onclick="ConfirmAddStore">Thêm cửa hàng</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ============== MODAL: EDIT LOCATION ============== *@
+@if (showEditLocationModal && editingStore != null)
+{
+    <div class="modal-overlay" @onclick="() => showEditLocationModal = false">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Sửa địa chỉ · @editingStore.Id</h3>
+
+            <div class="field-group">
+                <label>Địa chỉ mới</label>
+                <input @bind="editingStore.StoreLocate" />
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showEditLocationModal = false">Hủy</button>
+                <button class="btn-primary" @onclick="ConfirmEditLocation">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ============== MODAL: DELETE CONFIRM ============== *@
+@if (showDeleteConfirmModal && deletingStore != null)
+{
+    <div class="modal-overlay" @onclick="() => showDeleteConfirmModal = false">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Xóa cửa hàng?</h3>
+            <p class="text-[13.5px] text-neutral-500 mb-5">
+                Bạn sắp xóa <strong class="text-neutral-800">@deletingStore.Id</strong> (@deletingStore.StoreLocate).
+                Hành động này không thể hoàn tác.
+            </p>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showDeleteConfirmModal = false">Hủy</button>
+                <button class="btn-danger" @onclick="ConfirmDeleteStore">Xóa cửa hàng</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ============== MODAL: ASSIGN CAMPAIGN ============== *@
+@if (showAssignCampaignModal)
+{
+    <div class="modal-overlay" @onclick="() => showAssignCampaignModal = false">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Gán chương trình cho @SelectedStore?.Id</h3>
+
+            <div class="space-y-2 mb-5">
+                @foreach (var c in AllCampaigns.Where(c => !StoreCampaigns.Any(sc => sc.Id == c.Id)))
+                {
+                    <label class="campaign-pick">
+                        <input type="checkbox" @onchange="e => ToggleCampaignPick(c.Id, (bool)e.Value!)" />
+                        <span>@c.CampaignName</span>
+                        <span class="text-neutral-400 text-[11.5px]">@c.StartDate.ToString("dd/MM") – @c.EndDate.ToString("dd/MM")</span>
+                    </label>
+                }
+                @if (AllCampaigns.All(c => StoreCampaigns.Any(sc => sc.Id == c.Id)))
+                {
+                    <p class="text-[13px] text-neutral-400">Cửa hàng đã được gán tất cả chương trình hiện có.</p>
+                }
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showAssignCampaignModal = false">Hủy</button>
+                <button class="btn-primary" @onclick="ConfirmAssignCampaigns">Gán chương trình</button>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .wheel-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: conic-gradient(#FB5607 0deg 90deg, #FFBE0B 90deg 180deg, #FF6B35 180deg 270deg, #F7C59F 270deg 360deg);
+        border: 2px solid rgba(255,255,255,0.25);
+    }
+
+    .wheel-badge-sm {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: conic-gradient(#FB5607 0deg 90deg, #FFBE0B 90deg 180deg, #FF6B35 180deg 270deg, #F7C59F 270deg 360deg);
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px #eee;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.65);
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+    }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #FB5607, #FFBE0B);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav-item.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+            .nav-item.disabled:hover {
+                background: none;
+                color: rgba(255,255,255,0.65);
+            }
+
+    .nav-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #fff;
+    }
+
+    .nav-dot-empty {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.3);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #FB5607, #FFBE0B);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.15s;
+    }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+    .btn-secondary {
+        background: #fff;
+        color: #57534E;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: 1.5px solid #E7E5E4;
+        cursor: pointer;
+    }
+
+        .btn-secondary:hover {
+            background: #FAFAF9;
+        }
+
+    .btn-danger {
+        background: #DC2626;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+    .btn-ghost {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #FB5607;
+        background: #FFF3EB;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-ghost:hover {
+            background: #FFE8D6;
+        }
+
+    .btn-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: 1.5px solid #E7E5E4;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        color: #57534E;
+    }
+
+        .btn-icon:hover {
+            background: #FAFAF9;
+        }
+
+        .btn-icon.danger:hover {
+            background: #FEF2F2;
+            border-color: #FCA5A5;
+            color: #DC2626;
+        }
+
+    .btn-back {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #57534E;
+        background: #F5F5F4;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-back:hover {
+            background: #E7E5E4;
+        }
+
+    .btn-save {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #fff;
+        background: #16A34A;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-save:hover {
+            opacity: 0.9;
+        }
+
+    .metric-card {
+        background: #fff;
+        border: 1px solid #E7E5E4;
+        border-radius: 14px;
+        padding: 16px 18px;
+    }
+
+    .metric-label {
+        font-size: 11.5px;
+        color: #A8A29E;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-bottom: 6px;
+    }
+
+    .metric-value {
+        font-size: 20px;
+        font-weight: 800;
+        color: #1C1917;
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .campaign-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+        border: 1px solid #E7E5E4;
+        border-radius: 12px;
+        padding: 12px 16px;
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s;
+    }
+
+        .campaign-row:hover {
+            border-color: #FFBE0B;
+            background: #FFFDF7;
+        }
+
+    .empty-box {
+        background: #fff;
+        border: 1.5px dashed #E7E5E4;
+        border-radius: 14px;
+        padding: 28px;
+        text-align: center;
+        color: #A8A29E;
+        font-size: 13px;
+    }
+
+    .status-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+    }
+
+        .status-badge.active {
+            background: #DCFCE7;
+            color: #16A34A;
+        }
+
+        .status-badge.inactive {
+            background: #F5F5F4;
+            color: #A8A29E;
+        }
+
+    .weight-input {
+        width: 80px;
+        height: 34px;
+        border: 1.5px solid #E7E5E4;
+        border-radius: 8px;
+        padding: 0 10px;
+        font-size: 13px;
+        outline: none;
+    }
+
+        .weight-input:focus {
+            border-color: #FB5607;
+        }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(28,25,23,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
+
+    .modal-box {
+        background: #fff;
+        border-radius: 18px;
+        padding: 28px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+
+    .modal-title {
+        font-family: 'Manrope', sans-serif;
+        font-size: 17px;
+        font-weight: 800;
+        color: #1C1917;
+        margin-bottom: 18px;
+    }
+
+    .field-group {
+        margin-bottom: 14px;
+    }
+
+        .field-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #57534E;
+            margin-bottom: 5px;
+        }
+
+        .field-group input {
+            width: 100%;
+            height: 42px;
+            border: 1.5px solid #E7E5E4;
+            border-radius: 10px;
+            padding: 0 12px;
+            font-size: 13.5px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+            .field-group input:focus {
+                border-color: #FB5607;
+            }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .campaign-pick {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1.5px solid #E7E5E4;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #292524;
+        cursor: pointer;
+    }
+
+        .campaign-pick:hover {
+            border-color: #FFBE0B;
+            background: #FFFDF7;
+        }
+
+    .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: #1C1917;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 12px 18px;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        animation: toastIn 0.2s ease-out;
+    }
+
+    @@keyframes toastIn {
+        from {
+            transform: translateY(10px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+
+@code {
+    // ===================== STATE MACHINE =====================
+    private enum ViewState { StoreList, StoreDetail, PrizeList }
+    private ViewState CurrentView = ViewState.StoreList;
+
+    private string? SelectedStoreId;
+    private string? SelectedCampaignId;
+
+    private MockStore? SelectedStore => Stores.FirstOrDefault(s => s.Id == SelectedStoreId);
+    private MockCampaign? SelectedCampaign => AllCampaigns.FirstOrDefault(c => c.Id == SelectedCampaignId);
+
+    private List<MockCampaign> StoreCampaigns =>
+        AllCampaigns.Where(c => StoreCampaignLinks.Any(l => l.StoreId == SelectedStoreId && l.CampaignId == c.Id)).ToList();
+
+    private List<MockPrize> CampaignPrizes =>
+        AllPrizes.Where(p => p.CampaignId == SelectedCampaignId).ToList();
+
+    // ===================== NAVIGATION =====================
+    private void GoToStoreList()
+    {
+        CurrentView = ViewState.StoreList;
+        SelectedStoreId = null;
+        SelectedCampaignId = null;
+    }
+
+    private void GoToStoreDetail(string storeId)
+    {
+        SelectedStoreId = storeId;
+        SelectedCampaignId = null;
+        CurrentView = ViewState.StoreDetail;
+    }
+
+    private void GoToPrizeList(string campaignId)
+    {
+        SelectedCampaignId = campaignId;
+        CurrentView = ViewState.PrizeList;
+    }
+
+    // ===================== MOCK DATA MODELS =====================
+    private class MockStore
+    {
+        public string Id { get; set; } = "";
+        public string StoreLocate { get; set; } = "";
+        public int CampaignCount { get; set; }
+        public int SpinCount { get; set; }
+        public decimal TotalAmount { get; set; }
+    }
+
+    private class MockCampaign
+    {
+        public string Id { get; set; } = "";
+        public string CampaignName { get; set; } = "";
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+
+    private class MockPrize
+    {
+        public string Id { get; set; } = "";
+        public string CampaignId { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string PrizeType { get; set; } = "";
+        public int Quantity { get; set; }
+        public bool IsActive { get; set; }
+        public double ProbabilityWeight { get; set; }
+        public double EditedWeight { get; set; }
+    }
+
+    private class StoreCampaignLink
+    {
+        public string StoreId { get; set; } = "";
+        public string CampaignId { get; set; } = "";
+    }
+
+    // ===================== MOCK DATA (TODO: thay bằng dữ liệu từ API) =====================
+    private List<MockStore> Stores = new()
+    {
+        new() { Id = "S001", StoreLocate = "12 Lê Lợi, Quận 1", CampaignCount = 2, SpinCount = 341, TotalAmount = 45_200_000 },
+        new() { Id = "S002", StoreLocate = "88 Trần Hưng Đạo, Quận 5", CampaignCount = 1, SpinCount = 128, TotalAmount = 18_900_000 },
+        new() { Id = "S003", StoreLocate = "204 Nguyễn Văn Linh, Quận 7", CampaignCount = 1, SpinCount = 63, TotalAmount = 9_450_000 },
+    };
+
+    private List<MockCampaign> AllCampaigns = new()
+    {
+        new() { Id = "CAM001", CampaignName = "Khai trương hè 2026", StartDate = new DateTime(2026, 6, 1), EndDate = new DateTime(2026, 7, 31) },
+        new() { Id = "CAM002", CampaignName = "Trung thu rước đèn", StartDate = new DateTime(2026, 9, 1), EndDate = new DateTime(2026, 9, 20) },
+        new() { Id = "CAM003", CampaignName = "Tết 2027 may mắn", StartDate = new DateTime(2027, 1, 15), EndDate = new DateTime(2027, 2, 10) },
+    };
+
+    private List<StoreCampaignLink> StoreCampaignLinks = new()
+    {
+        new() { StoreId = "S001", CampaignId = "CAM001" },
+        new() { StoreId = "S001", CampaignId = "CAM002" },
+        new() { StoreId = "S002", CampaignId = "CAM001" },
+        new() { StoreId = "S003", CampaignId = "CAM002" },
+    };
+
+    private List<MockPrize> AllPrizes = new()
+    {
+        new() { Id = "P001", CampaignId = "CAM001", Name = "Voucher 50.000đ", PrizeType = "Voucher", Quantity = 100, IsActive = true, ProbabilityWeight = 40, EditedWeight = 40 },
+        new() { Id = "P002", CampaignId = "CAM001", Name = "Nước ngọt miễn phí", PrizeType = "Sản phẩm", Quantity = 200, IsActive = true, ProbabilityWeight = 35, EditedWeight = 35 },
+        new() { Id = "P003", CampaignId = "CAM001", Name = "Giảm giá 20%", PrizeType = "Voucher", Quantity = 50, IsActive = true, ProbabilityWeight = 20, EditedWeight = 20 },
+        new() { Id = "P004", CampaignId = "CAM001", Name = "iPhone 17", PrizeType = "Sản phẩm cao cấp", Quantity = 1, IsActive = false, ProbabilityWeight = 5, EditedWeight = 5 },
+        new() { Id = "P005", CampaignId = "CAM002", Name = "Lồng đèn giấy", PrizeType = "Sản phẩm", Quantity = 80, IsActive = true, ProbabilityWeight = 50, EditedWeight = 50 },
+        new() { Id = "P006", CampaignId = "CAM002", Name = "Bánh trung thu", PrizeType = "Sản phẩm", Quantity = 60, IsActive = true, ProbabilityWeight = 50, EditedWeight = 50 },
+    };
+
+    // ===================== MODAL: ADD STORE =====================
+    private bool showAddStoreModal = false;
+    private MockStore newStore = new();
+
+    private void ConfirmAddStore()
+    {
+        if (string.IsNullOrWhiteSpace(newStore.Id) || string.IsNullOrWhiteSpace(newStore.StoreLocate))
+            return;
+
+        // TODO: Call API POST /api/stores/addstore here, dùng newStore làm body.
+        // Sau khi API trả về thành công mới thêm vào danh sách hiển thị:
+        Stores.Add(new MockStore
+        {
+            Id = newStore.Id,
+            StoreLocate = newStore.StoreLocate,
+            CampaignCount = 0,
+            SpinCount = 0,
+            TotalAmount = 0
+        });
+
+        newStore = new MockStore();
+        showAddStoreModal = false;
+    }
+
+    // ===================== MODAL: EDIT LOCATION =====================
+    private bool showEditLocationModal = false;
+    private MockStore? editingStore;
+
+    private void OpenEditLocation(MockStore store)
+    {
+        // Copy để không sửa trực tiếp danh sách gốc trước khi xác nhận
+        editingStore = new MockStore { Id = store.Id, StoreLocate = store.StoreLocate };
+        showEditLocationModal = true;
+    }
+
+    private void ConfirmEditLocation()
+    {
+        if (editingStore == null) return;
+
+        // TODO: Call API PUT /api/stores/{storeId} here với editingStore.StoreLocate
+        var target = Stores.FirstOrDefault(s => s.Id == editingStore.Id);
+        if (target != null)
+            target.StoreLocate = editingStore.StoreLocate;
+
+        showEditLocationModal = false;
+        editingStore = null;
+    }
+
+    // ===================== MODAL: DELETE STORE =====================
+    private bool showDeleteConfirmModal = false;
+    private MockStore? deletingStore;
+
+    private void OpenDeleteConfirm(MockStore store)
+    {
+        deletingStore = store;
+        showDeleteConfirmModal = true;
+    }
+
+    private void ConfirmDeleteStore()
+    {
+        if (deletingStore == null) return;
+
+        // TODO: Call API DELETE /api/stores/{storeId} here
+        Stores.Remove(deletingStore);
+
+        showDeleteConfirmModal = false;
+        deletingStore = null;
+    }
+
+    // ===================== MODAL: ASSIGN CAMPAIGN =====================
+    private bool showAssignCampaignModal = false;
+    private HashSet<string> pickedCampaignIds = new();
+
+    private void ToggleCampaignPick(string campaignId, bool isChecked)
+    {
+        if (isChecked) pickedCampaignIds.Add(campaignId);
+        else pickedCampaignIds.Remove(campaignId);
+    }
+
+    private void ConfirmAssignCampaigns()
+    {
+        if (SelectedStoreId == null) return;
+
+        // TODO: Call API POST /api/stores/{storeId}/campaigns here với danh sách pickedCampaignIds
+        foreach (var campaignId in pickedCampaignIds)
+        {
+            StoreCampaignLinks.Add(new StoreCampaignLink { StoreId = SelectedStoreId, CampaignId = campaignId });
+        }
+
+        pickedCampaignIds.Clear();
+        showAssignCampaignModal = false;
+    }
+
+    // ===================== PRIZE: SAVE PROBABILITY WEIGHT =====================
+    private string? savingPrizeId;
+    private string saveToast = "";
+
+    private async Task SavePrizeWeight(MockPrize prize)
+    {
+        savingPrizeId = prize.Id;
+        StateHasChanged();
+
+        // TODO: Call API PUT /api/prizes/{prizeId}/weight here với prize.EditedWeight
+        await Task.Delay(400); // giả lập độ trễ gọi API
+
+        prize.ProbabilityWeight = prize.EditedWeight;
+        savingPrizeId = null;
+        saveToast = $"Đã lưu tỷ lệ cho \"{prize.Name}\"";
+
+        StateHasChanged();
+        _ = ClearToastAfterDelay();
+    }
+
+    private async Task ClearToastAfterDelay()
+    {
+        await Task.Delay(2500);
+        saveToast = "";
+        StateHasChanged();
+    }
+}

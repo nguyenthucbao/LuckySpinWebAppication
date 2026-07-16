@@ -1,5 +1,5 @@
-﻿using LuckySpin.Dto;
-using LuckySpin.DTO;
+﻿using DocumentFormat.OpenXml.Drawing;
+using LuckySpin.Dto;
 using LuckySpin.Models;
 using LuckySpin.Services;
 using Microsoft.AspNetCore.Http;
@@ -88,32 +88,91 @@ namespace LuckySpin.Controllers
         /// <summary>
         ///////////////////////////////////////////////////////////////////////////////////
         /// </summary>
+        private const decimal AmountPerSpin = 300000;
 
-        [HttpPost]
-        [ProducesResponseType(typeof(GetBillResponseDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateBill([FromBody] PostBillRequest request)
+        [HttpPost("pos/newbill")]
+        public async Task<IActionResult> CreateBill([FromBody] PostBillRequest req)
         {
             try
             {
-                var result = await _billService.CreateBillAsync(request);
-                return CreatedAtAction(nameof(CreateBill), new { id = result.Id }, result);
+                var existingBill = await _context.Bills.FindAsync(req.Id);
+                if (existingBill != null)
+                    return BadRequest(new { message = "Bill đã tồn tại" });
+
+                // Add Bill + Products => gen RewardCode 
+
+                int spinCount = Math.Max(1, (int)(req.TotalAmount / AmountPerSpin));
+
+                var bill = new Bill
+                {
+                    Id = req.Id,
+                    StoreId = req.StoreId ?? "",////////////////////////////
+                    StoreLocate = req.StoreLocate,
+                    TotalAmount = req.TotalAmount,
+                    PaymentMethod = req.PaymentMethod,
+                    Products = req.Products.Select(p => new Product
+                    {
+                        Id = p.Id,
+                        BillId = req.Id,
+                        Name = p.Name,
+                        Quantity = p.Quantity
+                    }).ToList(),
+                };
+
+                var rewardCode = new RewardCode
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    BillId = req.Id,
+                    Code = GenerateCode(),
+                    SpinCount = spinCount,
+                    RemainingSpins = spinCount,
+                    CreatedAt = DateTime.UtcNow,
+                };
+
+                _context.Bills.Add(bill);
+                _context.RewardCodes.Add(rewardCode);
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    var innerMessage = ex.InnerException?.Message ?? ex.Message;
+                    throw new Exception($"Lỗi lưu Database (500): {innerMessage}");
+                }
+
+                //return new GetBillResponseDto
+                //{
+                //    Id = bill.Id,
+                //    StoreId = bill.StoreId,
+                //    StoreLocate = bill.StoreLocate,
+                //    TotalAmount = bill.TotalAmount,
+                //    PaymentMethod = bill.PaymentMethod,
+                //    Products = req.Products,
+                //    RewardCode = new DbRewardCodeDto
+                //    {
+                //        Id = rewardCode.Id,
+                //        Code = rewardCode.Code,
+                //        SpinCount = rewardCode.SpinCount,
+                //        RemainingSpins = rewardCode.RemainingSpins,
+                //        CreatedAt = rewardCode.CreatedAt
+                //    }
+                //};
+
+
+                return Ok();
             }
-            catch (InvalidOperationException ex)
-            {
-                // Bill ID bị trùng
-                return Conflict(new { message = ex.Message });
-            }
+
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tạo bill {BillId}", request.Id);
+                _logger.LogError(ex, "Lỗi khi tạo bill {BillId}", req.Id);
                 return StatusCode(500, new { message = "Đã xảy ra lỗi" });
             }
         }
 
-
+        private static string GenerateCode()
+        => $"LUCKY-{Guid.NewGuid().ToString("N")[..8].ToUpper()}";
 
 
     }

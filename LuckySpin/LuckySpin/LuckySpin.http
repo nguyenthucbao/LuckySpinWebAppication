@@ -17,30 +17,28 @@ Accept: application/json
 GET {{LuckySpin_HostAddress}}/api/bills
 Accept: application/json
 
+### Byid
+GET {{LuckySpin_HostAddress}}/api/bills/Bill001
+Accept: application/json
+
 ### Xóa bill
 DELETE {{LuckySpin_HostAddress}}/api/bills/Bill001
 Accept: application/json
 
 ### Test tạo bill mới
-POST {{LuckySpin_HostAddress}}/api/bills
+POST {{LuckySpin_HostAddress}}/api/bills/pos/newbill
 Content-Type: application/json
 {
-  "id": "Bill005",
-  "storeId": "S003",
-  "storeLocate": "Store locate 003",
-  "totalAmount": 600000.00,
+  "id": "Bill006",
+  "storeId": "S001",
+  "storeLocate": "Store locate 001",
+  "totalAmount": 1000000.00,
   "paymentMethod": "online",
   "products": [
-    { "id": "Product009", "name": "product9", "quantity": 1 },
-    { "id": "Product010", "name": "product10", "quantity": 2 }
+    { "id": "Product011", "name": "product11", "quantity": 1 },
+    { "id": "Product012", "name": "product12", "quantity": 1 }
   ]
 }
-
-### Tra cứu bill
-GET {{LuckySpin_HostAddress}}/api/bills/Bill002
-Accept: application/json
-
-
 
 
 
@@ -55,53 +53,15 @@ Accept: application/json
 
 
 
-#######################     Store     ###################################
 
-### In store
-GET {{LuckySpin_HostAddress}}/api/stores
-Accept: application/json
+
+
+
+#######################     Merchant   ####################################
 
 ### Store by id
 GET {{LuckySpin_HostAddress}}/api/stores/getstorebyid/S001
 Accept: application/json
-
-### Add store
-POST {{LuckySpin_HostAddress}}/api/stores/addstore
-Content-Type: application/json
-{
-  "Id": "S001",
-  "StoreLocate": "123 Đường ABC, Quận 2"
-}
-
-### Delete store
-DELETE {{LuckySpin_HostAddress}}/api/stores/deletestore/S001
-Accept: application/json
-
-### Get Prize in Campaign store
-GET {{LuckySpin_HostAddress}}/api/stores/S001/campaigns/Cam003/prizes
-Accept: application/json
-
-### Change probability in Campaign prize 
-POST {{LuckySpin_HostAddress}}/api/stores/changeprobability
-Content-Type: application/json
-{
-    "StoreId": "S001",
-    "CampaignId": "Cam002",
-    "PrizeName": "Prizes name 006",
-    "NewProbabilityWeight": "50"
-}
-
-### New Campaign in store
-POST {{LuckySpin_HostAddress}}/api/stores/addstorecampaign/S001/Cam003
-Accept: application/json
-
-### Remove Campaign in store
-DELETE {{LuckySpin_HostAddress}}/api/stores/removestorecampaign/S001/Cam003
-Accept: application/json
-
-
-
-
 
 
 
@@ -113,8 +73,8 @@ Accept: application/json
 POST {{LuckySpin_HostAddress}}/api/spin/spinaction
 Content-Type: application/json
 {
-  "rewardCode": "LUCKY-B318F32C",
-  "campaignId": "Cam002"
+  "rewardCode": "LUCKY-784738D3",
+  "campaignId": "Cam001"
 }
 
 

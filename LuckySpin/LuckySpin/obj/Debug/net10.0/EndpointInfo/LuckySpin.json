@@ -13,6 +13,239 @@
     }
   ],
   "paths": {
+    "/api/Campaigns/admin": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaignInfo"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaignInfo"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaignInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Campaigns/admin/getcambyid/{id}": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignWithPrize"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignWithPrize"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignWithPrize"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Campaigns/admin/addcampaign": {
+      "post": {
+        "tags": [
+          "Campaigns"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Campaign"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Campaign"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Campaign"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Campaigns/admin/deletecampaign/{campaignId}": {
+      "delete": {
+        "tags": [
+          "Campaigns"
+        ],
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Campaigns/admin/changecampaigninfo/{campaignId}/{newStartDate}/{newEndDate}": {
+      "post": {
+        "tags": [
+          "Campaigns"
+        ],
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newStartDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "newEndDate",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Campaigns/admin/addprize": {
+      "post": {
+        "tags": [
+          "Campaigns"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prize"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prize"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prize"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Merchant/getstorebyid/{id}": {
+      "get": {
+        "tags": [
+          "Merchant"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStoresInfo"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStoresInfo"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStoresInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/WinnerSessions": {
       "post": {
         "tags": [
@@ -209,96 +442,6 @@
             }
           }
         }
-      },
-      "post": {
-        "tags": [
-          "Bills"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostBillRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostBillRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostBillRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetBillResponseDto"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetBillResponseDto"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetBillResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
       }
     },
     "/api/Bills/{id}": {
@@ -336,6 +479,38 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Bills/pos/newbill": {
+      "post": {
+        "tags": [
+          "Bills"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostBillRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostBillRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostBillRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -505,7 +680,7 @@
         }
       }
     },
-    "/api/Stores": {
+    "/api/Stores/admin": {
       "get": {
         "tags": [
           "Stores"
@@ -534,7 +709,7 @@
         }
       }
     },
-    "/api/Stores/getstorebyid/{id}": {
+    "/api/Stores/admin/getstorebyid/{id}": {
       "get": {
         "tags": [
           "Stores"
@@ -573,7 +748,7 @@
         }
       }
     },
-    "/api/Stores/addstore": {
+    "/api/Stores/admin/addstore": {
       "post": {
         "tags": [
           "Stores"
@@ -605,7 +780,7 @@
         }
       }
     },
-    "/api/Stores/deletestore/{storeId}": {
+    "/api/Stores/admin/deletestore/{storeId}": {
       "delete": {
         "tags": [
           "Stores"
@@ -627,7 +802,7 @@
         }
       }
     },
-    "/api/Stores/changestoreinfo/{storeId}/{newLocation}": {
+    "/api/Stores/admin/changestoreinfo/{storeId}/{newLocation}": {
       "post": {
         "tags": [
           "Stores"
@@ -657,7 +832,7 @@
         }
       }
     },
-    "/api/Stores/{storeId}/campaigns/{campaignId}/prizes": {
+    "/api/Stores/admin/storecampaignprize/{storeId}/{campaignId}": {
       "get": {
         "tags": [
           "Stores"
@@ -713,7 +888,7 @@
         }
       }
     },
-    "/api/Stores/changeprobability": {
+    "/api/Stores/admin/changeprobability": {
       "post": {
         "tags": [
           "Stores"
@@ -745,7 +920,7 @@
         }
       }
     },
-    "/api/Stores/addstorecampaign/{storeId}/{campaignId}": {
+    "/api/Stores/admin/addcampaigntostore/{storeId}/{campaignId}": {
       "post": {
         "tags": [
           "Stores"
@@ -792,7 +967,7 @@
         }
       }
     },
-    "/api/Stores/removestorecampaign/{storeId}/{campaignId}": {
+    "/api/Stores/admin/removecampaignfromstore/{storeId}/{campaignId}": {
       "delete": {
         "tags": [
           "Stores"
@@ -970,6 +1145,37 @@
           }
         }
       },
+      "CampaignWithPrize": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "startAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "endAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "prizes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetPrize"
+            }
+          }
+        }
+      },
       "DbProductDto": {
         "type": "object",
         "properties": {
@@ -986,71 +1192,6 @@
               "string"
             ],
             "format": "int32"
-          }
-        }
-      },
-      "DbRewardCodeDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "code": {
-            "type": "string"
-          },
-          "spinCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
-            "format": "int32"
-          },
-          "remainingSpins": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
-            "format": "int32"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "GetBillResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "storeId": {
-            "type": "string"
-          },
-          "storeLocate": {
-            "type": "string"
-          },
-          "totalAmount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": [
-              "number",
-              "string"
-            ],
-            "format": "double"
-          },
-          "paymentMethod": {
-            "type": "string"
-          },
-          "products": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DbProductDto"
-            }
-          },
-          "rewardCode": {
-            "$ref": "#/components/schemas/DbRewardCodeDto"
           }
         }
       },
@@ -1103,6 +1244,51 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "GetPrize": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prizeType": {
+            "type": "string"
+          },
+          "quantity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "probabilityWeight": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "winnerId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "signatureKey": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -1296,8 +1482,21 @@
               "string"
             ]
           },
+          "signatureKey": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
           "campaign": {
-            "$ref": "#/components/schemas/Campaign"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/Campaign"
+              }
+            ]
           },
           "storeCampaignPrizes": {
             "type": "array",
@@ -1556,6 +1755,12 @@
     }
   },
   "tags": [
+    {
+      "name": "Campaigns"
+    },
+    {
+      "name": "Merchant"
+    },
     {
       "name": "WinnerSessions"
     },

@@ -1,5 +1,5 @@
-﻿using LuckySpin.Dto;
-using LuckySpin.DTO;
+﻿using ClosedXML.Excel;
+using LuckySpin.Dto;
 using LuckySpin.Models;
 using LuckySpin.Services;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxTokenParser;
@@ -32,7 +33,7 @@ namespace LuckySpin.Controllers
 
 
 
-        [HttpGet]
+        [HttpGet("admin")]
         public async Task<ActionResult<GetStores>> GetStores()
         {
             var b = await _context.Stores.ToListAsync();
@@ -47,7 +48,7 @@ namespace LuckySpin.Controllers
         }
 
 
-        [HttpGet("getstorebyid/{id}")]
+        [HttpGet("admin/getstorebyid/{id}")]
         public async Task<ActionResult<GetStoresInfo>> GetStoreById(string id)
         {
             var store = await _context.Stores.FindAsync(id);
@@ -94,7 +95,7 @@ namespace LuckySpin.Controllers
         }
 
         // Add Store
-        [HttpPost("addstore")]
+        [HttpPost("admin/addstore")]
         public async Task<IActionResult> AddStore([FromBody] Store store)
         {
             try
@@ -120,7 +121,7 @@ namespace LuckySpin.Controllers
 
 
         //Delete Store
-        [HttpDelete("deletestore/{storeId}")]
+        [HttpDelete("admin/deletestore/{storeId}")]
         public async Task<IActionResult> DeleteStore(string storeId)
         {
             try
@@ -156,7 +157,7 @@ namespace LuckySpin.Controllers
         }
 
         // Make change Store info
-        [HttpPost("changestoreinfo/{storeId}/{newLocation}")]
+        [HttpPost("admin/changestoreinfo/{storeId}/{newLocation}")]
         public async Task<IActionResult> ChangeStoreInfo(string storeId, string newLocation)
         {
             try
@@ -182,7 +183,7 @@ namespace LuckySpin.Controllers
 
 
         // Lấy danh sách giải thưởng của một cửa hàng trong một chiến dịch (gom nhóm theo tên)
-        [HttpGet("{storeId}/campaigns/{campaignId}/prizes")]
+        [HttpGet("admin/storecampaignprize/{storeId}/{campaignId}")]
         public async Task<ActionResult<List<GroupedPrize>>> GetStoreCampaignPrizes(string storeId, string campaignId)
         {
             try
@@ -232,7 +233,7 @@ namespace LuckySpin.Controllers
 
 
         // Cập nhật ProbabilityWeight cho tất cả prize cùng tên trong 1 store/campaign
-        [HttpPost("changeprobability")]
+        [HttpPost("admin/changeprobability")]
         public async Task<IActionResult> ChangeProbabilityWeight([FromBody] ProbabilityChangeDto probabilityChangeDto)
         {
             try
@@ -299,7 +300,7 @@ namespace LuckySpin.Controllers
 
 
 
-        [HttpPost("addstorecampaign/{storeId}/{campaignId}")]
+        [HttpPost("admin/addcampaigntostore/{storeId}/{campaignId}")]
         public async Task<ActionResult<AddCampaignToStoreResultDto>> AddStoreCampaign(string storeId, string campaignId)
         {
             try
@@ -319,7 +320,7 @@ namespace LuckySpin.Controllers
                 if (existingStoreCampaigns != null)
                     return BadRequest("Campaign đã tồn tại cho cửa hàng này");
 
-                var result = new List<GetPrizeInStore>();
+                var result = new List<GetPrize>();
 
                 // Recreate StoreCampaignPrize each prize in the campaign
                 foreach (var prize in campaign.Prizes)
@@ -334,7 +335,7 @@ namespace LuckySpin.Controllers
                         Prize = prize
                     };
 
-                    result.Add(new GetPrizeInStore
+                    result.Add(new GetPrize
                     {
                         Id = prize.Id,
                         Name = prize.Name,
@@ -360,7 +361,7 @@ namespace LuckySpin.Controllers
             }
         }
 
-        [HttpDelete("removestorecampaign/{storeId}/{campaignId}")]
+        [HttpDelete("admin/removecampaignfromstore/{storeId}/{campaignId}")]
         public async Task<IActionResult> RemoveStoreCampaign(string storeId, string campaignId)
         {
             try
@@ -387,6 +388,61 @@ namespace LuckySpin.Controllers
             }
         }
 
-        
+
+
+
+
+
+        //[HttpGet("export-excel")]
+        //public async Task<IActionResult> ExportToExcel()
+        //{
+        //    // 1. Lấy trực tiếp danh sách Store từ Database qua _context
+        //    var stores = await _context.Stores.AsNoTracking().ToListAsync();
+
+        //    // 2. Khởi tạo Workbook của ClosedXML
+        //    using (var workbook = new XLWorkbook())
+        //    {
+        //        var worksheet = workbook.Worksheets.Add("Danh sách cửa hàng");
+
+        //        // 3. Tạo Tiêu đề các cột (Header)
+        //        worksheet.Cell(1, 1).Value = "ID Cửa Hàng";
+        //        worksheet.Cell(1, 2).Value = "Vị Trí Cửa Hàng";
+
+        //        // Định dạng Header (In đậm, màu nền xanh navy, chữ trắng)
+        //        var headerRange = worksheet.Range("A1:B1");
+        //        headerRange.Style.Font.Bold = true;
+        //        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F4E78");
+        //        headerRange.Style.Font.FontColor = XLColor.White;
+        //        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+        //        // 4. Điền dữ liệu từ DB vào các dòng
+        //        int currentRow = 2;
+        //        foreach (var store in stores)
+        //        {
+        //            worksheet.Cell(currentRow, 1).Value = store.Id;
+        //            worksheet.Cell(currentRow, 2).Value = store.StoreLocate;
+
+        //            // Định dạng dữ liệu (Căn giữa cột ID cho gọn)
+        //            worksheet.Cell(currentRow, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        //            currentRow++;
+        //        }
+
+        //        // 5. Tự động căn rộng cột theo độ dài chữ
+        //        worksheet.Columns().AdjustToContents();
+
+        //        // 6. Ghi dữ liệu vào Stream để trả về file
+        //        using (var stream = new MemoryStream())
+        //        {
+        //            workbook.SaveAs(stream);
+        //            var content = stream.ToArray();
+
+        //            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        //            string fileName = "Danh_Sach_Cua_Hang.xlsx";
+
+        //            return File(content, contentType, fileName);
+        //        }
+        //    }
+        //}
+
     }
 }

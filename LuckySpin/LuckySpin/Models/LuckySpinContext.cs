@@ -21,6 +21,8 @@ public partial class LuckySpinContext : DbContext
 
     public virtual DbSet<Prize> Prizes { get; set; }
 
+    public virtual DbSet<PrizeKey> PrizeKeys { get; set; }
+
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<RewardCode> RewardCodes { get; set; }
@@ -121,11 +123,38 @@ public partial class LuckySpinContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("winner_id");
+            entity.Property(e => e.SignatureKey)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("Signature_key");
 
             entity.HasOne(d => d.Campaign).WithMany(p => p.Prizes)
                 .HasForeignKey(d => d.CampaignId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__prizes__campaign__3C34F16F");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_prizes_campaigns");
+        });
+
+        modelBuilder.Entity<PrizeKey>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Prize_Key__3213E83F");
+
+            entity.ToTable("Prize_Key");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("code");
+            entity.Property(e => e.SignatureKey)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("Signature_key");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
         });
 
         modelBuilder.Entity<Product>(entity =>

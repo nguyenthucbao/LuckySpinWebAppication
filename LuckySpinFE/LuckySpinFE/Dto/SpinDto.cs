@@ -15,9 +15,10 @@
 
     public class PrizeResult
     {
-        public string Id { get; set; } = string.Empty;
+        public string Id { get; set; }
         public string? Name { get; set; }
         public string? PrizeType { get; set; }
         public string? CampaignId { get; set; }
+        public string? SignatureKey { get; set; }
     }
 }

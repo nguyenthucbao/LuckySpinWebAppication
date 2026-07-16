@@ -1,0 +1,55 @@
+@LuckySpin_HostAddress = http://localhost:5074
+
+
+### In store
+GET {{LuckySpin_HostAddress}}/api/stores/admin
+Accept: application/json
+
+### Store by id
+GET {{LuckySpin_HostAddress}}/api/stores/admin/getstorebyid/S001
+Accept: application/json
+
+
+### Add store --------------------------------CRUD
+POST {{LuckySpin_HostAddress}}/api/stores/admin/addstore
+Content-Type: application/json
+{
+  "Id": "S001",
+  "StoreLocate": "123 Đường ABC, Quận 2"
+}
+
+### Delete store
+DELETE {{LuckySpin_HostAddress}}/api/stores/admin/deletestore/S001
+Accept: application/json
+
+### Change store info
+POST {{LuckySpin_HostAddress}}/api/stores/admin/changestoreinfo/S001/TPHCM
+Accept: application/json
+###--------------------------------------------CRUD
+
+
+### Get Prize in Campaign store
+GET {{LuckySpin_HostAddress}}/api/stores/admin/storecampaignprize/S001/Cam001
+Accept: application/json
+
+### Change probability in Campaign prize 
+POST {{LuckySpin_HostAddress}}/api/stores/admin/changeprobability
+Content-Type: application/json
+{
+    "StoreId": "S001",
+    "CampaignId": "Cam001",
+    "PrizeName": "Prize name 1",
+    "NewProbabilityWeight": "50"
+}
+
+### New Campaign in store
+POST {{LuckySpin_HostAddress}}/api/stores/admin/addcampaigntostore/S001/Cam001
+Accept: application/json
+
+### Remove Campaign in store
+DELETE {{LuckySpin_HostAddress}}/api/stores/admin/removecampaignfromstore/S001/Cam003
+Accept: application/json
+
+
+
+

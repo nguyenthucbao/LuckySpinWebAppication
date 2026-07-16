@@ -1,4 +1,5 @@
 using LuckySpinAdmin.Components;
+using LuckySpinAdmin.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +7,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddHttpClient("LuckySpin", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiHosts:LuckySpin"]!);
+});
+
+//builder.Services.AddScoped(sp => sp.GetService<IHttpClientFactory>().CreateClient("LuckySpin"));
+
+builder.Services.AddScoped<LuckySpinApiClient>(sp =>
+{
+    var factory = sp.GetRequiredService<IHttpClientFactory>();
+    var http = factory.CreateClient("LuckySpin");
+    return new LuckySpinApiClient(http);
+});
+
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

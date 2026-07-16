@@ -3,6 +3,7 @@
 @using LuckySpinFE.Dto
 @inject LuckySpinFE.Services.LuckySpinApiClient ApiClient
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <div class="spin-page">
 
@@ -162,52 +163,48 @@
                         @foreach (var p in wonPrizes)
                         {
                             <div class="cart-item">
-                                <span class="cart-item-name">@p.Name</span>
-                                <span class="cart-item-time">@p.WonAt.ToString("HH:mm dd/MM/yyyy")</span>
+                                <div class="cart-item-info">
+                                    <span class="cart-item-name">@p.Name</span>
+                                    <span class="cart-item-time">@p.WonAt.ToString("HH:mm dd/MM/yyyy")</span>
+                                </div>
+
+                                @if (p.IsConfirmed)
+                                {
+                                    <span class="cart-item-confirmed">✓ Đã xác nhận</span>
+                                }
+                                else
+                                {
+                                    <button class="btn-confirm-item" @onclick="() => ConfirmItem(p)" disabled="@p.IsConfirming">
+                                        @(p.IsConfirming ? "..." : "Xác nhận")
+                                    </button>
+                                }
+
+                                @if (!string.IsNullOrEmpty(p.ErrorMessage))
+                                {
+                                    <p class="cart-item-error">⚠ @p.ErrorMessage</p>
+                                }
                             </div>
                         }
                     </div>
-
-                    @if (!string.IsNullOrEmpty(confirmError))
-                    {
-                        <p class="error-msg">⚠ @confirmError</p>
-                    }
-
-                    <button class="btn-confirm-reward" @onclick="OpenConfirmDialog" disabled="@isConfirming">
-                        ✅ Xác nhận nhận thưởng
-                    </button>
                 }
             </div>
         </div>
     }
 
-    @* ===== DIALOG XÁC NHẬN ===== *@
-    @if (showConfirmDialog)
+    @* ===== POPUP MÃ NHẬN THƯỞNG ===== *@
+    @if (showSignaturePopup)
     {
         <div class="popup-overlay">
             <div class="popup">
-                <span class="big-emoji">❓</span>
-                <h3>Xác nhận nhận thưởng</h3>
-                <p class="confirm-text">Bạn có chắc chắn muốn nhận toàn bộ phần thưởng đã quay không?</p>
+                <span class="big-emoji">🔑</span>
+                <h3>Mã nhận thưởng</h3>
+                <div class="signature-key-box">@currentSignatureKey</div>
                 <div class="popup-actions">
-                    <button class="btn-continue" @onclick="ConfirmReward" disabled="@isConfirming">
-                        @(isConfirming ? "Đang xử lý..." : "OK")
+                    <button class="btn-continue" @onclick="CopySignatureKey">
+                        @(copied ? "✅ Đã copy" : "📋 Copy mã")
                     </button>
-                    <button class="btn-secondary" @onclick="CloseConfirmDialog" disabled="@isConfirming">Hủy</button>
+                    <button class="btn-secondary" @onclick="CloseSignaturePopup">Đóng</button>
                 </div>
-            </div>
-        </div>
-    }
-
-    @* ===== THÔNG BÁO ĐANG CHUYỂN GIAO ===== *@
-    @if (showTransferMessage)
-    {
-        <div class="popup-overlay">
-            <div class="popup">
-                <span class="big-emoji">🚚</span>
-                <h3>Đang chuyển giao phần thưởng</h3>
-                <p class="confirm-text">Phần thưởng của bạn sẽ được chuyển giao trong thời gian sớm nhất.</p>
-                <button class="btn-continue" @onclick="BackToCustomerInfo">OK</button>
             </div>
         </div>
     }
@@ -231,13 +228,24 @@
     private int? remainingSpins;
 
     // ===== Giỏ hàng phần thưởng =====
-    private record WonPrizeItem(string PrizeId, string Name, DateTime WonAt);
+    private class WonPrizeItem
+    {
+        public string PrizeId { get; set; } = "";
+        public string Name { get; set; } = "";
+        public DateTime WonAt { get; set; }
+        public string? SignatureKey { get; set; }
+        public bool IsConfirmed { get; set; }
+        public bool IsConfirming { get; set; }
+        public string? ErrorMessage { get; set; }
+    }
+
     private List<WonPrizeItem> wonPrizes = new();
     private bool showCart = false;
-    private bool showConfirmDialog = false;
-    private bool showTransferMessage = false;
-    private bool isConfirming = false;
-    private string confirmError = "";
+
+    // ===== Popup mã nhận thưởng =====
+    private bool showSignaturePopup = false;
+    private string? currentSignatureKey;
+    private bool copied = false;
 
     private async Task LoadCampaigns()
     {
@@ -280,7 +288,7 @@
         errorMessage = "";
         result = null;
 
-        await Task.Delay(3000);
+        await Task.Delay(2000);/////////////////////    DELAY
 
         try
         {
@@ -292,7 +300,13 @@
 
             if (result?.WonPrize != null && !string.IsNullOrWhiteSpace(result.WonPrize.Id))
             {
-                wonPrizes.Add(new WonPrizeItem(result.WonPrize.Id, result.WonPrize.Name ?? "Phần thưởng", DateTime.Now));
+                wonPrizes.Add(new WonPrizeItem
+                {
+                    PrizeId = result.WonPrize.Id,
+                    Name = result.WonPrize.Name ?? "Phần thưởng",
+                    WonAt = DateTime.Now,
+                    SignatureKey = result.WonPrize.SignatureKey
+                });
             }
 
             showPopup = true;
@@ -328,72 +342,52 @@
     private void ToggleCart()
     {
         showCart = !showCart;
-        confirmError = "";
     }
 
-    private void OpenConfirmDialog()
+    private async Task ConfirmItem(WonPrizeItem item)
     {
-        showConfirmDialog = true;
-    }
+        if (item.IsConfirmed || item.IsConfirming) return;
 
-    private void CloseConfirmDialog()
-    {
-        showConfirmDialog = false;
-    }
-
-    private async Task ConfirmReward()
-    {
         if (string.IsNullOrWhiteSpace(CustomerId))
         {
-            confirmError = "Không xác định được khách hàng (thiếu customerId).";
-            showConfirmDialog = false;
+            item.ErrorMessage = "Không xác định được khách hàng (thiếu customerId).";
             return;
         }
 
-        isConfirming = true;
-        confirmError = "";
+        item.IsConfirming = true;
+        item.ErrorMessage = "";
 
-        // Gọi API cho từng phần thưởng trong giỏ (API chỉ xử lý được 1 prize mỗi lần).
-        var succeeded = new List<WonPrizeItem>();
-        var failedNames = new List<string>();
-
-        foreach (var item in wonPrizes)
+        try
         {
-            try
-            {
-                await ApiClient.AssignWinnerToPrizeAsync(CustomerId, item.PrizeId);
-                succeeded.Add(item);
-            }
-            catch (Exception ex)
-            {
-                failedNames.Add($"{item.Name} ({ex.Message})");
-            }
-        }
+            await ApiClient.AssignWinnerToPrizeAsync(CustomerId, item.PrizeId);
+            item.IsConfirmed = true;
 
-        // Xóa khỏi giỏ những phần thưởng đã xác nhận thành công, giữ lại phần lỗi để thử lại
-        foreach (var s in succeeded)
+            currentSignatureKey = item.SignatureKey;
+            copied = false;
+            showSignaturePopup = true;
+        }
+        catch (Exception ex)
         {
-            wonPrizes.Remove(s);
+            item.ErrorMessage = ex.Message;
         }
-
-        showConfirmDialog = false;
-
-        if (failedNames.Count == 0)
+        finally
         {
-            showCart = false;
-            showTransferMessage = true;
+            item.IsConfirming = false;
         }
-        else
-        {
-            confirmError = $"Không thể xác nhận: {string.Join(", ", failedNames)}. Vui lòng thử lại.";
-        }
-
-        isConfirming = false;
     }
 
-    private void BackToCustomerInfo()
+    private async Task CopySignatureKey()
     {
-        Nav.NavigateTo("https://localhost:7109/spin-test", forceLoad: true);
+        if (string.IsNullOrEmpty(currentSignatureKey)) return;
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", currentSignatureKey);
+        copied = true;
+    }
+
+    private void CloseSignaturePopup()
+    {
+        showSignaturePopup = false;
+        currentSignatureKey = null;
+        copied = false;
     }
 }
 
@@ -1046,12 +1040,20 @@
 
     .cart-item {
         display: flex;
-        flex-direction: column;
-        gap: 2px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
         padding: 10px 14px;
         background: #fff8f0;
         border-radius: 10px;
         border-left: 3px solid #FFBE0B;
+    }
+
+    .cart-item-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
     }
 
     .cart-item-name {
@@ -1065,25 +1067,47 @@
         color: #999;
     }
 
-    .btn-confirm-reward {
-        width: 100%;
-        height: 48px;
-        border-radius: 12px;
+    .btn-confirm-item {
+        height: 34px;
+        padding: 0 14px;
+        border-radius: 8px;
         border: none;
         background: linear-gradient(135deg, #2ecc71, #27ae60);
         color: #fff;
-        font-size: 14px;
-        font-weight: 700;
+        font-size: 12.5px;
+        font-weight: 600;
         cursor: pointer;
-        transition: opacity 0.2s;
+        white-space: nowrap;
     }
 
-        .btn-confirm-reward:hover:not(:disabled) {
-            opacity: 0.9;
-        }
-
-        .btn-confirm-reward:disabled {
-            opacity: 0.5;
+        .btn-confirm-item:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
         }
+
+    .cart-item-confirmed {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #2ecc71;
+        white-space: nowrap;
+    }
+
+    .cart-item-error {
+        flex-basis: 100%;
+        font-size: 11.5px;
+        color: #e24b4b;
+        margin: 0;
+    }
+
+    .signature-key-box {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #FB5607;
+        background: #fff8f0;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 1.25rem;
+        word-break: break-all;
+    }
 </style>

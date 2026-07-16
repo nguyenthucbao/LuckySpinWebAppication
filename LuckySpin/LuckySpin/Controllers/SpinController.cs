@@ -196,6 +196,7 @@ namespace LuckySpin.Controllers
                     Name = wonGroup.FirstPrize.Name,
                     PrizeType = wonGroup.FirstPrize.PrizeType,
                     CampaignId = wonGroup.FirstPrize.CampaignId,
+                    SignatureKey = wonGroup.FirstPrize.SignatureKey,
                 }
             });
 
@@ -231,19 +232,13 @@ namespace LuckySpin.Controllers
 
             var campaigns = storePrizeList
                 .GroupBy(scp => scp.Prize.Campaign)
-                .Select(g => new DbCampaignDto
+                .Select(g => new GetCampaignList
                 {
                     RemainingSpin = rwCode.RemainingSpins,
                     Id = g.Key.Id,
                     Name = g.Key.CampaignName,
                     StartAt = (DateTime)g.Key.StartDate,
                     EndAt = (DateTime)g.Key.EndDate,
-                    Prizes = g.Select(scp => new DbPrizeDto
-                    {
-                        Name = scp.Prize.Name,
-                        PrizeType = scp.Prize.PrizeType,
-                        Quantity = (int)scp.Prize.Quantity
-                    }).ToList()
                 })
                 .ToList();
 

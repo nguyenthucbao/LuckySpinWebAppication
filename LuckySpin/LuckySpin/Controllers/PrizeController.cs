@@ -38,12 +38,12 @@ namespace LuckySpin.Controllers
         public async Task<IActionResult> ResetPrize()
         {
 
-            await _context.Prizes
+            await _context.Prizes // reset prize to default values
                 .ExecuteUpdateAsync(setters => setters
                 .SetProperty(p => p.WinnerId, (string)null) 
                 .SetProperty(p => p.IsActive, true));
 
-            var rewardCodes = await _context.RewardCodes
+            var rewardCodes = await _context.RewardCodes // reset reward codes to default values
                 .Include(rc => rc.Bill)
                 .ToListAsync();
 

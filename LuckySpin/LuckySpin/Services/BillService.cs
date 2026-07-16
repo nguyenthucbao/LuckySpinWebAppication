@@ -77,29 +77,6 @@ public class BillService : IBillService
         };
     }
 
-    //public async Task<DbRewardCodeDto> GenerateCodeOnBillAsync(Bill bill)
-    //{
-    //    int spinCount = Math.Max(1, (int)(bill.TotalAmount / AmountPerSpin));
-
-    //    var rewardCode = new RewardCode
-    //    {
-    //        Id = Guid.NewGuid().ToString(),
-    //        BillId = bill.Id,
-    //        Code = GenerateCode(),
-    //        SpinCount = spinCount,
-    //        RemainingSpins = spinCount,
-    //        CreatedAt = DateTime.UtcNow
-    //    };
-
-    //    return new DbRewardCodeDto
-    //    {
-    //        Id = rewardCode.Id,
-    //        Code = rewardCode.Code,
-    //        SpinCount = rewardCode.SpinCount,
-    //        RemainingSpins = rewardCode.RemainingSpins,
-    //        CreatedAt = rewardCode.CreatedAt
-    //    };
-    //}
 
     private static string GenerateCode()
         => $"LUCKY-{Guid.NewGuid().ToString("N")[..8].ToUpper()}";

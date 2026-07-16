@@ -9,62 +9,13 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "LuckySpin.DTO.BillWithProductsDto",
+        "Type": "LuckySpin.Dto.BillWithProductsDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
           "text/json"
         ],
         "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "LuckySpin.Controllers.BillsController",
-    "Method": "CreateBill",
-    "RelativePath": "api/Bills",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "LuckySpin.Dto.PostBillRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "LuckySpin.Dto.GetBillResponseDto",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 201
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 409
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
       }
     ]
   },
@@ -84,7 +35,169 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "LuckySpin.DTO.BillWithProductsDto",
+        "Type": "LuckySpin.Dto.BillWithProductsDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "LuckySpin.Controllers.BillsController",
+    "Method": "CreateBill",
+    "RelativePath": "api/Bills/pos/newbill",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "req",
+        "Type": "LuckySpin.Dto.PostBillRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CampaignsController",
+    "Method": "GetCampaign",
+    "RelativePath": "api/Campaigns/admin",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "LuckySpin.Dto.GetCampaignInfo",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CampaignsController",
+    "Method": "AddCampaign",
+    "RelativePath": "api/Campaigns/admin/addcampaign",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "campaign",
+        "Type": "LuckySpin.Models.Campaign",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CampaignsController",
+    "Method": "AddPrize",
+    "RelativePath": "api/Campaigns/admin/addprize",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "prize",
+        "Type": "LuckySpin.Models.Prize",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CampaignsController",
+    "Method": "ChangeCampaignInfo",
+    "RelativePath": "api/Campaigns/admin/changecampaigninfo/{campaignId}/{newStartDate}/{newEndDate}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "campaignId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "newStartDate",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      },
+      {
+        "Name": "newEndDate",
+        "Type": "System.DateTime",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CampaignsController",
+    "Method": "DeleteStore",
+    "RelativePath": "api/Campaigns/admin/deletecampaign/{campaignId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "campaignId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CampaignsController",
+    "Method": "GetCampaignById",
+    "RelativePath": "api/Campaigns/admin/getcambyid/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "LuckySpin.Dto.CampaignWithPrize",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "MerchantController",
+    "Method": "GetStoreById",
+    "RelativePath": "api/Merchant/getstorebyid/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "LuckySpin.Dto.GetStoresInfo",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -199,7 +312,7 @@
   {
     "ContainingType": "LuckySpin.Controllers.StoresController",
     "Method": "GetStores",
-    "RelativePath": "api/Stores",
+    "RelativePath": "api/Stores/admin",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -218,55 +331,8 @@
   },
   {
     "ContainingType": "LuckySpin.Controllers.StoresController",
-    "Method": "GetStoreCampaignPrizes",
-    "RelativePath": "api/Stores/{storeId}/campaigns/{campaignId}/prizes",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "storeId",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "campaignId",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[LuckySpin.Dto.GroupedPrize, LuckySpin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "LuckySpin.Controllers.StoresController",
-    "Method": "AddStore",
-    "RelativePath": "api/Stores/addstore",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "store",
-        "Type": "LuckySpin.Models.Store",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "LuckySpin.Controllers.StoresController",
     "Method": "AddStoreCampaign",
-    "RelativePath": "api/Stores/addstorecampaign/{storeId}/{campaignId}",
+    "RelativePath": "api/Stores/admin/addcampaigntostore/{storeId}/{campaignId}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -296,8 +362,24 @@
   },
   {
     "ContainingType": "LuckySpin.Controllers.StoresController",
+    "Method": "AddStore",
+    "RelativePath": "api/Stores/admin/addstore",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "store",
+        "Type": "LuckySpin.Models.Store",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LuckySpin.Controllers.StoresController",
     "Method": "ChangeProbabilityWeight",
-    "RelativePath": "api/Stores/changeprobability",
+    "RelativePath": "api/Stores/admin/changeprobability",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -313,7 +395,7 @@
   {
     "ContainingType": "LuckySpin.Controllers.StoresController",
     "Method": "ChangeStoreInfo",
-    "RelativePath": "api/Stores/changestoreinfo/{storeId}/{newLocation}",
+    "RelativePath": "api/Stores/admin/changestoreinfo/{storeId}/{newLocation}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -334,7 +416,7 @@
   {
     "ContainingType": "LuckySpin.Controllers.StoresController",
     "Method": "DeleteStore",
-    "RelativePath": "api/Stores/deletestore/{storeId}",
+    "RelativePath": "api/Stores/admin/deletestore/{storeId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -350,7 +432,7 @@
   {
     "ContainingType": "LuckySpin.Controllers.StoresController",
     "Method": "GetStoreById",
-    "RelativePath": "api/Stores/getstorebyid/{id}",
+    "RelativePath": "api/Stores/admin/getstorebyid/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -376,7 +458,7 @@
   {
     "ContainingType": "LuckySpin.Controllers.StoresController",
     "Method": "RemoveStoreCampaign",
-    "RelativePath": "api/Stores/removestorecampaign/{storeId}/{campaignId}",
+    "RelativePath": "api/Stores/admin/removecampaignfromstore/{storeId}/{campaignId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -393,6 +475,37 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LuckySpin.Controllers.StoresController",
+    "Method": "GetStoreCampaignPrizes",
+    "RelativePath": "api/Stores/admin/storecampaignprize/{storeId}/{campaignId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "storeId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "campaignId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[LuckySpin.Dto.GroupedPrize, LuckySpin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "WinnerSessionsController",

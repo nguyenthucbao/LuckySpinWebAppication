@@ -23,7 +23,9 @@ public partial class Prize
 
     public string? WinnerId { get; set; }
 
-    public virtual Campaign Campaign { get; set; } = null!;
+    public string? SignatureKey { get; set; }
+
+    public virtual Campaign? Campaign { get; set; } = null!;
 
     public virtual ICollection<StoreCampaignPrize> StoreCampaignPrizes { get; set; } = new List<StoreCampaignPrize>();
 }

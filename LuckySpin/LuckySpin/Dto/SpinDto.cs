@@ -11,7 +11,7 @@ namespace LuckySpin.Dto
         public string CampaignId { get; set; } = string.Empty;
     }
 
-    // ── Response ───────────────────────────────────────────────────────────────
+
     public class SpinResponse
     {
         public string RewardCode { get; set; } = string.Empty;
@@ -29,5 +29,6 @@ namespace LuckySpin.Dto
         public string? Name { get; set; }
         public string? PrizeType { get; set; }
         public string? CampaignId { get; set; }
+        public string? SignatureKey { get; set; }
     }
 }
