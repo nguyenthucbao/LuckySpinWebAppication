@@ -29,9 +29,9 @@ public class CampaignsController : ControllerBase
         List<GetCampaignInfo> campaign = c.Select(c => new GetCampaignInfo
         {
             Id = c.Id,
-            Name = c.CampaignName,
-            StartAt = c.StartDate ?? DateTime.MinValue,
-            EndAt = c.EndDate ?? DateTime.MinValue
+            CampaignName = c.CampaignName,
+            StartDate = c.StartDate ?? DateTime.MinValue,
+            EndDate = c.EndDate ?? DateTime.MinValue
         }).ToList();
 
         return Ok(campaign);
@@ -55,6 +55,7 @@ public class CampaignsController : ControllerBase
         {
             Id = campaign.Id,
             Name = campaign.CampaignName,
+            TotalRoll = campaign.TotalRoll,
             StartAt = campaign.StartDate ?? DateTime.MinValue,
             EndAt = campaign.EndDate ?? DateTime.MinValue,
             Prizes = prizeincampaign.Select(p => new GetPrize
@@ -63,8 +64,8 @@ public class CampaignsController : ControllerBase
                 Name = p.Name,
                 PrizeType = p.PrizeType,
                 Quantity = p.Quantity ?? 0,
-                ProbabilityWeight = p.ProbabilityWeight,
-                IsActive = p.IsActive,
+                ProbabilityWeight = p.ProbabilityWeight ?? 0,
+                IsActive = p.IsActive ?? false,
                 WinnerId = p.WinnerId,
                 SignatureKey = p.SignatureKey
             }).ToList()
@@ -83,7 +84,16 @@ public class CampaignsController : ControllerBase
             if (existingCampaign != null)
                 return BadRequest(new { message = "Chiến dịch với ID này đã tồn tại" });
 
-            _context.Campaigns.Add(campaign);
+            var addcampaign = new Campaign
+            {
+                Id = campaign.Id,
+                CampaignName = campaign.CampaignName,
+                StartDate = campaign.StartDate,
+                EndDate = campaign.EndDate,
+                TotalRoll = 0
+            };
+
+            _context.Campaigns.Add(addcampaign);
             await _context.SaveChangesAsync();
 
             return Ok();
@@ -106,12 +116,17 @@ public class CampaignsController : ControllerBase
             if (campaign == null)
                 return NotFound(new { message = "không tìm thấy chương trình" });
 
+            //xoa tat ca cac lien ket voi cua hang
+            var campaignStore = await _context.CampaignStores
+                .Where(cs => cs.CampaignId == campaignId).ToListAsync();
+
+            _context.CampaignStores.RemoveRange(campaignStore);
 
             // Remove campaign
             _context.Campaigns.Remove(campaign);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Đã xóa chương trình thành công" });
+            return Ok(new { message = "Đã xóa chương trình và loại khỏi các cửa hàng thành công" });
         }
         catch (Exception ex)
         {
@@ -120,17 +135,18 @@ public class CampaignsController : ControllerBase
         }
     }
 
-    [HttpPost("admin/changecampaigninfo/{campaignId}/{newStartDate}/{newEndDate}")]
-    public async Task<IActionResult> ChangeCampaignInfo(string campaignId, DateTime newStartDate, DateTime newEndDate)
+    [HttpPost("admin/changecampaigninfo")]
+    public async Task<IActionResult> ChangeCampaignInfo([FromBody] GetCampaignInfo newCampaignInfo)
     {
         try
         {
-            var campaign = await _context.Campaigns.FindAsync(campaignId);
+            var campaign = await _context.Campaigns.FindAsync(newCampaignInfo.Id);
             if (campaign == null)
                 return NotFound(new { message = "không tìm thấy chương trình" });
 
-            campaign.StartDate = newStartDate;
-            campaign.EndDate = newEndDate;
+            campaign.CampaignName = newCampaignInfo.CampaignName;
+            campaign.StartDate = newCampaignInfo.StartDate;
+            campaign.EndDate = newCampaignInfo.EndDate;
 
             _context.Campaigns.Update(campaign);
             await _context.SaveChangesAsync();
@@ -145,7 +161,7 @@ public class CampaignsController : ControllerBase
         }
     }
 
-    [HttpPost("admin/addprize")]
+    [HttpPost("admin/addprizetostore")]
     public async Task<IActionResult> AddPrize([FromBody] Prize prize)
     {
         try
@@ -162,7 +178,7 @@ public class CampaignsController : ControllerBase
             _context.Prizes.Add(prize);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(prize);
         }
         catch (Exception ex)
         {

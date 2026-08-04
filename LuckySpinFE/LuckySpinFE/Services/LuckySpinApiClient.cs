@@ -43,10 +43,6 @@ public class LuckySpinApiClient(HttpClient http)
         public string PrizeId { get; set; } = string.Empty;
     }
 
-    /// <summary>
-    /// Gán 1 winner (customerId) vào 1 prize cụ thể để xác nhận nhận thưởng.
-    /// Chỉ xử lý được 1 prize mỗi lần gọi - nếu khách có nhiều phần thưởng, gọi hàm này nhiều lần.
-    /// </summary>
     public async Task AssignWinnerToPrizeAsync(string winnerId, string prizeId)
     {
         var response = await http.PostAsJsonAsync("api/WinnerSessions/AssignWinnerToPrize", new AssignPrizeWinnerRequest
@@ -60,5 +56,42 @@ public class LuckySpinApiClient(HttpClient http)
             var error = await response.Content.ReadAsStringAsync();
             throw new Exception($"API lỗi ({(int)response.StatusCode}): {error}");
         }
+    }
+
+    public class GetCustomerByPhoneResponse
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Mail { get; set; } = string.Empty;
+        public string? Address { get; set; }
+    }
+
+    public async Task<GetCustomerByPhoneResponse?> GetCustomerByPhoneAsync(string phone)
+    {
+        var response = await http.GetAsync($"api/WinnerSessions/GetByPhoneNumber/{phone}");
+
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            return null;
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"API lỗi ({(int)response.StatusCode}): {error}");
+        }
+
+        return await response.Content.ReadFromJsonAsync<GetCustomerByPhoneResponse>();
+    }
+
+    public async Task<List<GetCustomerPrize>?> GetCustomerPrizeByIdAsync(string winnerId)
+    {
+        var response = await http.GetAsync($"api/WinnerSessions/GetCustomerPrizeById/{winnerId}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"API lỗi ({(int)response.StatusCode}): {error}");
+        }
+
+        return await response.Content.ReadFromJsonAsync<List<GetCustomerPrize>>();
     }
 }

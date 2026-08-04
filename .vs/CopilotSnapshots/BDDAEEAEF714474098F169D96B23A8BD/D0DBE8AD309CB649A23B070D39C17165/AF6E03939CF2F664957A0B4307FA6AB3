@@ -1,0 +1,792 @@
+﻿@page "/admin/store"
+@page "/admin/store/{storeId}"
+@rendermode InteractiveServer
+@using LuckySpinAdmin.Dto
+@using LuckySpinAdmin.Service
+@layout AdminLayout
+@inject LuckySpinApiClient ApiClient
+@inject NavigationManager NavigationManager
+
+
+<div>
+    @if (isLoading)
+    {
+        <div class="text-[13px] text-neutral-400">Đang tải...</div>
+    }
+    else if (!string.IsNullOrEmpty(loadError))
+    {
+        <div class="text-[13px] text-red-500">@loadError</div>
+    }
+
+    @* ---------- BREADCRUMB ---------- *@
+    <div class="flex items-center gap-2 text-[13px] text-neutral-500 mb-6">
+        <span class="@(CurrentView == ViewState.StoreList ? "text-neutral-900 font-semibold" : "cursor-pointer hover:text-neutral-800")"
+              @onclick="GoToStoreList">
+            Chi nhánh
+        </span>
+        @if (CurrentView == ViewState.StoreDetail && SelectedStore != null)
+        {
+            <span>/</span>
+            <span class="text-neutral-900 font-semibold">@SelectedStore.StoreLocate</span>
+        }
+    </div>
+
+    @* ================= VIEW 1: STORE LIST ================= *@
+    @if (CurrentView == ViewState.StoreList)
+    {
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">Chi nhánh cửa hàng</h1>
+                <p class="text-[13px] text-neutral-500 mt-0.5">@Stores.Count chi nhánh đang hoạt động trong hệ thống</p>
+            </div>
+            <button class="btn-primary" @onclick="() => showAddStoreModal = true">
+                + Thêm cửa hàng
+            </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden">
+            <table class="w-full text-[13.5px]">
+                <thead>
+                    <tr class="text-left text-neutral-400 text-[11.5px] uppercase tracking-wide border-b border-neutral-100">
+                        <th class="px-5 py-3 font-semibold">Mã cửa hàng</th>
+                        <th class="px-5 py-3 font-semibold">Địa chỉ</th>
+                        <th class="px-5 py-3 font-semibold text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var store in Stores)
+                    {
+                        <tr class="border-b border-neutral-50 last:border-0 hover:bg-neutral-50/70 transition-colors cursor-pointer" @onclick="() => GoToStoreDetail(store.Id)">
+                            <td class="px-5 py-2.5">
+                                <div class="flex items-center gap-3">
+                                    <div class="wheel-badge-sm"></div>
+                                    <span class="font-semibold text-neutral-900">@store.Id</span>
+                                </div>
+                            </td>
+                            <td class="px-5 py-2.5 text-neutral-600">@store.StoreLocate</td>
+                            <td class="px-5 py-2.5">
+                                <div class="flex items-center justify-end gap-2">
+                                    <button class="btn-ghost" @onclick="() => GoToStoreDetail(store.Id)">Xem chi tiết</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @* ================= VIEW 2: STORE DETAIL ================= *@
+    @if (CurrentView == ViewState.StoreDetail && SelectedStore != null)
+    {
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <button class="btn-back" @onclick="GoToStoreList">← Quay lại</button>
+                <div>
+                    <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">@SelectedStore.Id</h1>
+                    <p class="text-[13px] text-neutral-500 mt-0.5">@SelectedStore.StoreLocate</p>
+                </div>
+            </div>
+            <button class="btn-danger" @onclick="() => showDeleteConfirmModal = true">
+                Xóa cửa hàng
+            </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-8">
+            <div class="metric-card">
+                <div class="metric-label">Tổng doanh thu</div>
+                <div class="metric-value">@SelectedStore.StoreAmount.ToString("N0") ₫</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Tổng lượt quay</div>
+                <div class="metric-value">@SelectedStore.StoreSpinCount</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Lượt đã sử dụng</div>
+                <div class="metric-value">@SelectedStore.StoreUsedSpinCount</div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="text-[15px] font-bold text-neutral-800" style="font-family:'Manrope',sans-serif;">Chương trình khuyến mãi đang hoạt động</h2>
+            <button class="btn-icon" title="Gán chương trình" @onclick="OpenAssignCampaign">+</button>
+        </div>
+
+        @if (SelectedStore.Campaigns == null || SelectedStore.Campaigns.Count == 0)
+        {
+            <div class="empty-box">Cửa hàng này chưa được gán chương trình nào.</div>
+        }
+        else
+        {
+            <div class="space-y-2">
+                @foreach (var c in SelectedStore.Campaigns)
+                {
+                    <div class="campaign-row">
+                        <div class="flex flex-col cursor-pointer" @onclick="() => ViewCampaignDetail(c)">
+                            <div class="text-[17px] font-bold text-neutral-900" style="font-family:'Manrope',sans-serif;">@c.Name</div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="campaign-id-badge">ID: @c.Id</span>
+                                <span class="text-[11.5px] text-neutral-400">@c.StartAt.ToString("dd/MM/yyyy") – @c.EndAt.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="btn-ghost" @onclick="() => ViewCampaignDetail(c)">Xem chi tiết</button>
+                            <button class="btn-danger" @onclick="() => OpenDeleteCampaignConfirm(c)">Ngừng cung cấp</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+
+@* ============== MODAL: ADD STORE ============== *@
+@if (showAddStoreModal)
+{
+    <div class="modal-overlay" @onclick="() => showAddStoreModal = false">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Thêm cửa hàng mới</h3>
+
+            <div class="field-group">
+                <label>Mã cửa hàng</label>
+                <input @bind="newStore.Id" placeholder="VD: S005" />
+            </div>
+            <div class="field-group">
+                <label>Địa chỉ</label>
+                <input @bind="newStore.StoreLocate" placeholder="VD: 45 Nguyễn Huệ, Quận 1" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(addStoreError))
+            {
+                <p class="text-[12.5px] text-red-500 mb-2">@addStoreError</p>
+            }
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showAddStoreModal = false">Hủy</button>
+                <button class="btn-primary" @onclick="ConfirmAddStore">Thêm cửa hàng</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ============== MODAL: DELETE CONFIRM ============== *@
+@if (showDeleteConfirmModal && SelectedStore != null)
+{
+    <div class="modal-overlay" @onclick="() => showDeleteConfirmModal = false">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Xóa cửa hàng?</h3>
+            <p class="text-[13.5px] text-neutral-500 mb-5">
+                Bạn sắp xóa <strong class="text-neutral-800">@SelectedStore.Id</strong> (@SelectedStore.StoreLocate).
+                Hành động này không thể hoàn tác.
+            </p>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showDeleteConfirmModal = false">Hủy</button>
+                <button class="btn-danger" @onclick="ConfirmDeleteStore">Xóa cửa hàng</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ============== MODAL: DELETE CAMPAIGN CONFIRM ============== *@
+@if (showDeleteCampaignModal && deletingCampaign != null)
+{
+    <div class="modal-overlay" @onclick="() => showDeleteCampaignModal = false">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Xóa chương trình?</h3>
+            <p class="text-[13.5px] text-neutral-500 mb-5">
+                Bạn sắp xóa <strong class="text-neutral-800">@deletingCampaign.Name</strong> (ID: @deletingCampaign.Id) khỏi cửa hàng này.
+                Hành động này không thể hoàn tác.
+            </p>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showDeleteCampaignModal = false">Hủy</button>
+                <button class="btn-danger" @onclick="ConfirmDeleteCampaign">Xóa chương trình</button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ============== MODAL: ASSIGN CAMPAIGN ============== *@
+@if (showAssignCampaignModal)
+{
+    <div class="modal-overlay" @onclick="() => showAssignCampaignModal = false">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Gán chương trình cho @SelectedStore?.Id</h3>
+
+            @if (isLoadingAllCampaigns)
+            {
+                <p class="text-[13px] text-neutral-400 mb-4">Đang tải danh sách chương trình...</p>
+            }
+            else if (AllCampaigns.Count == 0)
+            {
+                <p class="text-[13px] text-neutral-400 mb-4">Không có chương trình nào trong hệ thống.</p>
+            }
+            else
+            {
+                <div class="space-y-2 mb-5">
+                    @foreach (var c in AllCampaigns)
+                    {
+                        <label class="campaign-pick">
+                            <input type="checkbox" checked="@pickedCampaignIds.Contains(c.Id)"
+                                   @onchange="e => ToggleCampaignPick(c.Id, (bool)e.Value!)" />
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-neutral-900 text-[13px]">@c.Name</span>
+                                <span class="text-neutral-400 text-[11.5px]">ID: @c.Id · @c.StartAt.ToString("dd/MM/yyyy") – @c.EndAt.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </label>
+                    }
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(assignCampaignError))
+            {
+                <p class="text-[12.5px] text-red-500 mb-2">@assignCampaignError</p>
+            }
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showAssignCampaignModal = false">Hủy</button>
+                <button class="btn-primary" @onclick="ConfirmAssignCampaigns" disabled="@isAssigningCampaigns">
+                    @(isAssigningCampaigns ? "Đang thêm..." : "Thêm")
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? StoreId { get; set; }
+
+    private enum ViewState { StoreList, StoreDetail }
+    private ViewState CurrentView = ViewState.StoreList;
+
+    private List<GetStores> Stores = new();
+    private GetStoresInfo? SelectedStore;
+    private GetCampaignInfo? deletingCampaign;
+
+    private bool isLoading = false;
+    private string? loadError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStoresAsync();
+        if (!string.IsNullOrEmpty(StoreId))
+        {
+            await GoToStoreDetail(StoreId);
+        }
+    }
+
+    private async Task LoadStoresAsync()
+    {
+        isLoading = true;
+        loadError = null;
+        try
+        {
+            Stores = await ApiClient.GetStoresAsync() ?? new();
+        }
+        catch (Exception ex)
+        {
+            loadError = "Không tải được danh sách cửa hàng: " + ex.Message;
+        }
+        isLoading = false;
+    }
+
+    private async Task GoToStoreList()
+    {
+        CurrentView = ViewState.StoreList;
+        SelectedStore = null;
+        await LoadStoresAsync();
+        NavigationManager.NavigateTo("/admin/store");
+    }
+
+    private async Task GoToStoreDetail(string storeId)
+    {
+        isLoading = true;
+        loadError = null;
+        try
+        {
+            SelectedStore = await ApiClient.GetStoreInfoAsync(storeId);
+            if (SelectedStore == null)
+            {
+                loadError = "Không tìm thấy cửa hàng.";
+            }
+            else
+            {
+                CurrentView = ViewState.StoreDetail;
+                NavigationManager.NavigateTo($"/admin/store/{storeId}");
+            }
+        }
+        catch (Exception ex)
+        {
+            loadError = "Không tải được chi tiết cửa hàng: " + ex.Message;
+        }
+        isLoading = false;
+    }
+
+    // ===================== MODAL: ADD STORE =====================
+    private bool showAddStoreModal = false;
+    private CreateStoreDto newStore = new();
+    private string? addStoreError;
+
+    private async Task ConfirmAddStore()
+    {
+        if (string.IsNullOrWhiteSpace(newStore.Id) || string.IsNullOrWhiteSpace(newStore.StoreLocate))
+        {
+            addStoreError = "Vui lòng nhập đủ mã cửa hàng và địa chỉ.";
+            return;
+        }
+
+        var isSuccess = await ApiClient.AddStoreAsync(newStore);
+        if (isSuccess)
+        {
+            await LoadStoresAsync();
+            newStore = new CreateStoreDto();
+            addStoreError = null;
+            showAddStoreModal = false;
+        }
+        else
+        {
+            addStoreError = "Thêm cửa hàng thất bại, vui lòng thử lại.";
+        }
+    }
+
+    // ===================== CAMPAIGN ACTIONS =====================
+    private bool showDeleteCampaignModal = false;
+
+    private async Task ViewCampaignDetail(GetCampaignInfo campaign)
+    {
+        NavigationManager.NavigateTo($"/admin/campaign/{SelectedStore?.Id}/{campaign.Id}");
+    }
+
+    private void OpenDeleteCampaignConfirm(GetCampaignInfo campaign)
+    {
+        deletingCampaign = campaign;
+        showDeleteCampaignModal = true;
+    }
+
+    private void ConfirmDeleteCampaign()
+    {
+        // TODO: chưa có API xóa chương trình khỏi cửa hàng
+        showDeleteCampaignModal = false;
+        deletingCampaign = null;
+    }
+
+    // ===================== MODAL: ASSIGN CAMPAIGN =====================
+    private bool showAssignCampaignModal = false;
+    private bool isLoadingAllCampaigns = false;
+    private bool isAssigningCampaigns = false;
+    private string? assignCampaignError;
+    private List<GetCampaignInfo> AllCampaigns = new();
+    private HashSet<string> pickedCampaignIds = new();
+
+    private async Task OpenAssignCampaign()
+    {
+        pickedCampaignIds.Clear();
+        assignCampaignError = null;
+        showAssignCampaignModal = true;
+        isLoadingAllCampaigns = true;
+        try
+        {
+            AllCampaigns = await ApiClient.GetAllCampaignsAsync() ?? new();
+        }
+        catch (Exception ex)
+        {
+            assignCampaignError = "Không tải được danh sách chương trình: " + ex.Message;
+        }
+        isLoadingAllCampaigns = false;
+    }
+
+    private void ToggleCampaignPick(string campaignId, bool isChecked)
+    {
+        if (isChecked) pickedCampaignIds.Add(campaignId);
+        else pickedCampaignIds.Remove(campaignId);
+    }
+
+    private async Task ConfirmAssignCampaigns()
+    {
+        if (SelectedStore?.Id == null || pickedCampaignIds.Count == 0)
+        {
+            assignCampaignError = "Vui lòng chọn ít nhất một chương trình.";
+            return;
+        }
+
+        isAssigningCampaigns = true;
+        assignCampaignError = null;
+
+        var successCount = 0;
+        foreach (var campaignId in pickedCampaignIds)
+        {
+            var isSuccess = await ApiClient.AddCampaignToStoreAsync(SelectedStore.Id, campaignId);
+            if (isSuccess) successCount++;
+        }
+
+        isAssigningCampaigns = false;
+
+        if (successCount == pickedCampaignIds.Count)
+        {
+            showAssignCampaignModal = false;
+            await GoToStoreDetail(SelectedStore.Id);
+        }
+        else
+        {
+            assignCampaignError = $"Chỉ gán thành công {successCount}/{pickedCampaignIds.Count} chương trình.";
+            await GoToStoreDetail(SelectedStore.Id);
+        }
+    }
+
+    // ===================== MODAL: DELETE STORE =====================
+    private bool showDeleteConfirmModal = false;
+
+    private async Task ConfirmDeleteStore()
+    {
+        if (SelectedStore == null) return;
+
+        var isSuccess = await ApiClient.DeleteStoreAsync(SelectedStore.Id);
+        if (isSuccess)
+        {
+            showDeleteConfirmModal = false;
+            await GoToStoreList();
+        }
+    }
+}
+
+<style>
+    .wheel-badge-sm {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: conic-gradient(#FB5607 0deg 90deg, #FFBE0B 90deg 180deg, #FF6B35 180deg 270deg, #F7C59F 270deg 360deg);
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px #eee;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #FB5607, #FFBE0B);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.15s;
+    }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+    .btn-secondary {
+        background: #fff;
+        color: #57534E;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: 1.5px solid #E7E5E4;
+        cursor: pointer;
+    }
+
+        .btn-secondary:hover {
+            background: #FAFAF9;
+        }
+
+    .btn-danger {
+        background: #DC2626;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+    .btn-ghost {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #FB5607;
+        background: #FFF3EB;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-ghost:hover {
+            background: #FFE8D6;
+        }
+
+    .btn-back {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #57534E;
+        background: #F5F5F4;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-back:hover {
+            background: #E7E5E4;
+        }
+
+    .btn-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: 1.5px solid #E7E5E4;
+        background: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 700;
+        color: #57534E;
+        line-height: 1;
+    }
+
+        .btn-icon:hover {
+            background: #FFF3EB;
+            border-color: #FFBE0B;
+            color: #FB5607;
+        }
+
+    .metric-card {
+        background: #fff;
+        border: 1px solid #E7E5E4;
+        border-radius: 14px;
+        padding: 16px 18px;
+    }
+
+    .metric-label {
+        font-size: 11.5px;
+        color: #A8A29E;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-bottom: 6px;
+    }
+
+    .metric-value {
+        font-size: 20px;
+        font-weight: 800;
+        color: #1C1917;
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .campaign-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+        border: 1px solid #E7E5E4;
+        border-radius: 12px;
+        padding: 16px 18px;
+    }
+
+    .campaign-id-badge {
+        font-size: 11px;
+        font-weight: 700;
+        color: #78716C;
+        background: #F5F5F4;
+        padding: 3px 8px;
+        border-radius: 999px;
+    }
+
+    .campaign-pick {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1.5px solid #E7E5E4;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+        .campaign-pick:hover {
+            border-color: #FFBE0B;
+            background: #FFFDF7;
+        }
+
+    .empty-box {
+        background: #fff;
+        border: 1.5px dashed #E7E5E4;
+        border-radius: 14px;
+        padding: 28px;
+        text-align: center;
+        color: #A8A29E;
+        font-size: 13px;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(28,25,23,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
+
+    .modal-box {
+        background: #fff;
+        border-radius: 18px;
+        padding: 28px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+
+    .modal-title {
+        font-family: 'Manrope', sans-serif;
+        font-size: 17px;
+        font-weight: 800;
+        color: #1C1917;
+        margin-bottom: 18px;
+    }
+
+    .field-group {
+        margin-bottom: 14px;
+    }
+
+        .field-group label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #57534E;
+            margin-bottom: 5px;
+        }
+
+        .field-group input {
+            width: 100%;
+            height: 42px;
+            border: 1.5px solid #E7E5E4;
+            border-radius: 10px;
+            padding: 0 12px;
+            font-size: 13.5px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+            .field-group input:focus {
+                border-color: #FB5607;
+            }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .space-y-2 > * + * {
+        margin-top: 0.5rem;
+    }
+
+    .grid {
+        display: grid;
+    }
+
+    .grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .gap-4 {
+        gap: 1rem;
+    }
+
+    .mb-8 {
+        margin-bottom: 2rem;
+    }
+
+    .mb-6 {
+        margin-bottom: 1.5rem;
+    }
+
+    .mb-5 {
+        margin-bottom: 1.25rem;
+    }
+
+    .mb-4 {
+        margin-bottom: 1rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 0.75rem;
+    }
+
+    .mb-2 {
+        margin-bottom: 0.5rem;
+    }
+
+    .mt-0.5 {
+        margin-top: 0.125rem;
+    }
+
+    .mt-1 {
+        margin-top: 0.25rem;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .items-center {
+        align-items: center;
+    }
+
+    .justify-between {
+        justify-content: space-between;
+    }
+
+    .justify-end {
+        justify-content: flex-end;
+    }
+
+    .gap-3 {
+        gap: 0.75rem;
+    }
+
+    .gap-2 {
+        gap: 0.5rem;
+    }
+
+    .flex-col {
+        flex-direction: column;
+    }
+
+    .shrink-0 {
+        flex-shrink: 0;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .w-full {
+        width: 100%;
+    }
+
+    .overflow-hidden {
+        overflow: hidden;
+    }
+
+    ::deep input[type="checkbox"] {
+        cursor: pointer;
+    }
+</style>

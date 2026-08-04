@@ -135,39 +135,31 @@
         }
       }
     },
-    "/api/Campaigns/admin/changecampaigninfo/{campaignId}/{newStartDate}/{newEndDate}": {
+    "/api/Campaigns/admin/changecampaigninfo": {
       "post": {
         "tags": [
           "Campaigns"
         ],
-        "parameters": [
-          {
-            "name": "campaignId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCampaignInfo"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCampaignInfo"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCampaignInfo"
+              }
             }
           },
-          {
-            "name": "newStartDate",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "newEndDate",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -175,7 +167,7 @@
         }
       }
     },
-    "/api/Campaigns/admin/addprize": {
+    "/api/Campaigns/admin/addprizetostore": {
       "post": {
         "tags": [
           "Campaigns"
@@ -299,45 +291,6 @@
             "description": "Internal Server Error"
           }
         }
-      },
-      "get": {
-        "tags": [
-          "WinnerSessions"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetCustomerResponse"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetCustomerResponse"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetCustomerResponse"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
       }
     },
     "/api/WinnerSessions/AssignWinnerToPrize": {
@@ -411,6 +364,91 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/WinnerSessions/GetCustomerList": {
+      "get": {
+        "tags": [
+          "WinnerSessions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetCustomerResponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetCustomerResponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetCustomerResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/WinnerSessions/GetByPhoneNumber/{phone}": {
+      "get": {
+        "tags": [
+          "WinnerSessions"
+        ],
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/WinnerSessions/GetCustomerPrizeById/{winnerId}": {
+      "get": {
+        "tags": [
+          "WinnerSessions"
+        ],
+        "parameters": [
+          {
+            "name": "winnerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -832,6 +870,38 @@
         }
       }
     },
+    "/api/Stores/admin/addprizetostore": {
+      "post": {
+        "tags": [
+          "Stores"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prize"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prize"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prize"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Stores/admin/storecampaignprize/{storeId}/{campaignId}": {
       "get": {
         "tags": [
@@ -996,6 +1066,18 @@
           }
         }
       }
+    },
+    "/api/Stores/admin/export-excel": {
+      "get": {
+        "tags": [
+          "Stores"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1043,18 +1125,25 @@
             "type": "string"
           },
           "storeLocate": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "totalAmount": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
             "type": [
+              "null",
               "number",
               "string"
             ],
             "format": "double"
           },
           "paymentMethod": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "storeId": {
             "type": [
@@ -1121,7 +1210,10 @@
             "type": "string"
           },
           "campaignName": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "startDate": {
             "type": [
@@ -1136,6 +1228,15 @@
               "string"
             ],
             "format": "date-time"
+          },
+          "totalRoll": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           },
           "prizes": {
             "type": "array",
@@ -1152,7 +1253,19 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "totalRoll": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           },
           "startAt": {
             "type": [
@@ -1201,14 +1314,14 @@
           "id": {
             "type": "string"
           },
-          "name": {
+          "campaignName": {
             "type": "string"
           },
-          "startAt": {
+          "startDate": {
             "type": "string",
             "format": "date-time"
           },
-          "endAt": {
+          "endDate": {
             "type": "string",
             "format": "date-time"
           }
@@ -1219,12 +1332,6 @@
         "properties": {
           "id": {
             "type": "string"
-          },
-          "rewardCodeId": {
-            "type": [
-              "null",
-              "string"
-            ]
           },
           "fullName": {
             "type": "string"
@@ -1444,17 +1551,27 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "campaignId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "prizeType": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "probabilityWeight": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
+              "null",
               "integer",
               "string"
             ],
@@ -1470,10 +1587,16 @@
             "format": "int32"
           },
           "isActive": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ]
           },
           "createdAt": {
-            "type": "string",
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "winnerId": {
@@ -1483,6 +1606,12 @@
             ]
           },
           "signatureKey": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "storeId": {
             "type": [
               "null",
               "string"
@@ -1573,21 +1702,35 @@
             "type": "string"
           },
           "billId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "name": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "quantity": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
+              "null",
               "integer",
               "string"
             ],
             "format": "int32"
           },
           "bill": {
-            "$ref": "#/components/schemas/Bill"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/Bill"
+              }
+            ]
           }
         }
       },
@@ -1598,14 +1741,21 @@
             "type": "string"
           },
           "billId": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "code": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "spinCount": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
+              "null",
               "integer",
               "string"
             ],
@@ -1614,23 +1764,28 @@
           "remainingSpins": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
+              "null",
               "integer",
               "string"
             ],
             "format": "int32"
           },
           "createdAt": {
-            "type": "string",
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "bill": {
-            "$ref": "#/components/schemas/Bill"
-          },
-          "winnerSessions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WinnerSession"
-            }
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/Bill"
+              }
+            ]
           }
         }
       },
@@ -1652,7 +1807,10 @@
             "type": "string"
           },
           "storeLocate": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "storeCampaignPrizes": {
             "type": "array",
@@ -1683,6 +1841,7 @@
           "probabilityWeight": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
+              "null",
               "integer",
               "string"
             ],
@@ -1713,42 +1872,6 @@
                 "$ref": "#/components/schemas/Store"
               }
             ]
-          }
-        }
-      },
-      "WinnerSession": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "rewardCodeId": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "fullName": {
-            "type": "string"
-          },
-          "phone": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "address": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "rewardCode": {
-            "$ref": "#/components/schemas/RewardCode"
           }
         }
       }

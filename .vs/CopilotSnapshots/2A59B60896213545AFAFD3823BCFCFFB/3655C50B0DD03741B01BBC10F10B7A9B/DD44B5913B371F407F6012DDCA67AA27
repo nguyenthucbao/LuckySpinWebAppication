@@ -1,0 +1,174 @@
+﻿using LuckySpin.Controllers;
+using LuckySpin.Dto;
+using LuckySpin.Models;
+using LuckySpin.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CampaignsController : ControllerBase
+{
+    private readonly LuckySpinContext _context;
+    private readonly ILogger<CampaignsController> _logger;
+
+    public CampaignsController(LuckySpinContext context, ILogger<CampaignsController> logger)
+    {
+        _context = context;
+        _logger = logger;
+    }
+
+
+
+
+    [HttpGet("admin")]
+    public async Task<ActionResult<GetCampaignInfo>> GetCampaign()
+    {
+        var c = await _context.Campaigns.ToListAsync();
+
+        List<GetCampaignInfo> campaign = c.Select(c => new GetCampaignInfo
+        {
+            Id = c.Id,
+            Name = c.CampaignName,
+            StartAt = c.StartDate ?? DateTime.MinValue,
+            EndAt = c.EndDate ?? DateTime.MinValue
+        }).ToList();
+
+        return Ok(campaign);
+    }
+
+
+    [HttpGet("admin/getcambyid/{id}")]
+    public async Task<ActionResult<CampaignWithPrize>> GetCampaignById(string id)
+    {
+        var campaign = await _context.Campaigns.FindAsync(id);
+        if (campaign == null)
+            return BadRequest(new { message = "K tồn tại" });
+
+        var prizeincampaign = await _context.Prizes
+            .Where(p => p.CampaignId == id)
+            .ToListAsync();
+
+        
+
+        var result = new CampaignWithPrize
+        {
+            Id = campaign.Id,
+            Name = campaign.CampaignName,
+            StartAt = campaign.StartDate ?? DateTime.MinValue,
+            EndAt = campaign.EndDate ?? DateTime.MinValue,
+            Prizes = prizeincampaign.Select(p => new GetPrize
+            {
+                Id = p.Id,
+                Name = p.Name,
+                PrizeType = p.PrizeType,
+                Quantity = p.Quantity ?? 0,
+                ProbabilityWeight = p.ProbabilityWeight,
+                IsActive = p.IsActive,
+                WinnerId = p.WinnerId,
+                SignatureKey = p.SignatureKey
+            }).ToList()
+        };
+
+        return Ok(result);
+    }
+
+
+    [HttpPost("admin/addcampaign")]
+    public async Task<IActionResult> AddCampaign([FromBody] Campaign campaign)
+    {
+        try
+        {
+            var existingCampaign = await _context.Campaigns.FindAsync(campaign.Id);
+            if (existingCampaign != null)
+                return BadRequest(new { message = "Chiến dịch với ID này đã tồn tại" });
+
+            _context.Campaigns.Add(campaign);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi khi thêm store mới");
+            return StatusCode(500, new { message = "Lỗi hệ thống khi thêm store", error = ex.Message });
+        }
+    }
+
+
+
+    [HttpDelete("admin/deletecampaign/{campaignId}")]
+    public async Task<IActionResult> DeleteStore(string campaignId)
+    {
+        try
+        {
+            var campaign = await _context.Campaigns.FindAsync(campaignId);
+            if (campaign == null)
+                return NotFound(new { message = "không tìm thấy chương trình" });
+
+
+            // Remove campaign
+            _context.Campaigns.Remove(campaign);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Đã xóa chương trình thành công" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi khi xóa store");
+            return StatusCode(500, new { message = "Lỗi hệ thống khi xóa store", error = ex.Message });
+        }
+    }
+
+    [HttpPost("admin/changecampaigninfo/{campaignId}/{newStartDate}/{newEndDate}")]
+    public async Task<IActionResult> ChangeCampaignInfo(string campaignId, DateTime newStartDate, DateTime newEndDate)
+    {
+        try
+        {
+            var campaign = await _context.Campaigns.FindAsync(campaignId);
+            if (campaign == null)
+                return NotFound(new { message = "không tìm thấy chương trình" });
+
+            campaign.StartDate = newStartDate;
+            campaign.EndDate = newEndDate;
+
+            _context.Campaigns.Update(campaign);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "đã cập nhật" });
+        }
+
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi khi update");
+            return StatusCode(500, new { message = "lỗi hệ thống", error = ex.Message });
+        }
+    }
+
+    [HttpPost("admin/addprize")]
+    public async Task<IActionResult> AddPrize([FromBody] Prize prize)
+    {
+        try
+        {
+            var existingPrize = await _context.Prizes.FindAsync(prize.Id);
+            if (existingPrize != null)
+                return BadRequest(new { message = "Phần thưởng với ID này đã trùng" });
+
+            var existingCampaign = await _context.Campaigns.FindAsync(prize.CampaignId);
+            if (existingCampaign == null)
+                return BadRequest(new { message = "Campaign chưa được khởi tại" });
+
+
+            _context.Prizes.Add(prize);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Lỗi khi thêm prize mới");
+            return StatusCode(500, new { message = "Lỗi hệ thống khi thêm prize", error = ex.Message });
+        }
+    }
+
+}

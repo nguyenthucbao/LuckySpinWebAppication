@@ -40,9 +40,9 @@ public class MerchantController : ControllerBase
             .Select(g => new GetCampaignInfo
             {
                 Id = g.Key.Id,
-                Name = g.Key.CampaignName,
-                StartAt = g.Key.StartDate ?? DateTime.MinValue,
-                EndAt = g.Key.EndDate ?? DateTime.MinValue
+                CampaignName = g.Key.CampaignName,
+                StartDate = g.Key.StartDate ?? DateTime.MinValue,
+                EndDate = g.Key.EndDate ?? DateTime.MinValue
             })
             .ToList();
 
@@ -50,9 +50,9 @@ public class MerchantController : ControllerBase
         {
             Id = store.Id,
             StoreLocate = store.StoreLocate,
-            StoreAmount = bills.Sum(x => x.TotalAmount),
-            StoreSpinCount = rewardCodes.Sum(x => x.SpinCount),
-            StoreUsedSpinCount = rewardCodes.Sum(x => x.SpinCount - x.RemainingSpins),
+            StoreAmount = bills.Sum(x => x.TotalAmount ?? 0),
+            StoreSpinCount = rewardCodes.Sum(x => x.SpinCount ?? 0),
+            StoreUsedSpinCount = rewardCodes.Sum(x => (x.SpinCount ?? 0) - (x.RemainingSpins ?? 0)),
             Campaigns = campaigns
         };
 
@@ -60,5 +60,28 @@ public class MerchantController : ControllerBase
     }
 
 
+    //[HttpPost("PendingApprove/{id}")]
+    //public async Task<ActionResult<bool>> PendingApprove(string customerId, string prizeId)
+    //{
+    //    try
+    //    {
+    //        var existingCampaign = await _context.Campaigns.FindAsync(campaign.Id);
+    //        if (existingCampaign != null)
+    //            return BadRequest(new { message = "Chiến dịch với ID này đã tồn tại" });
 
+    //        _context.Campaigns.Add(campaign);
+    //        await _context.SaveChangesAsync();
+
+    //        return Ok();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Lỗi khi thêm store mới");
+    //        return StatusCode(500, new { message = "Lỗi hệ thống khi thêm store", error = ex.Message });
+    //    }
+
+    //}
 }
+
+
+    

@@ -19,6 +19,8 @@ public partial class LuckySpinContext : DbContext
 
     public virtual DbSet<Campaign> Campaigns { get; set; }
 
+    public virtual DbSet<CampaignStore> CampaignStores { get; set; }
+
     public virtual DbSet<Prize> Prizes { get; set; }
 
     public virtual DbSet<PrizeKey> PrizeKeys { get; set; }
@@ -35,7 +37,7 @@ public partial class LuckySpinContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-DIK7C96S\\SQLEXPRESS;Database=LuckySpin;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=LuckySpin;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -84,6 +86,29 @@ public partial class LuckySpinContext : DbContext
             entity.Property(e => e.StartDate)
                 .HasColumnType("datetime")
                 .HasColumnName("start_date");
+            entity.Property(e => e.TotalRoll)
+                .HasDefaultValue(0)
+                .HasColumnName("totalroll");
+        });
+
+        modelBuilder.Entity<CampaignStore>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Campaign__3213E83FC06D6D28");
+
+            entity.ToTable("Campaign_Store");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.CampaignId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("campaign_id");
+            entity.Property(e => e.StoreId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("store_id");
         });
 
         modelBuilder.Entity<Prize>(entity =>
@@ -119,14 +144,18 @@ public partial class LuckySpinContext : DbContext
                 .HasDefaultValue(1)
                 .HasColumnName("probability_weight");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
-            entity.Property(e => e.WinnerId)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("winner_id");
             entity.Property(e => e.SignatureKey)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("Signature_key");
+            entity.Property(e => e.StoreId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("store_id");
+            entity.Property(e => e.WinnerId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("winner_id");
 
             entity.HasOne(d => d.Campaign).WithMany(p => p.Prizes)
                 .HasForeignKey(d => d.CampaignId)
@@ -136,7 +165,7 @@ public partial class LuckySpinContext : DbContext
 
         modelBuilder.Entity<PrizeKey>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Prize_Key__3213E83F");
+            entity.HasKey(e => e.Id).HasName("PK__Prize_Ke__3213E83F78CC6447");
 
             entity.ToTable("Prize_Key");
 
@@ -148,13 +177,13 @@ public partial class LuckySpinContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("code");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
             entity.Property(e => e.SignatureKey)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("Signature_key");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -179,6 +208,7 @@ public partial class LuckySpinContext : DbContext
 
             entity.HasOne(d => d.Bill).WithMany(p => p.Products)
                 .HasForeignKey(d => d.BillId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__products__bill_i__4E88ABD4");
         });
 
@@ -215,8 +245,8 @@ public partial class LuckySpinContext : DbContext
 
             entity.HasOne(d => d.Bill).WithOne(p => p.RewardCode)
                 .HasForeignKey<RewardCode>(d => d.BillId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__reward_co__bill___5441852A");
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_reward_codes_bills");
         });
 
         modelBuilder.Entity<Store>(entity =>
@@ -271,8 +301,6 @@ public partial class LuckySpinContext : DbContext
                 .HasConstraintName("FK__Store_Cam__store__44CA3770");
         });
 
-
-
         modelBuilder.Entity<WinnerSession>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__winner_s__3213E83F95A00FD2");
@@ -302,15 +330,6 @@ public partial class LuckySpinContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("phone");
-            entity.Property(e => e.RewardCodeId)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("reward_code_id");
-
-            entity.HasOne(d => d.RewardCode).WithMany(p => p.WinnerSessions)
-                .HasForeignKey(d => d.RewardCodeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__winner_se__rewar__5DCAEF64");
         });
 
         OnModelCreatingPartial(modelBuilder);

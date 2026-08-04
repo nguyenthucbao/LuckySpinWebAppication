@@ -1,7 +1,7 @@
 ﻿@page "/customer-info"
 @rendermode InteractiveServer
 @using LuckySpinFE.Dto
-@using System.Text.RegularExpressions @* Thêm thư viện này để dùng Regex *@
+@using System.Text.RegularExpressions
 @inject LuckySpinFE.Services.LuckySpinApiClient ApiClient
 @inject NavigationManager Nav
 @inject IJSRuntime JS
@@ -88,15 +88,40 @@
             }
         </button>
     </div>
+
+    @if (showFoundPopup && respone != null)
+    {
+        <div class="found-popup-overlay">
+            <div class="found-popup">
+                <span class="big-emoji">🔍</span>
+                <h3>Đã tìm thấy tài khoản</h3>
+                <p class="found-info">
+                    Số điện thoại này đã có tài khoản:<br />
+                    <strong>@respone.FullName</strong><br />
+                    @respone.Email<br />
+                </p>
+                <p class="found-question">Bạn có muốn cập nhật lại thông tin theo tài khoản này không?</p>
+                <div class="found-actions">
+                    <button class="btn-submit" @onclick="ConfirmUseFoundAccount" disabled="@isLoading">Có, cập nhật</button>
+                    <button class="btn-secondary-found" @onclick="DeclineFoundAccount" disabled="@isLoading">Không, giữ thông tin đã nhập</button>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
+    private bool showFoundPopup = false;
+
     private PostCustomerRequest request = new();
+    private GetAccountByPhoneRespone respone = new();
+
+    private bool accountAlreadyExists = false;
+
     private bool submitted = false;
     private bool isLoading = false;
     private string errorMessage = "";
 
-    // Hàm kiểm tra số điện thoại chỉ chứa các chữ số từ 0-9
     private bool IsPhoneValid()
     {
         if (string.IsNullOrWhiteSpace(request.Phone)) return false;
@@ -108,7 +133,6 @@
     {
         submitted = true;
 
-        // Chặn thêm điều kiện nếu số điện thoại không đúng định dạng số
         if (string.IsNullOrWhiteSpace(request.FullName) ||
             string.IsNullOrWhiteSpace(request.Phone) ||
             !IsPhoneValid() ||
@@ -120,16 +144,68 @@
 
         try
         {
+            var foundCustomer = await ApiClient.GetCustomerByPhoneAsync(request.Phone);
+
+            if (foundCustomer != null)
+            {
+                accountAlreadyExists = true;
+                respone.Id = foundCustomer.Id;
+                respone.FullName = foundCustomer.Name;
+                respone.Email = foundCustomer.Mail;
+                respone.Address = foundCustomer.Address;
+
+                isLoading = false;
+                showFoundPopup = true;
+                return;
+            }
+
+            await CreateSessionAndNavigate();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Lỗi: {ex.Message}";
+            isLoading = false;
+        }
+    }
+
+    private async Task ConfirmUseFoundAccount()
+    {
+        if (respone == null) return;
+
+        request.FullName = respone.FullName;
+        request.Phone = respone.Phone;
+        request.Email = respone.Email;
+        request.Address = respone.Address;
+
+        showFoundPopup = false;
+        await CreateSessionAndNavigate();
+    }
+
+    private async Task DeclineFoundAccount()
+    {
+        showFoundPopup = false;
+        accountAlreadyExists = false;
+        await CreateSessionAndNavigate();
+    }
+
+    private async Task CreateSessionAndNavigate()
+    {
+        isLoading = true;
+        errorMessage = "";
+
+        try
+        {
+            if (accountAlreadyExists)////tìm thấy tk
+            {
+                await JS.InvokeVoidAsync("localStorage.setItem", "customerId", respone.Id);
+                Nav.NavigateTo($"/spin-test?customerId={respone.Id}");
+                return;
+            }
+
+
             var customerId = await ApiClient.CreateWinnerSessionAsync(request);
 
-            try
-            {
-                await JS.InvokeVoidAsync("localStorage.setItem", "customerId", customerId);
-            }
-            catch
-            {
-                // ignore
-            }
+            await JS.InvokeVoidAsync("localStorage.setItem", "customerId", customerId);
 
             Nav.NavigateTo($"/spin-test?customerId={customerId}");
         }
@@ -365,5 +441,62 @@
         to {
             transform: rotate(360deg);
         }
+    }
+
+
+
+
+
+
+
+
+    .found-popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
+
+    .found-popup {
+        background: #fff;
+        border-radius: 20px;
+        padding: 2rem 1.75rem;
+        text-align: center;
+        width: 320px;
+        box-sizing: border-box;
+    }
+
+    .found-info {
+        font-size: 14px;
+        color: #444;
+        margin-bottom: 12px;
+        line-height: 1.5;
+    }
+
+    .found-question {
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 1.25rem;
+    }
+
+    .found-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn-secondary-found {
+        width: 100%;
+        height: 44px;
+        border-radius: 12px;
+        border: 1.5px solid #e5e5e5;
+        background: #fff;
+        color: #777;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
     }
 </style>

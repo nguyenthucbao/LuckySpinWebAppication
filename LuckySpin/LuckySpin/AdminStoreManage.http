@@ -1,6 +1,10 @@
 @LuckySpin_HostAddress = http://localhost:5074
 
 
+###
+GET {{LuckySpin_HostAddress}}/api/prize/getprizes
+Accept: application/json
+
 ### In store
 GET {{LuckySpin_HostAddress}}/api/stores/admin
 Accept: application/json
@@ -15,7 +19,7 @@ POST {{LuckySpin_HostAddress}}/api/stores/admin/addstore
 Content-Type: application/json
 {
   "Id": "S001",
-  "StoreLocate": "123 Đường ABC, Quận 2"
+  "StoreLocate": "123 Duong ABC, Quan 2"
 }
 
 ### Delete store
@@ -28,6 +32,22 @@ Accept: application/json
 ###--------------------------------------------CRUD
 
 
+### Add prize in Campaign
+POST {{LuckySpin_HostAddress}}/api/stores/admin/addprizetostore
+Content-Type: application/json
+{
+  "Id": "Prize007",
+  "Name": "Sandal Shoe",
+  "CampaignId": "Cam002",      
+  "PrizeType": "PHYSICAL",
+  "ProbabilityWeight": 0,
+  "Quantity": 1,
+  "IsActive": true,             
+  "CreatedAt": "2026-01-01T00:00:00",
+  "SignatureKey": "SANDALSHOE",
+  "StoreId": "S001"
+}
+
 ### Get Prize in Campaign store
 GET {{LuckySpin_HostAddress}}/api/stores/admin/storecampaignprize/S001/Cam001
 Accept: application/json
@@ -38,8 +58,8 @@ Content-Type: application/json
 {
     "StoreId": "S001",
     "CampaignId": "Cam001",
-    "PrizeName": "Prize name 1",
-    "NewProbabilityWeight": "50"
+    "PrizeName": "SandalShoePremier",
+    "NewProbabilityWeight": "20"
 }
 
 ### New Campaign in store
@@ -47,9 +67,11 @@ POST {{LuckySpin_HostAddress}}/api/stores/admin/addcampaigntostore/S001/Cam001
 Accept: application/json
 
 ### Remove Campaign in store
-DELETE {{LuckySpin_HostAddress}}/api/stores/admin/removecampaignfromstore/S001/Cam003
+DELETE {{LuckySpin_HostAddress}}/api/stores/admin/removecampaignfromstore/S001/Cam002
 Accept: application/json
 
-
+### export
+GET {{LuckySpin_HostAddress}}/api/stores/admin/export-excel
+Accept: application/json
 
 

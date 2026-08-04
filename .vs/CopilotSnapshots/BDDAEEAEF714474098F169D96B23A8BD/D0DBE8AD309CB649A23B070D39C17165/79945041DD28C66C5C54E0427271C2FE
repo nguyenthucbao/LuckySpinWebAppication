@@ -1,0 +1,409 @@
+﻿@page "/admin/campaign/{storeId}/{campaignId}"
+@rendermode InteractiveServer
+@using LuckySpinAdmin.Dto
+@using LuckySpinAdmin.Service
+@layout AdminLayout
+@inject LuckySpinApiClient ApiClient
+@inject NavigationManager NavigationManager
+
+<div>
+    @if (isLoading)
+    {
+        <div class="text-[13px] text-neutral-400">Đang tải...</div>
+    }
+    else if (!string.IsNullOrEmpty(loadError))
+    {
+        <div class="text-[13px] text-red-500">@loadError</div>
+    }
+
+    @* ---------- BREADCRUMB ---------- *@
+    <div class="flex items-center gap-2 text-[13px] text-neutral-500 mb-6">
+        <span class="cursor-pointer hover:text-neutral-800" @onclick="() => NavigationManager.NavigateTo($'/admin/store/{StoreId}')">
+            Chi nhánh
+        </span>
+        <span>/</span>
+        <span class="cursor-pointer hover:text-neutral-800" @onclick="() => NavigationManager.NavigateTo($'/admin/store/{StoreId}')">
+            @SelectedStore?.StoreLocate
+        </span>
+        @if (SelectedCampaign != null)
+        {
+            <span>/</span>
+            <span class="text-neutral-900 font-semibold">@SelectedCampaign.Name</span>
+        }
+    </div>
+
+    @* ================= VIEW: PRIZE LIST ================= *@
+    @if (SelectedCampaign != null)
+    {
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <button class="btn-back" @onclick="GoBack">← Quay lại</button>
+                <div>
+                    <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">@SelectedCampaign.Name</h1>
+                    <p class="text-[13px] text-neutral-500 mt-0.5">Chi nhánh @SelectedStore?.StoreLocate</p>
+                </div>
+            </div>
+            <button class="btn-primary" @onclick="SaveProbabilityChanges" disabled="@isSavingPrizes">
+                @(isSavingPrizes ? "Đang lưu..." : "Lưu")
+            </button>
+        </div>
+
+        @if (CampaignPrizes.Count == 0)
+        {
+            <div class="empty-box">Chưa có giải thưởng nào cho chương trình này tại cửa hàng.</div>
+        }
+        else
+        {
+            <div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden">
+                <table class="w-full text-[13.5px]">
+                    <thead>
+                        <tr class="text-left text-neutral-400 text-[11.5px] uppercase tracking-wide border-b border-neutral-100">
+                            <th class="px-5 py-3 font-semibold">Tên phần thưởng</th>
+                            <th class="px-5 py-3 font-semibold">Số lượng</th>
+                            <th class="px-5 py-3 font-semibold">Kích hoạt</th>
+                            <th class="px-5 py-3 font-semibold">Tỷ lệ giải thưởng (100%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in CampaignPrizes)
+                        {
+                            <tr class="border-b border-neutral-50 last:border-0 hover:bg-neutral-50/70 transition-colors">
+                                <td class="px-5 py-2.5">
+                                    <span class="font-semibold text-neutral-900">@p.Name ( x @p.Quantity )</span>
+                                    <div class="text-[11.5px] text-neutral-400 mt-0.5">@p.PrizeType</div>
+                                </td>
+                                <td class="px-5 py-2.5 text-neutral-600">@p.PrizeQuantity</td>
+                                <td class="px-5 py-2.5">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked="@p.IsActive" disabled />
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                                <td class="px-5 py-2.5">
+                                    <input type="number" min="0" class="weight-input" @bind="p.EditedWeight" @bind:event="oninput" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(prizeSaveToast))
+        {
+            <div class="toast">@prizeSaveToast</div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? StoreId { get; set; }
+
+    [Parameter]
+    public string? CampaignId { get; set; }
+
+    private GetStoresInfo? SelectedStore;
+    private GetCampaignInfo? SelectedCampaign;
+    private List<PrizeRowVm> CampaignPrizes = new();
+
+    private class PrizeRowVm
+    {
+        public string Name { get; set; } = "";
+        public string PrizeType { get; set; } = "";
+        public int Quantity { get; set; }
+        public int PrizeQuantity { get; set; }
+        public bool IsActive { get; set; }
+        public int OriginalWeight { get; set; }
+        public int EditedWeight { get; set; }
+    }
+
+    private bool isLoading = false;
+    private string? loadError;
+    private bool isSavingPrizes = false;
+    private string prizeSaveToast = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCampaignData();
+    }
+
+    private async Task LoadCampaignData()
+    {
+        if (string.IsNullOrEmpty(StoreId) || string.IsNullOrEmpty(CampaignId))
+            return;
+
+        isLoading = true;
+        loadError = null;
+        try
+        {
+            // Load store info
+            SelectedStore = await ApiClient.GetStoreInfoAsync(StoreId);
+            if (SelectedStore == null)
+            {
+                loadError = "Không tìm thấy cửa hàng.";
+                isLoading = false;
+                return;
+            }
+
+            // Find campaign in store campaigns
+            SelectedCampaign = SelectedStore.Campaigns?.FirstOrDefault(c => c.Id == CampaignId);
+            if (SelectedCampaign == null)
+            {
+                loadError = "Không tìm thấy chương trình.";
+                isLoading = false;
+                return;
+            }
+
+            // Load prizes
+            var prizes = await ApiClient.GetStoreCampaignPrizesAsync(StoreId, CampaignId) ?? new();
+            CampaignPrizes = prizes.Select(p => new PrizeRowVm
+            {
+                Name = p.Name,
+                PrizeType = p.PrizeType,
+                Quantity = p.Quantity,
+                PrizeQuantity = p.PrizeQuantity,
+                IsActive = p.IsActive,
+                OriginalWeight = p.ProbabilityWeight,
+                EditedWeight = p.ProbabilityWeight
+            }).ToList();
+        }
+        catch (Exception ex)
+        {
+            loadError = "Không tải được dữ liệu: " + ex.Message;
+        }
+        isLoading = false;
+    }
+
+    private async Task SaveProbabilityChanges()
+    {
+        if (StoreId == null || SelectedCampaign == null) return;
+
+        var changed = CampaignPrizes.Where(p => p.EditedWeight != p.OriginalWeight).ToList();
+        if (changed.Count == 0)
+        {
+            prizeSaveToast = "Không có thay đổi nào để lưu";
+            StateHasChanged();
+            _ = ClearPrizeToastAfterDelay();
+            return;
+        }
+
+        isSavingPrizes = true;
+        StateHasChanged();
+
+        var successCount = 0;
+        foreach (var p in changed)
+        {
+            var dto = new ProbabilityChangeDto
+            {
+                StoreId = StoreId,
+                CampaignId = SelectedCampaign.Id,
+                PrizeName = p.Name,
+                NewProbabilityWeight = p.EditedWeight
+            };
+
+            var isSuccess = await ApiClient.ChangeProbabilityWeightAsync(dto);
+            if (isSuccess)
+            {
+                p.OriginalWeight = p.EditedWeight;
+                successCount++;
+            }
+        }
+
+        isSavingPrizes = false;
+        prizeSaveToast = successCount == changed.Count
+            ? $"Đã lưu {successCount} thay đổi"
+            : $"Đã lưu {successCount}/{changed.Count} thay đổi, một số lỗi";
+        StateHasChanged();
+        _ = ClearPrizeToastAfterDelay();
+    }
+
+    private async Task ClearPrizeToastAfterDelay()
+    {
+        await Task.Delay(2500);
+        prizeSaveToast = "";
+        StateHasChanged();
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/admin/store/{StoreId}");
+    }
+}
+
+<style>
+    .btn-primary {
+        background: linear-gradient(135deg, #FB5607, #FFBE0B);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.15s;
+    }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+    .btn-back {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #57534E;
+        background: #F5F5F4;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-back:hover {
+            background: #E7E5E4;
+        }
+
+    .empty-box {
+        background: #fff;
+        border: 1.5px dashed #E7E5E4;
+        border-radius: 14px;
+        padding: 28px;
+        text-align: center;
+        color: #A8A29E;
+        font-size: 13px;
+    }
+
+    .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: #1C1917;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 12px 18px;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+    }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .toggle-slider {
+        position: absolute;
+        inset: 0;
+        background: #D6D3D1;
+        border-radius: 999px;
+        transition: background 0.15s;
+    }
+
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.15s;
+        }
+
+    .toggle-switch input:checked + .toggle-slider {
+        background: #2563EB;
+    }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(18px);
+        }
+
+    .weight-input {
+        width: 80px;
+        height: 36px;
+        border: 1.5px solid #E7E5E4;
+        border-radius: 8px;
+        padding: 0 10px;
+        font-size: 13px;
+        font-weight: 600;
+        outline: none;
+    }
+
+        .weight-input:focus {
+            border-color: #FB5607;
+        }
+
+    .flex {
+        display: flex;
+    }
+
+    .items-center {
+        align-items: center;
+    }
+
+    .justify-between {
+        justify-content: space-between;
+    }
+
+    .justify-end {
+        justify-content: flex-end;
+    }
+
+    .gap-3 {
+        gap: 0.75rem;
+    }
+
+    .gap-2 {
+        gap: 0.5rem;
+    }
+
+    .flex-col {
+        flex-direction: column;
+    }
+
+    .w-full {
+        width: 100%;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .overflow-hidden {
+        overflow: hidden;
+    }
+
+    .mb-6 {
+        margin-bottom: 1.5rem;
+    }
+
+    .mb-5 {
+        margin-bottom: 1.25rem;
+    }
+
+    .mt-0.5 {
+        margin-top: 0.125rem;
+    }
+
+    ::deep input[type="checkbox"] {
+        cursor: pointer;
+    }
+</style>

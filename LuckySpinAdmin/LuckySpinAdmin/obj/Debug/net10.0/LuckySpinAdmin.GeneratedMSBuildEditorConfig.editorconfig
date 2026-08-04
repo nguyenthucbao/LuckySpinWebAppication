@@ -27,8 +27,16 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Project/GitPJ/LuckySpinWebAppication/LuckySpinAdmin/LuckySpinAdmin/Components/Layout/AdminLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcQWRtaW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Project/GitPJ/LuckySpinWebAppication/LuckySpinAdmin/LuckySpinAdmin/Components/Pages/AdminDashboard.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBZG1pbkRhc2hib2FyZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/GitPJ/LuckySpinWebAppication/LuckySpinAdmin/LuckySpinAdmin/Components/Pages/CampaignManagement.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDYW1wYWlnbk1hbmFnZW1lbnQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project/GitPJ/LuckySpinWebAppication/LuckySpinAdmin/LuckySpinAdmin/Components/Pages/Component.razor]
@@ -51,6 +59,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xOb3RGb3VuZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Project/GitPJ/LuckySpinWebAppication/LuckySpinAdmin/LuckySpinAdmin/Components/Pages/StoreManagement.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdG9yZU1hbmFnZW1lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Project/GitPJ/LuckySpinWebAppication/LuckySpinAdmin/LuckySpinAdmin/Components/Pages/Weather.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWF0aGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
@@ -66,10 +78,6 @@ build_metadata.AdditionalFiles.CssScope =
 [D:/Project/GitPJ/LuckySpinWebAppication/LuckySpinAdmin/LuckySpinAdmin/Components/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-9qypxpc0lq
-
-[D:/Project/GitPJ/LuckySpinWebAppication/LuckySpinAdmin/LuckySpinAdmin/Components/Layout/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-4e1l12uhai
 
 [D:/Project/GitPJ/LuckySpinWebAppication/LuckySpinAdmin/LuckySpinAdmin/Components/Layout/ReconnectModal.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcUmVjb25uZWN0TW9kYWwucmF6b3I=

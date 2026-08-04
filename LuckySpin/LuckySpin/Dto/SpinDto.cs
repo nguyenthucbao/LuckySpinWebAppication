@@ -16,8 +16,8 @@ namespace LuckySpin.Dto
     {
         public string RewardCode { get; set; } = string.Empty;
 
-        /// <summary>Số lượt quay còn lại SAU lần quay này.</summary>
         public int RemainingSpins { get; set; }
+        public bool IsWin { get; set; }
 
         public PrizeResult WonPrize { get; set; } = null!;
     }

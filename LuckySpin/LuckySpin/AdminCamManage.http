@@ -1,12 +1,15 @@
 @LuckySpin_HostAddress = http://localhost:5074
 
+###
+GET {{LuckySpin_HostAddress}}/api/prize/getprizes
+Accept: application/json
 
 ### In campaign
 GET {{LuckySpin_HostAddress}}/api/campaigns/admin
 Accept: application/json
 
 ### Campaign by id
-GET {{LuckySpin_HostAddress}}/api/campaigns/admin/getcambyid/Cam002
+GET {{LuckySpin_HostAddress}}/api/campaigns/admin/getcambyid/Cam001
 Accept: application/json
 
 
@@ -14,37 +17,47 @@ Accept: application/json
 POST {{LuckySpin_HostAddress}}/api/campaigns/admin/addcampaign
 Content-Type: application/json
 {
-  "Id": "Cam004",
-  "CampaignName": "Hè 2028",
+  "Id": "Cam002",
+  "CampaignName": "Chien dich he 2027",
   "StartAt": "2026-01-01T00:00:00",
   "EndAt": "2026-12-01T00:00:00"
 }
 
 ### Delete campaign
-DELETE {{LuckySpin_HostAddress}}/api/campaigns/admin/deletecampaign/Cam001
+DELETE {{LuckySpin_HostAddress}}/api/campaigns/admin/deletecampaign/Cam003
 Accept: application/json
 
 
 
 ### Change campaign info 
-POST {{LuckySpin_HostAddress}}/api/campaigns/admin/changecampaigninfo/Cam001/2026-01-01T00:00:00/2026-12-01T00:00:00
-Accept: application/json
+POST {{LuckySpin_HostAddress}}/api/campaigns/admin/changecampaigninfo
+Content-Type: application/json
+{
+  "Id": "Cam001",
+  "CampaignName": "Chien dich he 2027",
+  "StartDate": "2026-01-01T00:00:00",
+  "EndDate": "2026-12-01T00:00:00"
+}
+###-----------------------------------------------CRUD
 
 
 ### Add prize in Campaign
 POST {{LuckySpin_HostAddress}}/api/campaigns/admin/addprize
 Content-Type: application/json
 {
-  "Id": "Prize007",
-  "Name": "Prize name 3",
-  "CampaignId": "Cam001",      
+  "Id": "Prize008",
+  "Name": "Prize name 4",
+  "CampaignId": "Cam002",      
   "PrizeType": "PHYSICAL",
   "ProbabilityWeight": 50,
   "Quantity": 1,
   "IsActive": true,             
   "CreatedAt": "2026-01-01T00:00:00",
-  "SignatureKey": "PRIZENAME3"
+  "SignatureKey": "PRIZENAME4"
 }
-###-----------------------------------------------CRUD
+
+
+
+
 
 

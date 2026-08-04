@@ -11,7 +11,7 @@ public partial class StoreCampaignPrize
 
     public string? PrizeId { get; set; }
 
-    public int ProbabilityWeight { get; set; }
+    public int? ProbabilityWeight { get; set; }
 
     public bool? IsActive { get; set; }
 

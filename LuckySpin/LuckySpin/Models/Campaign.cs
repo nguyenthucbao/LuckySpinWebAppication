@@ -7,11 +7,13 @@ public partial class Campaign
 {
     public string Id { get; set; } = null!;
 
-    public string CampaignName { get; set; } = null!;
+    public string? CampaignName { get; set; }
 
     public DateTime? StartDate { get; set; }
 
     public DateTime? EndDate { get; set; }
+
+    public int? TotalRoll { get; set; }
 
     public virtual ICollection<Prize> Prizes { get; set; } = new List<Prize>();
 }

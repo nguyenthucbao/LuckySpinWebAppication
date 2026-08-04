@@ -29,14 +29,14 @@ Accept: application/json
 POST {{LuckySpin_HostAddress}}/api/bills/pos/newbill
 Content-Type: application/json
 {
-  "id": "Bill006",
-  "storeId": "S001",
-  "storeLocate": "Store locate 001",
-  "totalAmount": 1000000.00,
+  "id": "Bill007",
+  "storeId": "S003",
+  "storeLocate": "Store locate 003",
+  "totalAmount": 300000.00,
   "paymentMethod": "online",
   "products": [
-    { "id": "Product011", "name": "product11", "quantity": 1 },
-    { "id": "Product012", "name": "product12", "quantity": 1 }
+    { "id": "Product013", "name": "product13", "quantity": 1 },
+    { "id": "Product014", "name": "product14", "quantity": 1 }
   ]
 }
 
@@ -104,7 +104,15 @@ Content-Type: application/json
 }
 
 ### In
-GET {{LuckySpin_HostAddress}}/api/WinnerSessions
+GET {{LuckySpin_HostAddress}}/api/WinnerSessions/GetCustomerList
+Accept: application/json
+
+### Get customerinfo by phone
+GET {{LuckySpin_HostAddress}}/api/WinnerSessions/GetByPhoneNumber/111111111
+Accept: application/json
+
+### Get prizes by customerid
+GET {{LuckySpin_HostAddress}}/api/WinnerSessions/GetCustomerPrizeById/CUSTOMER-C8DDE2AF
 Accept: application/json
 
 ###############################################################

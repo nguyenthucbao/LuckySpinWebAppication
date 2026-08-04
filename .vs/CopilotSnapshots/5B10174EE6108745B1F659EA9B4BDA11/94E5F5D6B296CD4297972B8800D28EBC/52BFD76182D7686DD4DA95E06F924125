@@ -1,0 +1,344 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
+namespace LuckySpin.Models;
+
+public partial class LuckySpinContext : DbContext
+{
+    public LuckySpinContext()
+    {
+    }
+
+    public LuckySpinContext(DbContextOptions<LuckySpinContext> options)
+        : base(options)
+    {
+    }
+
+    public virtual DbSet<Bill> Bills { get; set; }
+
+    public virtual DbSet<Campaign> Campaigns { get; set; }
+
+    public virtual DbSet<CampaignStore> CampaignStores { get; set; }
+
+    public virtual DbSet<Prize> Prizes { get; set; }
+
+    public virtual DbSet<PrizeKey> PrizeKeys { get; set; }
+
+    public virtual DbSet<Product> Products { get; set; }
+
+    public virtual DbSet<RewardCode> RewardCodes { get; set; }
+
+    public virtual DbSet<Store> Stores { get; set; }
+
+    public virtual DbSet<StoreCampaignPrize> StoreCampaignPrizes { get; set; }
+
+    public virtual DbSet<WinnerSession> WinnerSessions { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=LuckySpin;Trusted_Connection=True;TrustServerCertificate=True;");
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Bill>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__bills__3213E83FFD4B5CB7");
+
+            entity.ToTable("bills");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.PaymentMethod)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("payment_method");
+            entity.Property(e => e.StoreId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("store_id");
+            entity.Property(e => e.StoreLocate)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("store_locate");
+            entity.Property(e => e.TotalAmount)
+                .HasColumnType("decimal(15, 2)")
+                .HasColumnName("total_amount");
+        });
+
+        modelBuilder.Entity<Campaign>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Campaign__3213E83F5DE7C939");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.CampaignName)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("campaign_name");
+            entity.Property(e => e.EndDate)
+                .HasColumnType("datetime")
+                .HasColumnName("end_date");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("start_date");
+        });
+
+        modelBuilder.Entity<CampaignStore>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Campaign_Store__3213E83F");
+
+            entity.ToTable("Campaign_Store");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.StoreId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("store_id");
+            entity.Property(e => e.CampaignId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("campaign_id");
+        });
+
+        modelBuilder.Entity<Prize>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__prizes__3213E83FA8FEFADE");
+
+            entity.ToTable("prizes");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.CampaignId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("campaign_id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
+            entity.Property(e => e.Name)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.PrizeType)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("prize_type");
+            entity.Property(e => e.ProbabilityWeight)
+                .HasDefaultValue(1)
+                .HasColumnName("probability_weight");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.SignatureKey)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("Signature_key");
+            entity.Property(e => e.WinnerId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("winner_id");
+            entity.Property(e => e.StoreId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("store_id");
+
+            entity.HasOne(d => d.Campaign).WithMany(p => p.Prizes)
+                .HasForeignKey(d => d.CampaignId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_prizes_campaigns");
+        });
+
+        modelBuilder.Entity<PrizeKey>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Prize_Ke__3213E83F78CC6447");
+
+            entity.ToTable("Prize_Key");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("code");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
+            entity.Property(e => e.SignatureKey)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("Signature_key");
+        });
+
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__products__3213E83FE658F326");
+
+            entity.ToTable("products");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.BillId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("bill_id");
+            entity.Property(e => e.Name)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+            entity.HasOne(d => d.Bill).WithMany(p => p.Products)
+                .HasForeignKey(d => d.BillId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__products__bill_i__4E88ABD4");
+        });
+
+        modelBuilder.Entity<RewardCode>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__reward_c__3213E83F4A4EC44B");
+
+            entity.ToTable("reward_codes");
+
+            entity.HasIndex(e => e.Code, "UQ__reward_c__357D4CF97ED6A960").IsUnique();
+
+            entity.HasIndex(e => e.BillId, "UQ__reward_c__D706DDB2C0B50882").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.BillId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("bill_id");
+            entity.Property(e => e.Code)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("code");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.RemainingSpins).HasColumnName("remaining_spins");
+            entity.Property(e => e.SpinCount)
+                .HasDefaultValue(1)
+                .HasColumnName("spin_count");
+
+            entity.HasOne(d => d.Bill).WithOne(p => p.RewardCode)
+                .HasForeignKey<RewardCode>(d => d.BillId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_reward_codes_bills");
+        });
+
+        modelBuilder.Entity<Store>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Stores__3213E83F46CE11AC");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.StoreLocate)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("store_locate");
+        });
+
+        modelBuilder.Entity<StoreCampaignPrize>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Store_Ca__3213E83F1AF28974");
+
+            entity.ToTable("Store_Campaign_Prizes");
+
+            entity.HasIndex(e => new { e.StoreId, e.PrizeId }, "UNIQUE_store_campaign_prize").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
+            entity.Property(e => e.PrizeId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("prize_id");
+            entity.Property(e => e.ProbabilityWeight)
+                .HasDefaultValue(1)
+                .HasColumnName("probability_weight");
+            entity.Property(e => e.StoreId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("store_id");
+
+            entity.HasOne(d => d.Prize).WithMany(p => p.StoreCampaignPrizes)
+                .HasForeignKey(d => d.PrizeId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Store_Cam__prize__45BE5BA9");
+
+            entity.HasOne(d => d.Store).WithMany(p => p.StoreCampaignPrizes)
+                .HasForeignKey(d => d.StoreId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__Store_Cam__store__44CA3770");
+        });
+
+        modelBuilder.Entity<WinnerSession>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__winner_s__3213E83F95A00FD2");
+
+            entity.ToTable("winner_sessions");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("id");
+            entity.Property(e => e.Address)
+                .HasColumnType("text")
+                .HasColumnName("address");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("email");
+            entity.Property(e => e.FullName)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("full_name");
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("phone");
+            entity.Property(e => e.RewardCodeId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("reward_code_id");
+
+            entity.HasOne(d => d.RewardCode).WithMany(p => p.WinnerSessions)
+                .HasForeignKey(d => d.RewardCodeId)
+                .HasConstraintName("FK__winner_se__rewar__5DCAEF64");
+        });
+
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}

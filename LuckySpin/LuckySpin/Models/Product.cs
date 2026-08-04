@@ -7,11 +7,11 @@ public partial class Product
 {
     public string Id { get; set; } = null!;
 
-    public string BillId { get; set; } = null!;
+    public string? BillId { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string? Name { get; set; }
 
-    public int Quantity { get; set; }
+    public int? Quantity { get; set; }
 
-    public virtual Bill Bill { get; set; } = null!;
+    public virtual Bill? Bill { get; set; }
 }

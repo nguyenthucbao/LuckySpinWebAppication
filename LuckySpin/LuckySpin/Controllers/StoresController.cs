@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
 using LuckySpin.Dto;
 using LuckySpin.Models;
 using LuckySpin.Services;
@@ -63,32 +64,34 @@ namespace LuckySpin.Controllers
 
             var rewardCodes = bills.Where(b => b.RewardCode != null).Select(b => b.RewardCode!).ToList();
 
-            var storePrizes = await _context.StoreCampaignPrizes
-                .Where(scp => scp.StoreId == store.Id)
-                .Include(scp => scp.Prize)
-                .ThenInclude(p => p.Campaign)
-                .ToListAsync();
-
-            var campaigns = storePrizes
-                .Where(scp => scp.Prize != null && scp.Prize.Campaign != null)
-                .GroupBy(scp => scp.Prize.Campaign)
-                .Select(g => new GetCampaignInfo
+            var campaignStore = (await _context.CampaignStores
+                .Where(cs => cs.StoreId == id)
+                .Join(
+                    _context.Campaigns,
+                    cs => cs.CampaignId,
+                    c => c.Id,
+                    (cs, c) => new { cs, c }
+                )
+                .ToListAsync())  
+                .Select(x => new GetCampaignInfo 
                 {
-                    Id = g.Key.Id,
-                    Name = g.Key.CampaignName,
-                    StartAt = g.Key.StartDate ?? DateTime.MinValue,
-                    EndAt = g.Key.EndDate ?? DateTime.MinValue
+                    Id = x.c.Id,
+                    CampaignName = x.c.CampaignName,
+                    StartDate = x.c.StartDate ?? DateTime.MinValue,
+                    EndDate = x.c.EndDate ?? DateTime.MinValue
                 })
                 .ToList();
+
+
 
             var result = new GetStoresInfo
             {
                 Id = store.Id,
                 StoreLocate = store.StoreLocate,
-                StoreAmount = bills.Sum(x => x.TotalAmount),
-                StoreSpinCount = rewardCodes.Sum(x => x.SpinCount),
-                StoreUsedSpinCount = rewardCodes.Sum(x => x.SpinCount - x.RemainingSpins),
-                Campaigns = campaigns
+                StoreAmount = bills.Sum(x => x.TotalAmount ?? 0),
+                StoreSpinCount = rewardCodes.Sum(x => x.SpinCount ?? 0),
+                StoreUsedSpinCount = rewardCodes.Sum(x => (x.SpinCount ?? 0) - (x.RemainingSpins ?? 0)),
+                Campaigns = campaignStore
             };
 
             return Ok(result);
@@ -109,7 +112,7 @@ namespace LuckySpin.Controllers
                 _context.Stores.Add(store);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetStores), new { storeId = store.Id }, store);
+                return Ok(new { message = "Đã thêm store thành công" });
             }
             catch (Exception ex)
             {
@@ -131,16 +134,14 @@ namespace LuckySpin.Controllers
                     return NotFound(new { message = "không tìm thấy store" });
 
                 // Get all campaigns linked to this store
-                var storeCampaigns = await _context.StoreCampaignPrizes
-                    .Where(scp => scp.StoreId == storeId)
-                    .Select(scp => scp.Prize.CampaignId)
-                    .Distinct()
+                var campaignStores = await _context.CampaignStores
+                    .Where(cs => cs.StoreId == storeId)
                     .ToListAsync();
 
                 // Remove store from all campaigns
-                foreach (var campaignId in storeCampaigns)
+                foreach (var campaign in campaignStores)
                 {
-                    await _storeService.RemoveStoreCampaignAsync(storeId, campaignId);
+                    await _storeService.RemoveStoreCampaignAsync(storeId, campaign.CampaignId);
                 }
 
                 // Remove store
@@ -181,6 +182,69 @@ namespace LuckySpin.Controllers
             }
         }
 
+        //thêm 1 phần thưởng vào store
+        [HttpPost("admin/addprizetostore")]
+        public async Task<IActionResult> AddPrize([FromBody] Prize prize)
+        {
+            try
+            {
+                var existingPrize = await _context.Prizes.FindAsync(prize.Id);
+                if (existingPrize != null)
+                    return BadRequest(new { message = "Phần thưởng với ID này đã trùng" });
+
+                // 2. Kiểm tra CampaignId có tồn tại hợp lệ không
+                var existingCampaign = await _context.Campaigns.FindAsync(prize.CampaignId);
+                if (existingCampaign == null)
+                    return BadRequest(new { message = "Campaign chưa được khởi tạo" });
+
+                var existingStore = await _context.Stores.FindAsync(prize.StoreId);
+                if (existingStore == null)
+                    return BadRequest(new { message = "Cửa hàng (Store) không tồn tại trên hệ thống" });
+
+
+                var campaignStores = await _context.CampaignStores
+                    .Where(cs => cs.StoreId == prize.StoreId && cs.CampaignId == prize.CampaignId)
+                    .ToListAsync();
+
+                if (!campaignStores.Any())
+                    return BadRequest(new { message = "Cửa hàng chưa đăng kí chương trình này" });
+
+
+                // 4. Tạo thực thể liên kết StoreCampaignPrize
+                var scp = new StoreCampaignPrize
+                {
+                    // BỎ dòng Id = Guid.NewGuid().ToString() NẾU id trong database là kiểu INT tự tăng
+                    Id = Guid.NewGuid().ToString(), 
+                    StoreId = prize.StoreId,
+                    PrizeId = prize.Id,
+                    ProbabilityWeight = prize.ProbabilityWeight,
+                    IsActive = true,
+                };
+
+                // 5. Thêm vào DbContext
+                _context.Prizes.Add(prize);
+                _context.StoreCampaignPrizes.Add(scp);
+
+                // 6. Lưu vào database
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log chi tiết cả InnerException (nơi hiển thị rõ lỗi ràng buộc database như trùng/sai khóa ngoại)
+                var detailedError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                _logger.LogError(ex, "Lỗi khi thêm prize mới: {Message}", detailedError);
+
+                return StatusCode(500, new
+                {
+                    message = "Lỗi hệ thống khi thêm prize",
+                    error = detailedError // Trả về chi tiết để bạn dễ debug lúc này
+                });
+            }
+        }
+
+
 
         // Lấy danh sách giải thưởng của một cửa hàng trong một chiến dịch (gom nhóm theo tên)
         [HttpGet("admin/storecampaignprize/{storeId}/{campaignId}")]
@@ -206,20 +270,23 @@ namespace LuckySpin.Controllers
 
                 var prizes = await _context.StoreCampaignPrizes
                     .Include(scp => scp.Prize)
-                    .Where(scp => scp.StoreId == storeId && scp.Prize != null && scp.Prize.CampaignId == campaignId)
+                    .Where(scp => scp.StoreId == storeId 
+                        && scp.Prize != null 
+                        && scp.Prize.CampaignId == campaignId 
+                        && scp.Prize.IsActive == true)
                     .ToListAsync();
 
                 // Gom nhóm các prize giống nhau theo tên và tính tổng quantity
                 var groupedPrizes = prizes
                     .GroupBy(scp => scp.Prize!.Name)
-                    .Select(g => new GroupedPrize
+                    .Select(g => new GroupedPrizeAdmin
                     {
                         Name = g.Key,
                         PrizeType = g.First().Prize!.PrizeType,
                         Quantity = g.First().Prize!.Quantity ?? 0, // Số lượng voucher/phần thưởng mỗi cái
                         PrizeQuantity = g.Count(), // Số lượng phần thưởng giống nhau có trong store
-                        ProbabilityWeight = g.First().ProbabilityWeight,
-                        IsActive = g.First().Prize!.IsActive
+                        ProbabilityWeight = g.First().ProbabilityWeight ?? 0,
+                        IsActive = g.First().Prize!.IsActive ?? false
                     })
                     .ToList();
 
@@ -232,6 +299,7 @@ namespace LuckySpin.Controllers
         }
 
 
+
         // Cập nhật ProbabilityWeight cho tất cả prize cùng tên trong 1 store/campaign
         [HttpPost("admin/changeprobability")]
         public async Task<IActionResult> ChangeProbabilityWeight([FromBody] ProbabilityChangeDto probabilityChangeDto)
@@ -241,11 +309,6 @@ namespace LuckySpin.Controllers
                 // Validate input
                 if (probabilityChangeDto == null)
                     return BadRequest(new { message = "Dữ liệu không hợp lệ" });
-
-                if (string.IsNullOrEmpty(probabilityChangeDto.StoreId) ||
-                    string.IsNullOrEmpty(probabilityChangeDto.CampaignId) ||
-                    string.IsNullOrEmpty(probabilityChangeDto.PrizeName))
-                    return BadRequest(new { message = "StoreId không được trống" });
 
 
                 if (probabilityChangeDto.NewProbabilityWeight <= 0)
@@ -261,13 +324,14 @@ namespace LuckySpin.Controllers
                 if (campaign == null)
                     return NotFound(new { message = "không tìm thấy campaign" });
 
-                // Tìm tất cả Prize với tên này trong campaign
+                // Tìm tất cả Prize với tên này trong kho hang của store
                 var prizes = await _context.Prizes
-                    .Where(p => p.Name == probabilityChangeDto.PrizeName && p.CampaignId == probabilityChangeDto.CampaignId)
+                    .Where(p => p.Name == probabilityChangeDto.PrizeName && p.CampaignId == probabilityChangeDto.CampaignId && p.StoreId == probabilityChangeDto.StoreId)
                     .ToListAsync();
 
                 if (!prizes.Any())
-                    return NotFound(new { message = "không tìm thấy prize với tên này trong campaign" });
+                    return NotFound(new { message = "không tìm thấy prize với tên này trong kho hàng" });
+
 
                 // Lấy ID của tất cả Prize tìm được
                 var prizeIds = prizes.Select(p => p.Id).ToList();
@@ -278,7 +342,7 @@ namespace LuckySpin.Controllers
                     .ToListAsync();
 
                 if (!storeCampaignPrizes.Any())
-                    return NotFound(new { message = "prize không tồn tại trong store này" });
+                    return NotFound(new { message = "không tìm thấy StoreCampaignPrizes" });
 
                 // Cập nhật ProbabilityWeight cho tất cả record
                 foreach (var scp in storeCampaignPrizes)
@@ -314,44 +378,24 @@ namespace LuckySpin.Controllers
                     return NotFound(new { message = "không tìm thấy campaign" });
 
                 // Check if campaign already exists for this store
-                var existingStoreCampaigns = await _context.StoreCampaignPrizes
-                    .Where(scp => scp.StoreId == storeId && scp.Prize.CampaignId == campaignId)
-                    .FirstOrDefaultAsync();
-                if (existingStoreCampaigns != null)
-                    return BadRequest("Campaign đã tồn tại cho cửa hàng này");
+                var campaignStores = await _context.CampaignStores
+                    .Where(cs => cs.StoreId == storeId && cs.CampaignId == campaignId)
+                    .ToListAsync();
 
-                var result = new List<GetPrize>();
+                if (campaignStores.Any())
+                    return BadRequest(new { message = "Campaign đã tồn tại cho cửa hàng này" });
 
-                // Recreate StoreCampaignPrize each prize in the campaign
-                foreach (var prize in campaign.Prizes)
+                var campaintostore = new CampaignStore // tao 1 record trong bang CampaignStore de luu thong tin store va campaign
                 {
-                    var scp = new StoreCampaignPrize
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        StoreId = storeId,
-                        PrizeId = prize.Id,
-                        ProbabilityWeight = prize.ProbabilityWeight,
-                        IsActive = true,
-                        Prize = prize
-                    };
+                    Id = Guid.NewGuid().ToString(),
+                    StoreId = storeId,
+                    CampaignId = campaignId
+                };
 
-                    result.Add(new GetPrize
-                    {
-                        Id = prize.Id,
-                        Name = prize.Name,
-                        PrizeType = prize.PrizeType,
-                        Quantity = prize.Quantity ?? 0,
-                        ProbabilityWeight = scp.ProbabilityWeight,
-                        IsActive = prize.IsActive
-                    });
-
-                    _context.StoreCampaignPrizes.Add(scp);
-                }
-
+                _context.CampaignStores.Add(campaintostore);
                 await _context.SaveChangesAsync();
 
-                return Ok(result);
-
+                return Ok(campaintostore);
 
             }
             catch (Exception ex)
@@ -374,10 +418,17 @@ namespace LuckySpin.Controllers
                 if (campaign == null)
                     return NotFound(new { message = "không tìm thấy campaign" });
 
+                var campaignStores = await _context.CampaignStores
+                    .Where(cs => cs.StoreId == storeId && cs.CampaignId == campaignId)
+                    .ToListAsync();
+
+                if (!campaignStores.Any())
+                    return NotFound(new { message = "Campaign không tồn tại cho cửa hàng này" });
+
+
+                /////////////////// xóa các phần thưởng được cấu hình trong StoreCampaignPrize
                 var removedCount = await _storeService.RemoveStoreCampaignAsync(storeId, campaignId);
 
-                if (removedCount == 0)
-                    return NotFound(new { message = "Campaign không tồn tại cho cửa hàng này" });
 
                 return Ok(new { message = $"Đã xóa {removedCount} giải thưởng khỏi campaign", removedCount = removedCount });
             }
@@ -390,59 +441,56 @@ namespace LuckySpin.Controllers
 
 
 
+        [HttpGet("admin/export-excel")]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            // 1. Lấy trực tiếp danh sách Store từ Database qua _context
+            var stores = await _context.Stores.AsNoTracking().ToListAsync();
 
+            // 2. Khởi tạo Workbook của ClosedXML
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Danh sách cửa hàng");
 
+                // 3. Tạo Tiêu đề các cột (Header)
+                worksheet.Cell(1, 1).Value = "ID Cửa Hàng";
+                worksheet.Cell(1, 2).Value = "Vị Trí Cửa Hàng";
 
-        //[HttpGet("export-excel")]
-        //public async Task<IActionResult> ExportToExcel()
-        //{
-        //    // 1. Lấy trực tiếp danh sách Store từ Database qua _context
-        //    var stores = await _context.Stores.AsNoTracking().ToListAsync();
+                var headerRange = worksheet.Range("A1:B1");
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F4E78");
+                headerRange.Style.Font.FontColor = XLColor.White;
+                headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-        //    // 2. Khởi tạo Workbook của ClosedXML
-        //    using (var workbook = new XLWorkbook())
-        //    {
-        //        var worksheet = workbook.Worksheets.Add("Danh sách cửa hàng");
+                // 4. Điền dữ liệu từ DB vào các dòng
+                int currentRow = 2;
+                foreach (var store in stores)
+                {
+                    worksheet.Cell(currentRow, 1).Value = store.Id;
+                    worksheet.Cell(currentRow, 2).Value = store.StoreLocate;
 
-        //        // 3. Tạo Tiêu đề các cột (Header)
-        //        worksheet.Cell(1, 1).Value = "ID Cửa Hàng";
-        //        worksheet.Cell(1, 2).Value = "Vị Trí Cửa Hàng";
+                    // Định dạng dữ liệu (Căn giữa cột ID cho gọn)
+                    worksheet.Cell(currentRow, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    currentRow++;
+                }
 
-        //        // Định dạng Header (In đậm, màu nền xanh navy, chữ trắng)
-        //        var headerRange = worksheet.Range("A1:B1");
-        //        headerRange.Style.Font.Bold = true;
-        //        headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F4E78");
-        //        headerRange.Style.Font.FontColor = XLColor.White;
-        //        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                // 5. Tự động căn rộng cột theo độ dài chữ
+                worksheet.Columns().AdjustToContents();
 
-        //        // 4. Điền dữ liệu từ DB vào các dòng
-        //        int currentRow = 2;
-        //        foreach (var store in stores)
-        //        {
-        //            worksheet.Cell(currentRow, 1).Value = store.Id;
-        //            worksheet.Cell(currentRow, 2).Value = store.StoreLocate;
+                // 6. Ghi dữ liệu vào Stream để trả về file
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
 
-        //            // Định dạng dữ liệu (Căn giữa cột ID cho gọn)
-        //            worksheet.Cell(currentRow, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-        //            currentRow++;
-        //        }
+                    string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    string fileName = "Danh_Sach_Cua_Hang.xlsx";
 
-        //        // 5. Tự động căn rộng cột theo độ dài chữ
-        //        worksheet.Columns().AdjustToContents();
+                    return File(content, contentType, fileName);
+                }
+            }
+        }
 
-        //        // 6. Ghi dữ liệu vào Stream để trả về file
-        //        using (var stream = new MemoryStream())
-        //        {
-        //            workbook.SaveAs(stream);
-        //            var content = stream.ToArray();
-
-        //            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        //            string fileName = "Danh_Sach_Cua_Hang.xlsx";
-
-        //            return File(content, contentType, fileName);
-        //        }
-        //    }
-        //}
 
     }
 }

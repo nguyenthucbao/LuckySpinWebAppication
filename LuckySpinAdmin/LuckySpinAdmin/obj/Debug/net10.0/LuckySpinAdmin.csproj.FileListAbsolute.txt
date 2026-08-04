@@ -106,7 +106,6 @@ D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\scopedcss\Components\Layout\MainLayout.razor.rz.scp.css
-D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\scopedcss\Components\Layout\ReconnectModal.razor.rz.scp.css
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\scopedcss\bundle\LuckySpinAdmin.styles.css
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\scopedcss\projectbundle\LuckySpinAdmin.bundle.scp.css
@@ -169,5 +168,5 @@ D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\LuckySpinAdmin.genruntimeconfig.cache
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\ref\LuckySpinAdmin.dll
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\x8tq0d7blt-{0}-u31y0wfcze-u31y0wfcze.gz
-D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\vj39n40wx3-{0}-mo2upa1y7k-mo2upa1y7k.gz
-D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\eu80xzkn1a-{0}-mo2upa1y7k-mo2upa1y7k.gz
+D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\vj39n40wx3-{0}-h5mevfadsx-h5mevfadsx.gz
+D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\eu80xzkn1a-{0}-h5mevfadsx-h5mevfadsx.gz

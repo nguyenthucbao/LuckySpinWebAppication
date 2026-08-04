@@ -1,70 +1,124 @@
-﻿using System.Net.Http.Json;
-using LuckySpinAdmin.Dto;
+﻿using LuckySpinAdmin.Dto;
+using System.Net.Http.Json;
+using static System.Net.WebRequestMethods;
 
 namespace LuckySpinAdmin.Service;
 
 public class LuckySpinApiClient(HttpClient http)
 {
 
-    public async Task<List<StoreDto>> GetStoresAsync()
+    /// /////////////////////////////////////////////// STORE API ////////////////////////////////
+
+    public async Task<List<GetStores>?> GetStoresAsync()
     {
-        return await http.GetFromJsonAsync<List<StoreDto>>("api/stores") ?? new();
+        var response = await http.GetAsync("api/stores/admin");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<List<GetStores>>();
+    }
+
+    public async Task<List<GetCampaignInfo>?> GetAllCampaignsAsync()
+    {
+        var response = await http.GetAsync("api/campaigns/admin");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<List<GetCampaignInfo>>();
+    }
+
+    public async Task<bool> AddCampaignToStoreAsync(string storeId, string campaignId)
+    {
+        var response = await http.PostAsync($"api/stores/admin/addcampaigntostore/{storeId}/{campaignId}", null);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> DeleteCampaignFromStoreAsync(string storeId, string campaignId)
+    {
+        var response = await http.DeleteAsync($"api/stores/admin/removecampaignfromstore/{storeId}/{campaignId}");
+        return response.IsSuccessStatusCode;
+    }
+
+
+    public async Task<GetStoresInfo?> GetStoreInfoAsync(string storeId)
+    {
+        var response = await http.GetAsync($"api/stores/admin/getstorebyid/{storeId}");
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<GetStoresInfo>();
     }
 
     public async Task<bool> AddStoreAsync(CreateStoreDto store)
     {
-        var response = await http.PostAsJsonAsync("api/stores/addstore", store);
-        return response.IsSuccessStatusCode;
-    }
-
-    public async Task<bool> UpdateStoreLocationAsync(string storeId, string newLocation)
-    {
-        var body = new UpdateStoreLocationDto { StoreLocate = newLocation };
-        var response = await http.PutAsJsonAsync($"api/stores/{storeId}", body);
+        var response = await http.PostAsJsonAsync("api/stores/admin/addstore", store);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> DeleteStoreAsync(string storeId)
     {
-        var response = await http.DeleteAsync($"api/stores/{storeId}");
+        var response = await http.DeleteAsync($"api/stores/admin/deletestore/{storeId}");
         return response.IsSuccessStatusCode;
     }
 
-    // ================= CAMPAIGNS APIS =================
-    // Endpoint bổ sung theo yêu cầu để lấy toàn bộ danh sách Campaign hệ thống có
-    public async Task<List<CampaignDto>> GetAllCampaignsAsync()
+    public async Task<List<GroupedPrizeAdmin>?> GetStoreCampaignPrizesAsync(string storeId, string campaignId)
     {
-        return await http.GetFromJsonAsync<List<CampaignDto>>("api/campaigns") ?? new();
+        var response = await http.GetAsync($"api/stores/admin/storecampaignprize/{storeId}/{campaignId}");
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadFromJsonAsync<List<GroupedPrizeAdmin>>();
     }
 
-    public async Task<List<CampaignDto>> GetCampaignsByStoreAsync(string storeId)
+    public async Task<bool> ChangeProbabilityWeightAsync(ProbabilityChangeDto dto)
     {
-        return await http.GetFromJsonAsync<List<CampaignDto>>($"api/stores/{storeId}/campaigns") ?? new();
-    }
-
-    public async Task<bool> AssignCampaignsToStoreAsync(string storeId, List<string> campaignIds)
-    {
-        var body = new AssignCampaignsDto { CampaignIds = campaignIds };
-        var response = await http.PostAsJsonAsync($"api/stores/{storeId}/campaigns", body);
+        var response = await http.PostAsJsonAsync("api/stores/admin/changeprobability", dto);
         return response.IsSuccessStatusCode;
     }
 
-    // ================= PRIZES APIS =================
-    public async Task<List<PrizeDto>> GetPrizesByCampaignAsync(string campaignId)
+    public async Task<byte[]?> ExportStoresExcelAsync()
     {
-        var prizes = await http.GetFromJsonAsync<List<PrizeDto>>($"api/campaigns/{campaignId}/prizes") ?? new();
-        // Gán giá trị ban đầu cho EditedWeight để thuận tiện cho việc chỉnh sửa trên FE
-        foreach (var prize in prizes)
-        {
-            prize.EditedWeight = prize.ProbabilityWeight;
-        }
-        return prizes;
+        var response = await http.GetAsync("api/stores/admin/export-excel");
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadAsByteArrayAsync();
+
+        
     }
 
-    public async Task<bool> UpdatePrizeWeightAsync(string prizeId, double weight)
+
+    /// /////////////////////////////////////////////// CAMPAIGN API ////////////////////////////////
+    /// 
+
+    // Thêm vào LuckySpinApiClient
+    public async Task<List<GetCampaignInfo>?> GetCampaignsAsync()
     {
-        var body = new UpdatePrizeWeightDto { Weight = weight };
-        var response = await http.PutAsJsonAsync($"api/prizes/{prizeId}/weight", body);
-        return response.IsSuccessStatusCode;
+        var response = await http.GetAsync("api/campaigns/admin");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<List<GetCampaignInfo>>();
     }
+
+    public async Task<CampaignWithPrize?> GetCampaignByIdAsync(string campaignid)
+    {
+        var response = await http.GetAsync($"api/campaigns/admin/getcambyid/{campaignid}");
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<CampaignWithPrize>();
+    }
+
+    public async Task<bool> AddCampaignAsync(GetCampaignInfo campaign)
+    {
+        var res = await http.PostAsJsonAsync("api/campaigns/admin/addcampaign", campaign);
+        return res.IsSuccessStatusCode;
+    }
+   
+
+
+    public async Task<bool> DeleteCampaignAsync(string campaignId)
+    {
+        var res = await http.DeleteAsync($"api/campaigns/admin/deletecampaign/{campaignId}");
+        return res.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> ChangeCampaignInfoAsync(GetCampaignInfo dto)
+    {
+        var res = await http.PostAsJsonAsync("api/campaigns/admin/changecampaigninfo", dto);
+        return res.IsSuccessStatusCode;
+    }
+
+
+   
+
 }

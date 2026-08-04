@@ -1,0 +1,78 @@
+﻿@inherits LayoutComponentBase
+
+<div class="admin-root w-full h-screen flex" style="font-family:'Inter',sans-serif; background:#F7F5F2;">
+
+    @* ============== SIDEBAR ============== *@
+    <aside class="w-64 shrink-0 text-white flex flex-col" style="background:#1C1917;">
+        <div class="px-6 py-6 flex items-center gap-3 border-b border-white/10">
+            <div class="wheel-badge"></div>
+            <div>
+                <div class="font-bold text-[15px]" style="font-family:'Manrope',sans-serif;">LuckySpin</div>
+                <div class="text-[11px] text-white/40">Bảng quản trị</div>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-3 py-4 space-y-1">
+            <NavLink class="nav-item" ActiveClass="active" href="/admin/stores" Match="NavLinkMatch.Prefix">
+                <span class="nav-dot"></span> Quản lý cửa hàng
+            </NavLink>
+
+            <NavLink class="nav-item" ActiveClass="active" href="/admin/campaign" Match="NavLinkMatch.Prefix">
+                <span class="nav-dot"></span> Chương trình khuyến mãi
+            </NavLink> 
+            
+            <div class="nav-item disabled" title="Chưa có API">
+                <span class="nav-dot-empty"></span> Báo cáo &amp; thống kê
+            </div>
+        </nav>
+
+        <div class="px-6 py-4 border-t border-white/10 text-[11px] text-white/30">
+            Dữ liệu hệ thống thực tế
+        </div>
+    </aside>
+
+    @* ============== MAIN CONTENT (rendered by the routed page) ============== *@
+    <main class="flex-1 px-10 py-8 overflow-hidden">
+        @Body
+    </main>
+</div>
+
+<style>
+    ::deep html,
+    ::deep body,
+    ::deep #app,
+    ::deep .page,
+    ::deep main {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100vw !important;
+        max-height: 100vh !important;
+        background-color: #1A1615 !important;
+        overflow: hidden !important;
+    }
+
+    .admin-root {
+        width: 100%;
+        height: 100vh;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;
+    }
+
+        main::-webkit-scrollbar {
+            display: none;
+        }
+
+    
+</style>

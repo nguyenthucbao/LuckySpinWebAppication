@@ -1,0 +1,83 @@
+﻿using LuckySpin.Dto;
+using LuckySpin.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace LuckySpin.Services;
+
+public class BillService : IBillService
+{
+    private readonly LuckySpinContext _db;
+    public BillService(LuckySpinContext db) => _db = db;
+    private const decimal AmountPerSpin = 300000;
+
+    public async Task<GetBillResponseDto> CreateBillAsync(PostBillRequest req)
+    {
+        int spinCount = Math.Max(1, (int)(req.TotalAmount / AmountPerSpin));
+        // Kiểm tra bill 
+        if (await _db.Bills.AnyAsync(b => b.Id == req.Id))
+            throw new InvalidOperationException($"Bill '{req.Id}' đã tồn tại.");
+
+        // Add Bill + Products => gen RewardCode 
+        
+        var bill = new Bill
+        {
+            Id = req.Id,
+            StoreId = req.StoreId ?? "",////////////////////////////
+            StoreLocate = req.StoreLocate,
+            TotalAmount = req.TotalAmount,
+            PaymentMethod = req.PaymentMethod,
+            Products = req.Products.Select(p => new Product
+            {
+                Id = p.Id,
+                BillId = req.Id,
+                Name = p.Name,
+                Quantity = p.Quantity
+            }).ToList(),
+        };
+
+        var rewardCode = new RewardCode
+        {
+            Id = Guid.NewGuid().ToString(),
+            BillId = req.Id,
+            Code = GenerateCode(),
+            SpinCount = spinCount,
+            RemainingSpins = spinCount,
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        _db.Bills.Add(bill);
+        _db.RewardCodes.Add(rewardCode);
+
+        try
+        {
+            await _db.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            var innerMessage = ex.InnerException?.Message ?? ex.Message;
+            throw new Exception($"Lỗi lưu Database (500): {innerMessage}");
+        }
+
+        return new GetBillResponseDto
+        {
+            Id = bill.Id,
+            StoreId = bill.StoreId,
+            StoreLocate = bill.StoreLocate,
+            TotalAmount = bill.TotalAmount,
+            PaymentMethod = bill.PaymentMethod,
+            Products = req.Products,
+            RewardCode = new DbRewardCodeDto
+            {
+                Id = rewardCode.Id,
+                Code = rewardCode.Code,
+                SpinCount = rewardCode.SpinCount,
+                RemainingSpins = rewardCode.RemainingSpins,
+                CreatedAt = rewardCode.CreatedAt
+            }
+        };
+    }
+
+
+    private static string GenerateCode()
+        => $"LUCKY-{Guid.NewGuid().ToString("N")[..8].ToUpper()}";
+}

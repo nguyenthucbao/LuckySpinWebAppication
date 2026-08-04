@@ -108,11 +108,21 @@
     {
         <div class="popup-overlay">
             <div class="popup">
-                @if (result.RemainingSpins > 0)
+                @if (result.IsWin)
                 {
                     <span class="big-emoji">🎉</span>
                     <h3>Chúc mừng!</h3>
                     <div class="prize-name">@result.WonPrize?.Name</div>
+                }
+                else
+                {
+                    <span class="big-emoji">😢</span>
+                    <h3>Chúc bạn may mắn lần sau!</h3>
+                    <p class="confirm-text">Lượt quay này bạn chưa trúng phần thưởng nào.</p>
+                }
+
+                @if (result.RemainingSpins > 0)
+                {
                     <div class="spins-left">
                         Số lượt quay còn lại: <strong>@result.RemainingSpins</strong>
                     </div>
@@ -125,9 +135,6 @@
                 }
                 else
                 {
-                    <span class="big-emoji">🎉</span>
-                    <h3>Chúc mừng!</h3>
-                    <div class="prize-name">@result.WonPrize?.Name</div>
                     <p class="no-spins-msg">😢 Bạn đã hết lượt quay.</p>
                     <button class="btn-continue" @onclick="ClosePopup">Quay lại</button>
                 }
@@ -165,7 +172,10 @@
                             <div class="cart-item">
                                 <div class="cart-item-info">
                                     <span class="cart-item-name">@p.Name</span>
-                                    <span class="cart-item-time">@p.WonAt.ToString("HH:mm dd/MM/yyyy")</span>
+                                    @if (p.WonAt.HasValue)
+                                    {
+                                        <span class="cart-item-time">@p.WonAt.Value.ToString("HH:mm dd/MM/yyyy")</span>
+                                    }
                                 </div>
 
                                 @if (p.IsConfirmed)
@@ -228,16 +238,6 @@
     private int? remainingSpins;
 
     // ===== Giỏ hàng phần thưởng =====
-    private class WonPrizeItem
-    {
-        public string PrizeId { get; set; } = "";
-        public string Name { get; set; } = "";
-        public DateTime WonAt { get; set; }
-        public string? SignatureKey { get; set; }
-        public bool IsConfirmed { get; set; }
-        public bool IsConfirming { get; set; }
-        public string? ErrorMessage { get; set; }
-    }
 
     private List<WonPrizeItem> wonPrizes = new();
     private bool showCart = false;
@@ -246,6 +246,40 @@
     private bool showSignaturePopup = false;
     private string? currentSignatureKey;
     private bool copied = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshCart();
+    }
+
+    private async Task RefreshCart()
+    {
+        if (string.IsNullOrWhiteSpace(CustomerId)) return;
+
+        try
+        {
+            var serverPrizes = await ApiClient.GetCustomerPrizeByIdAsync(CustomerId) ?? new();
+
+            var confirmedItems = serverPrizes.Select(p => new WonPrizeItem
+            {
+                PrizeId = p.Id,
+                Name = p.Name,
+                SignatureKey = p.SignatureKey,
+                IsConfirmed = true
+            }).ToList();
+
+            // Giữ lại các phần thưởng vừa quay nhưng chưa xác nhận, chưa có trong danh sách server
+            var pendingLocal = wonPrizes
+                .Where(w => !w.IsConfirmed && !confirmedItems.Any(c => c.PrizeId == w.PrizeId))
+                .ToList();
+
+            wonPrizes = confirmedItems.Concat(pendingLocal).ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Lỗi tải giỏ hàng: {ex.Message}";
+        }
+    }
 
     private async Task LoadCampaigns()
     {
@@ -298,7 +332,8 @@
                 CampaignId = selectedCampaign.Id
             });
 
-            if (result?.WonPrize != null && !string.IsNullOrWhiteSpace(result.WonPrize.Id))
+            // Chỉ thêm vào giỏ hàng khi thực sự trúng giải
+            if (result != null && result.IsWin && result.WonPrize != null && !string.IsNullOrWhiteSpace(result.WonPrize.Id))
             {
                 wonPrizes.Add(new WonPrizeItem
                 {
@@ -308,6 +343,8 @@
                     SignatureKey = result.WonPrize.SignatureKey
                 });
             }
+
+            await RefreshCart();
 
             showPopup = true;
         }
@@ -360,11 +397,12 @@
         try
         {
             await ApiClient.AssignWinnerToPrizeAsync(CustomerId, item.PrizeId);
-            item.IsConfirmed = true;
 
             currentSignatureKey = item.SignatureKey;
             copied = false;
             showSignaturePopup = true;
+
+            await RefreshCart();
         }
         catch (Exception ex)
         {

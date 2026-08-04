@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "HDopZVQ8wew=",
+  "dgSpecHash": "hofUF5PBLXI=",
   "success": true,
   "projectFilePath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
   "expectedPackageFiles": [
@@ -61,7 +61,7 @@
     "C:\\Users\\ACER\\.nuget\\packages\\humanizer.core.zh-cn\\2.14.1\\humanizer.core.zh-cn.2.14.1.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\humanizer.core.zh-hans\\2.14.1\\humanizer.core.zh-hans.2.14.1.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\humanizer.core.zh-hant\\2.14.1\\humanizer.core.zh-hant.2.14.1.nupkg.sha512",
-    "C:\\Users\\ACER\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.8\\microsoft.aspnetcore.openapi.10.0.8.nupkg.sha512",
+    "C:\\Users\\ACER\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.10\\microsoft.aspnetcore.openapi.10.0.10.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.24\\microsoft.aspnetcore.razor.language.6.0.24.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.bcl.cryptography\\9.0.4\\microsoft.bcl.cryptography.9.0.4.nupkg.sha512",
@@ -99,7 +99,7 @@
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\7.7.1\\microsoft.identitymodel.protocols.openidconnect.7.7.1.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.identitymodel.tokens\\7.7.1\\microsoft.identitymodel.tokens.7.7.1.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.net.stringtools\\17.11.48\\microsoft.net.stringtools.17.11.48.nupkg.sha512",
-    "C:\\Users\\ACER\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\ACER\\.nuget\\packages\\microsoft.openapi\\2.7.5\\microsoft.openapi.2.7.5.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.visualstudio.solutionpersistence\\1.0.52\\microsoft.visualstudio.solutionpersistence.1.0.52.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration\\10.0.2\\microsoft.visualstudio.web.codegeneration.10.0.2.nupkg.sha512",
@@ -111,15 +111,15 @@
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.visualstudio.web.codegenerators.mvc\\10.0.2\\microsoft.visualstudio.web.codegenerators.mvc.10.0.2.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
-    "C:\\Users\\ACER\\.nuget\\packages\\nuget.common\\6.12.1\\nuget.common.6.12.1.nupkg.sha512",
-    "C:\\Users\\ACER\\.nuget\\packages\\nuget.configuration\\6.12.1\\nuget.configuration.6.12.1.nupkg.sha512",
+    "C:\\Users\\ACER\\.nuget\\packages\\nuget.common\\6.12.5\\nuget.common.6.12.5.nupkg.sha512",
+    "C:\\Users\\ACER\\.nuget\\packages\\nuget.configuration\\6.12.5\\nuget.configuration.6.12.5.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\nuget.dependencyresolver.core\\6.12.1\\nuget.dependencyresolver.core.6.12.1.nupkg.sha512",
-    "C:\\Users\\ACER\\.nuget\\packages\\nuget.frameworks\\6.12.1\\nuget.frameworks.6.12.1.nupkg.sha512",
+    "C:\\Users\\ACER\\.nuget\\packages\\nuget.frameworks\\6.12.5\\nuget.frameworks.6.12.5.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\nuget.librarymodel\\6.12.1\\nuget.librarymodel.6.12.1.nupkg.sha512",
-    "C:\\Users\\ACER\\.nuget\\packages\\nuget.packaging\\6.12.1\\nuget.packaging.6.12.1.nupkg.sha512",
+    "C:\\Users\\ACER\\.nuget\\packages\\nuget.packaging\\6.12.5\\nuget.packaging.6.12.5.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\nuget.projectmodel\\6.12.1\\nuget.projectmodel.6.12.1.nupkg.sha512",
-    "C:\\Users\\ACER\\.nuget\\packages\\nuget.protocol\\6.12.1\\nuget.protocol.6.12.1.nupkg.sha512",
-    "C:\\Users\\ACER\\.nuget\\packages\\nuget.versioning\\6.12.1\\nuget.versioning.6.12.1.nupkg.sha512",
+    "C:\\Users\\ACER\\.nuget\\packages\\nuget.protocol\\6.12.5\\nuget.protocol.6.12.5.nupkg.sha512",
+    "C:\\Users\\ACER\\.nuget\\packages\\nuget.versioning\\6.12.5\\nuget.versioning.6.12.5.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\rbush.signed\\4.0.0\\rbush.signed.4.0.0.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\sixlabors.fonts\\1.0.0\\sixlabors.fonts.1.0.0.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\system.clientmodel\\1.5.1\\system.clientmodel.1.5.1.nupkg.sha512",
@@ -139,42 +139,5 @@
     "C:\\Users\\ACER\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.6\\system.security.cryptography.protecteddata.9.0.6.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
-      "projectPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
-      "warningLevel": 1,
-      "filePath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
-      "libraryId": "Microsoft.OpenApi",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    },
-    {
-      "code": "NU1901",
-      "level": "Warning",
-      "message": "Package 'NuGet.Packaging' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
-      "projectPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
-      "warningLevel": 1,
-      "filePath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
-      "libraryId": "NuGet.Packaging",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    },
-    {
-      "code": "NU1901",
-      "level": "Warning",
-      "message": "Package 'NuGet.Protocol' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
-      "projectPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
-      "warningLevel": 1,
-      "filePath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.csproj",
-      "libraryId": "NuGet.Protocol",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  "logs": []
 }

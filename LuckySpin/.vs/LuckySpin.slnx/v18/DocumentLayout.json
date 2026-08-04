@@ -3,84 +3,56 @@
   "WorkspaceRootPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\dto\\dbbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\dto\\dbbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\luckyspin.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\luckyspin.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\admincammanage.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\admincammanage.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\dto\\spindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\dto\\spindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\controllers\\spincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\controllers\\spincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\dto\\dbwinnersession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\dto\\dbwinnersession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\dto\\dbrewardcodedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\dto\\dbrewardcodedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\dto\\dbproductdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\dto\\dbproductdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\dto\\dbcampaign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\dto\\dbcampaign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\models\\luckyspincontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\models\\luckyspincontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\models\\prizekey.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\models\\prizekey.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\models\\rewardcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\models\\rewardcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\models\\prize.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\models\\prize.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\controllers\\storescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\controllers\\storescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\adminstoremanage.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\adminstoremanage.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\controllers\\campaignscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\controllers\\campaignscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\adminstoremanage.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\adminstoremanage.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\controllers\\storescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\controllers\\storescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\admincammanage.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\admincammanage.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\dto\\dbcampaign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\dto\\dbcampaign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\models\\campaign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\models\\campaign.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\controllers\\spincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\controllers\\spincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\models\\luckyspincontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\models\\luckyspincontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\controllers\\winnersessionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\controllers\\winnersessionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\luckyspin.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\luckyspin.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\models\\winnersession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\models\\winnersession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\models\\campaignstore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\models\\campaignstore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\dto\\dbstore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\dto\\dbstore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\controllers\\billscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\controllers\\billscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\services\\billservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\services\\billservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspin\\luckyspin\\services\\storeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{540B44C7-7F39-7954-D3D2-8C0EB3F00E6F}|LuckySpin\\LuckySpin.csproj|solutionrelative:luckyspin\\services\\storeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -89,7 +61,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 203,
+          "DockedWidth": 336,
           "SelectedChildIndex": -1,
           "Children": [
             {
@@ -107,252 +79,168 @@
           ]
         },
         {
-          "DockedWidth": 197,
+          "DockedWidth": 64,
           "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SpinDto.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\SpinDto.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Dto\\SpinDto.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\SpinDto.cs",
-              "RelativeToolTip": "LuckySpin\\Dto\\SpinDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T09:29:01.338Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "DbProductDto.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbProductDto.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Dto\\DbProductDto.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbProductDto.cs",
-              "RelativeToolTip": "LuckySpin\\Dto\\DbProductDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T09:22:45.807Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DbBill.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbBill.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Dto\\DbBill.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbBill.cs",
-              "RelativeToolTip": "LuckySpin\\Dto\\DbBill.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAA2wCcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T09:22:40.903Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AdminCamManage.http",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\AdminCamManage.http",
-              "RelativeDocumentMoniker": "LuckySpin\\AdminCamManage.http",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\AdminCamManage.http",
-              "RelativeToolTip": "LuckySpin\\AdminCamManage.http",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABDAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2026-07-15T04:09:19.565Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "SpinController.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\SpinController.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Controllers\\SpinController.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\SpinController.cs",
-              "RelativeToolTip": "LuckySpin\\Controllers\\SpinController.cs",
-              "ViewState": "AgIAAK8AAAAAAAAAAAAewMoAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T04:16:07.619Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "LuckySpin.http",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.http",
-              "RelativeDocumentMoniker": "LuckySpin\\LuckySpin.http",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.http",
-              "RelativeToolTip": "LuckySpin\\LuckySpin.http",
-              "ViewState": "AgIAAEwAAAAAAAAAAADwv3AAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2026-07-15T07:38:13.261Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "DbRewardCodeDto.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbRewardCodeDto.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Dto\\DbRewardCodeDto.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbRewardCodeDto.cs",
-              "RelativeToolTip": "LuckySpin\\Dto\\DbRewardCodeDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T09:22:47.02Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "DbWinnerSession.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbWinnerSession.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Dto\\DbWinnerSession.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbWinnerSession.cs",
-              "RelativeToolTip": "LuckySpin\\Dto\\DbWinnerSession.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAA3wAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T09:22:47.762Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "PrizeKey.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\PrizeKey.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Models\\PrizeKey.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\PrizeKey.cs",
-              "RelativeToolTip": "LuckySpin\\Models\\PrizeKey.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T09:16:39.074Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "RewardCode.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\RewardCode.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Models\\RewardCode.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\RewardCode.cs",
-              "RelativeToolTip": "LuckySpin\\Models\\RewardCode.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T09:16:54.587Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Prize.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\Prize.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Models\\Prize.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\Prize.cs",
-              "RelativeToolTip": "LuckySpin\\Models\\Prize.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAxwBAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T08:14:26.962Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "LuckySpinContext.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\LuckySpinContext.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Models\\LuckySpinContext.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\LuckySpinContext.cs",
-              "RelativeToolTip": "LuckySpin\\Models\\LuckySpinContext.cs",
-              "ViewState": "AgIAAIAAAAAAAAAAAADwv5wAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T07:26:12.918Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
               "Title": "DbCampaign.cs",
               "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbCampaign.cs",
               "RelativeDocumentMoniker": "LuckySpin\\Dto\\DbCampaign.cs",
               "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbCampaign.cs",
               "RelativeToolTip": "LuckySpin\\Dto\\DbCampaign.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAIA+wCAAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAwA4AAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T06:58:16.605Z"
+              "WhenOpened": "2026-07-17T07:36:56.016Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "StoresController.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\StoresController.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Controllers\\StoresController.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\StoresController.cs",
-              "RelativeToolTip": "LuckySpin\\Controllers\\StoresController.cs",
-              "ViewState": "AgIAADYBAAAAAAAAAAD4v0IBAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T04:06:39.344Z"
+              "DocumentIndex": 3,
+              "Title": "AdminCamManage.http",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\AdminCamManage.http",
+              "RelativeDocumentMoniker": "LuckySpin\\AdminCamManage.http",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\AdminCamManage.http",
+              "RelativeToolTip": "LuckySpin\\AdminCamManage.http",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAkwCYAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2026-07-17T04:04:14.96Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "CampaignsController.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\CampaignsController.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Controllers\\CampaignsController.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\CampaignsController.cs",
-              "RelativeToolTip": "LuckySpin\\Controllers\\CampaignsController.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAIAwwD4AAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T03:46:30.84Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 0,
               "Title": "AdminStoreManage.http",
               "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\AdminStoreManage.http",
               "RelativeDocumentMoniker": "LuckySpin\\AdminStoreManage.http",
               "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\AdminStoreManage.http",
               "RelativeToolTip": "LuckySpin\\AdminStoreManage.http",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAACwAAAAAAAAAAAAswEkAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2026-07-15T06:55:29.539Z"
+              "WhenOpened": "2026-07-15T06:55:29.539Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 2,
+              "Title": "StoresController.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\StoresController.cs",
+              "RelativeDocumentMoniker": "LuckySpin\\Controllers\\StoresController.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\StoresController.cs",
+              "RelativeToolTip": "LuckySpin\\Controllers\\StoresController.cs",
+              "ViewState": "AgIAAMkBAAAAAAAAAAAAAOABAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-17T02:49:02.413Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CampaignsController.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\CampaignsController.cs",
+              "RelativeDocumentMoniker": "LuckySpin\\Controllers\\CampaignsController.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\CampaignsController.cs",
+              "RelativeToolTip": "LuckySpin\\Controllers\\CampaignsController.cs",
+              "ViewState": "AgIAAJsAAAAAAAAAAAASwIoAAABiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-17T04:16:46.984Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Campaign.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\Campaign.cs",
+              "RelativeDocumentMoniker": "LuckySpin\\Models\\Campaign.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\Campaign.cs",
+              "RelativeToolTip": "LuckySpin\\Models\\Campaign.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-30T03:23:41.918Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SpinController.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\SpinController.cs",
+              "RelativeDocumentMoniker": "LuckySpin\\Controllers\\SpinController.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\SpinController.cs",
+              "RelativeToolTip": "LuckySpin\\Controllers\\SpinController.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAYwGwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-30T03:28:22.749Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LuckySpinContext.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\LuckySpinContext.cs",
+              "RelativeDocumentMoniker": "LuckySpin\\Models\\LuckySpinContext.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\LuckySpinContext.cs",
+              "RelativeToolTip": "LuckySpin\\Models\\LuckySpinContext.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAqwFgAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-28T09:12:12.703Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "WinnerSessionsController.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\WinnerSessionsController.cs",
+              "RelativeDocumentMoniker": "LuckySpin\\Controllers\\WinnerSessionsController.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\WinnerSessionsController.cs",
+              "RelativeToolTip": "LuckySpin\\Controllers\\WinnerSessionsController.cs",
+              "ViewState": "AgIAALQAAAAAAAAAAAAIwLsAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-24T08:18:53.72Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "LuckySpin.http",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.http",
+              "RelativeDocumentMoniker": "LuckySpin\\LuckySpin.http",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\LuckySpin.http",
+              "RelativeToolTip": "LuckySpin\\LuckySpin.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGoAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2026-07-24T08:14:43.694Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "WinnerSession.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\WinnerSession.cs",
+              "RelativeDocumentMoniker": "LuckySpin\\Models\\WinnerSession.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\WinnerSession.cs",
+              "RelativeToolTip": "LuckySpin\\Models\\WinnerSession.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-28T09:12:10.367Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CampaignStore.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\CampaignStore.cs",
+              "RelativeDocumentMoniker": "LuckySpin\\Models\\CampaignStore.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Models\\CampaignStore.cs",
+              "RelativeToolTip": "LuckySpin\\Models\\CampaignStore.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-17T09:21:32.479Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "DbStore.cs",
               "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbStore.cs",
               "RelativeDocumentMoniker": "LuckySpin\\Dto\\DbStore.cs",
               "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Dto\\DbStore.cs",
               "RelativeToolTip": "LuckySpin\\Dto\\DbStore.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAA9wBwAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAYwDIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T08:35:21.595Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "BillsController.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\BillsController.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Controllers\\BillsController.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Controllers\\BillsController.cs",
-              "RelativeToolTip": "LuckySpin\\Controllers\\BillsController.cs",
-              "ViewState": "AgIAAF8AAAAAAAAAAAAAwHEAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T08:39:41.782Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "BillService.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Services\\BillService.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Services\\BillService.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Services\\BillService.cs",
-              "RelativeToolTip": "LuckySpin\\Services\\BillService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T08:41:33.453Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "StoreService.cs",
-              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Services\\StoreService.cs",
-              "RelativeDocumentMoniker": "LuckySpin\\Services\\StoreService.cs",
-              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpin\\LuckySpin\\Services\\StoreService.cs",
-              "RelativeToolTip": "LuckySpin\\Services\\StoreService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-15T07:35:39.397Z"
+              "WhenOpened": "2026-07-17T06:48:33.894Z"
             }
           ]
         }

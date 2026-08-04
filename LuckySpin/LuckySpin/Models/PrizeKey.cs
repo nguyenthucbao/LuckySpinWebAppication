@@ -1,5 +1,4 @@
-using NuGet.Protocol;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace LuckySpin.Models;
@@ -12,5 +11,5 @@ public partial class PrizeKey
 
     public string? SignatureKey { get; set; }
 
-    public bool IsActive { get; set; }
+    public bool? IsActive { get; set; }
 }

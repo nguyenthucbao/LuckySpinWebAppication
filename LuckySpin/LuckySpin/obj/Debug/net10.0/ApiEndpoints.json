@@ -100,7 +100,7 @@
   {
     "ContainingType": "CampaignsController",
     "Method": "AddPrize",
-    "RelativePath": "api/Campaigns/admin/addprize",
+    "RelativePath": "api/Campaigns/admin/addprizetostore",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -116,24 +116,14 @@
   {
     "ContainingType": "CampaignsController",
     "Method": "ChangeCampaignInfo",
-    "RelativePath": "api/Campaigns/admin/changecampaigninfo/{campaignId}/{newStartDate}/{newEndDate}",
+    "RelativePath": "api/Campaigns/admin/changecampaigninfo",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "campaignId",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "newStartDate",
-        "Type": "System.DateTime",
-        "IsRequired": true
-      },
-      {
-        "Name": "newEndDate",
-        "Type": "System.DateTime",
+        "Name": "newCampaignInfo",
+        "Type": "LuckySpin.Dto.GetCampaignInfo",
         "IsRequired": true
       }
     ],
@@ -362,6 +352,22 @@
   },
   {
     "ContainingType": "LuckySpin.Controllers.StoresController",
+    "Method": "AddPrize",
+    "RelativePath": "api/Stores/admin/addprizetostore",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "prize",
+        "Type": "LuckySpin.Models.Prize",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LuckySpin.Controllers.StoresController",
     "Method": "AddStore",
     "RelativePath": "api/Stores/admin/addstore",
     "HttpMethod": "POST",
@@ -427,6 +433,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LuckySpin.Controllers.StoresController",
+    "Method": "ExportToExcel",
+    "RelativePath": "api/Stores/admin/export-excel",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -516,7 +532,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
+        "Name": "req",
         "Type": "LuckySpin.Dto.PostCustomerRequest",
         "IsRequired": true
       }
@@ -535,31 +551,6 @@
           "text/json"
         ],
         "StatusCode": 400
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
-  },
-  {
-    "ContainingType": "WinnerSessionsController",
-    "Method": "GetAllWinnerSessions",
-    "RelativePath": "api/WinnerSessions",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[LuckySpin.Dto.GetCustomerResponse, LuckySpin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
       },
       {
         "Type": "System.Void",
@@ -612,5 +603,62 @@
         "StatusCode": 500
       }
     ]
+  },
+  {
+    "ContainingType": "WinnerSessionsController",
+    "Method": "GetCustomerByPhone",
+    "RelativePath": "api/WinnerSessions/GetByPhoneNumber/{phone}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "phone",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WinnerSessionsController",
+    "Method": "GetAllWinnerSessions",
+    "RelativePath": "api/WinnerSessions/GetCustomerList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[LuckySpin.Dto.GetCustomerResponse, LuckySpin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "WinnerSessionsController",
+    "Method": "GetCustomerPrizeById",
+    "RelativePath": "api/WinnerSessions/GetCustomerPrizeById/{winnerId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "winnerId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

@@ -23,6 +23,19 @@
     <Routes />
     <ReconnectModal />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
+
+    <script>
+        function triggerFileDownload(url) {
+            const anchorElement = document.createElement('a');
+            anchorElement.href = url;
+            // Mở tab mới hoặc tải trực tiếp
+            anchorElement.target = '_blank'; 
+            anchorElement.click();
+            anchorElement.remove();
+        }
+    </script>
+    
+
 </body>
 
 </html>

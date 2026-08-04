@@ -7,11 +7,11 @@ public partial class Bill
 {
     public string Id { get; set; } = null!;
 
-    public string StoreLocate { get; set; } = null!;
+    public string? StoreLocate { get; set; }
 
-    public decimal TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
-    public string PaymentMethod { get; set; } = null!;
+    public string? PaymentMethod { get; set; }
 
     public string? StoreId { get; set; }
 

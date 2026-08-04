@@ -1,0 +1,900 @@
+﻿@page "/admin/campaign"
+@layout AdminLayout
+@rendermode InteractiveServer
+@using LuckySpinAdmin.Dto
+@using LuckySpinAdmin.Service
+@inject LuckySpinApiClient ApiClient
+
+@if (isLoading)
+{
+    <div class="text-[13px] text-neutral-400">Đang tải...</div>
+}
+else if (!string.IsNullOrEmpty(loadError))
+{
+    <div class="text-[13px] text-red-500">@loadError</div>
+}
+
+@* ---------- BREADCRUMB ---------- *@
+<div class="flex items-center gap-2 text-[13px] text-neutral-500 mb-6">
+    <span class="@(CurrentView == ViewState.CampaignList ? "text-neutral-900 font-semibold" : "cursor-pointer hover:text-neutral-800")"
+          @onclick="GoToList">
+        Chương trình khuyến mãi
+    </span>
+    @if (CurrentView == ViewState.CampaignDetail)
+    {
+        <span>/</span>
+        <span class="text-neutral-900 font-semibold">@Detail?.Name</span>
+    }
+</div>
+
+@* ================= VIEW 1: CAMPAIGN LIST ================= *@
+@if (CurrentView == ViewState.CampaignList)
+{
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">Chương trình khuyến mãi</h1>
+            <p class="text-[13px] text-neutral-500 mt-0.5">@Campaigns.Count chương trình trong hệ thống</p>
+        </div>
+        <button class="btn-primary" @onclick="OpenAddCampaign">
+            + Thêm chương trình
+        </button>
+    </div>
+
+    @if (!isLoading && Campaigns.Count == 0 && string.IsNullOrEmpty(loadError))
+    {
+        <div class="empty-box">Chưa có chương trình nào trong hệ thống.</div>
+    }
+    else if (Campaigns.Count > 0)
+    {
+        <div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden">
+            <div class="scrollable-table">
+                <table class="w-full text-[13.5px]">
+                    <thead>
+                        <tr class="text-left text-neutral-400 text-[11.5px] uppercase tracking-wide border-b border-neutral-100">
+                            <th class="px-5 py-3 font-semibold">Tên chương trình</th>
+                            <th class="px-5 py-3 font-semibold">Thời gian</th>
+                            <th class="px-5 py-3 font-semibold">Trạng thái</th>
+                            <th class="px-5 py-3 font-semibold text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in Campaigns)
+                        {
+                            var status = GetStatus(c.EndDate);
+                            <tr class="border-b border-neutral-50 last:border-0 hover:bg-neutral-50/70 transition-colors cursor-pointer" @onclick="() => GoToDetail(c.Id)">
+                                <td class="px-5 py-2.5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="wheel-badge-sm"></div>
+                                        <div class="flex flex-col">
+                                            <span class="font-semibold text-neutral-900">@c.CampaignName</span>
+                                            <span class="campaign-id-badge w-fit mt-0.5">ID: @c.Id</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-5 py-2.5 text-neutral-600">
+                                    @c.StartDate.ToString("dd/MM/yyyy") – @c.EndDate.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class="px-5 py-2.5">
+                                    @switch (status)
+                                    {
+                                        case CampaignStatus.Expired:
+                                            <span class="status-badge status-badge-danger">Đã hết hạn</span>
+                                            break;
+                                        case CampaignStatus.NearExpiry:
+                                            <span class="status-badge status-badge-warning">Sắp hết hạn</span>
+                                            break;
+                                        default:
+                                            <span class="status-badge status-badge-active">Đang hoạt động</span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="px-5 py-2.5">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button class="btn-ghost" @onclick="() => GoToDetail(c.Id)" @onclick:stopPropagation="true">Xem chi tiết</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+@* ================= VIEW 2: CAMPAIGN DETAIL ================= *@
+@if (CurrentView == ViewState.CampaignDetail && Detail != null)
+{
+    <div class="detail-scrollview">
+
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+            <button class="btn-back" @onclick="GoToList">← Quay lại</button>
+            <div>
+                <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">@Detail.Name</h1>
+                <p class="text-[13px] text-neutral-500 mt-0.5">@Detail.Id</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button class="btn-primary" @onclick="SaveCampaignInfo" disabled="@isSavingInfo">
+                @(isSavingInfo ? "Đang lưu..." : "Lưu")
+            </button>
+            <button class="btn-danger" @onclick="() => showDeleteModal = true">
+                Xóa chương trình
+            </button>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-neutral-200 p-6 mb-8">
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="field-group mb-0">
+                <label>Mã chương trình</label>
+                <input value="@Detail.Id" disabled class="bg-neutral-50 text-neutral-400" />
+            </div>
+            <div class="field-group mb-0">
+                <label>Tên chương trình</label>
+                <input @bind="editName" />
+            </div>
+            <div class="field-group mb-0">
+                <label>Ngày bắt đầu</label>
+                <input type="date" @bind="editStart" />
+            </div>
+            <div class="field-group mb-0">
+                <label>Ngày kết thúc</label>
+                <input type="date" @bind="editEnd" />
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(saveInfoError))
+        {
+            <p class="text-[12.5px] text-red-500 mb-3">@saveInfoError</p>
+        }
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="metric-card">
+                <div class="metric-label">Tổng lượt quay</div>
+                <div class="metric-value">@Detail.TotalRoll</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Trạng thái</div>
+                <div class="mt-1">
+                    @{
+                        var detailStatus = GetStatus(Detail.EndAt);
+                    }
+                    @switch (detailStatus)
+                    {
+                        case CampaignStatus.Expired:
+                            <span class="status-badge status-badge-danger">Đã hết hạn</span>
+                            break;
+                        case CampaignStatus.NearExpiry:
+                            <span class="status-badge status-badge-warning">Sắp hết hạn</span>
+                            break;
+                        default:
+                            <span class="status-badge status-badge-active">Đang hoạt động</span>
+                            break;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between mb-3">
+        <h2 class="text-[15px] font-bold text-neutral-800" style="font-family:'Manrope',sans-serif;">
+            Danh sách phần thưởng 
+        </h2>
+        <span class="campaign-id-badge">@Detail.Prizes.Count prizes</span>
+    </div>
+
+    @if (Detail.Prizes.Count == 0)
+    {
+        <div class="empty-box">Chương trình này chưa được cấu hình phần thưởng nào.</div>
+    }
+    else
+    {
+        <div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden">
+            <div class="scrollable-table">
+                <table class="w-full text-[13.5px]">
+                    <thead>
+                        <tr class="text-left text-neutral-400 text-[11.5px] uppercase tracking-wide border-b border-neutral-100">
+                            <th class="px-5 py-3 font-semibold">Mã phần thưởng</th>
+                            <th class="px-5 py-3 font-semibold">Tên phần thưởng</th>
+                            <th class="px-5 py-3 font-semibold">Loại</th>
+                            <th class="px-5 py-3 font-semibold">Số lượng</th>
+                            <th class="px-5 py-3 font-semibold">Mã kích hoạt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Detail.Prizes)
+                        {
+                            <tr class="border-b border-neutral-50 last:border-0 hover:bg-neutral-50/70 transition-colors">
+                                <td class="px-5 py-2.5 text-neutral-600">@p.Id</td>
+                                <td class="px-5 py-2.5 font-semibold text-neutral-900">@p.Name</td>
+                                <td class="px-5 py-2.5 text-neutral-600">@p.PrizeType</td>
+                                <td class="px-5 py-2.5 text-neutral-600">@p.Quantity</td>
+                                <td class="px-5 py-2.5 text-neutral-600">@p.SignatureKey</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(actionToast))
+{
+    <div class="toast">@actionToast</div>
+}
+
+@* ============== MODAL: ADD CAMPAIGN ============== *@
+@if (showAddModal)
+{
+    <div class="modal-overlay" @onclick="() => { if (!isSavingAdd) showAddModal = false; }">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Thêm chương trình mới</h3>
+
+            <div class="field-group">
+                <label>Mã chương trình</label>
+                <input @bind="newCampaign.Id" placeholder="VD: CAMP005" />
+            </div>
+            <div class="field-group">
+                <label>Tên chương trình</label>
+                <input @bind="newCampaign.CampaignName" placeholder="VD: Khuyến mãi hè 2026" />
+            </div>
+            <div class="field-group">
+                <label>Ngày bắt đầu</label>
+                <input type="date" @bind="newCampaign.StartDate" />
+            </div>
+            <div class="field-group">
+                <label>Ngày kết thúc</label>
+                <input type="date" @bind="newCampaign.EndDate" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(addError))
+            {
+                <p class="text-[12.5px] text-red-500 mb-2">@addError</p>
+            }
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showAddModal = false" disabled="@isSavingAdd">Hủy</button>
+                <button class="btn-primary" @onclick="ConfirmAddCampaign" disabled="@isSavingAdd">
+                    @(isSavingAdd ? "Đang thêm..." : "Thêm chương trình")
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@* ============== MODAL: DELETE CONFIRM ============== *@
+@if (showDeleteModal && Detail != null)
+{
+    <div class="modal-overlay" @onclick="() => { if (!isDeleting) showDeleteModal = false; }">
+        <div class="modal-box" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Xóa chương trình?</h3>
+            <p class="text-[13.5px] text-neutral-500 mb-5">
+                Bạn sắp xóa <strong class="text-neutral-800">@Detail.Name</strong> (ID: @Detail.Id).
+                Chương trình sẽ bị gỡ khỏi tất cả cửa hàng đang áp dụng. Hành động này không thể hoàn tác.
+            </p>
+
+            @if (!string.IsNullOrEmpty(deleteError))
+            {
+                <p class="text-[12.5px] text-red-500 mb-3">@deleteError</p>
+            }
+
+            <div class="modal-actions">
+                <button class="btn-secondary" @onclick="() => showDeleteModal = false" disabled="@isDeleting">Hủy</button>
+                <button class="btn-danger" @onclick="ConfirmDeleteCampaign" disabled="@isDeleting">
+                    @(isDeleting ? "Đang xóa..." : "Xóa chương trình")
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    // Ngưỡng cảnh báo "sắp hết hạn" tính bằng ngày trước EndAt
+    private const int NearExpiryDays = 3;
+
+    private enum ViewState { CampaignList, CampaignDetail }
+    private enum CampaignStatus { Active, NearExpiry, Expired }
+
+    private ViewState CurrentView = ViewState.CampaignList;
+
+    private List<GetCampaignInfo> Campaigns = new();
+    private CampaignWithPrize? Detail;
+
+    private bool isLoading = false;
+    private string? loadError;
+    private string actionToast = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCampaignsAsync();
+    }
+
+    private async Task LoadCampaignsAsync()
+    {
+        isLoading = true;
+        loadError = null;
+        try
+        {
+            Campaigns = (await ApiClient.GetCampaignsAsync() ?? new())
+                .OrderBy(c => c.EndDate)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            loadError = "Không tải được danh sách chương trình: " + ex.Message;
+        }
+        isLoading = false;
+    }
+
+    private CampaignStatus GetStatus(DateTime endAt)
+    {
+        var today = DateTime.Today;
+        if (endAt.Date < today) return CampaignStatus.Expired;
+        if (endAt.Date <= today.AddDays(NearExpiryDays)) return CampaignStatus.NearExpiry;
+        return CampaignStatus.Active;
+    }
+
+    private async Task ShowToast(string message)
+    {
+        actionToast = message;
+        StateHasChanged();
+        await Task.Delay(2500);
+        actionToast = "";
+        StateHasChanged();
+    }
+
+    private async Task GoToList()
+    {
+        CurrentView = ViewState.CampaignList;
+        Detail = null;
+        await LoadCampaignsAsync();
+    }
+
+    // ===================== DETAIL VIEW =====================
+    private string editName = "";
+    private DateTime editStart;
+    private DateTime editEnd;
+    private bool isSavingInfo = false;
+    private string? saveInfoError;
+
+    private async Task GoToDetail(string campaignId)
+    {
+        isLoading = true;
+        loadError = null;
+        try
+        {
+            Detail = await ApiClient.GetCampaignByIdAsync(campaignId);
+            if (Detail == null)
+            {
+                loadError = "Không tìm thấy chương trình.";
+            }
+            else
+            {
+                editName = Detail.Name;
+                editStart = Detail.StartAt;
+                editEnd = Detail.EndAt;
+                saveInfoError = null;
+                CurrentView = ViewState.CampaignDetail;
+            }
+        }
+        catch (Exception ex)
+        {
+            loadError = "Không tải được chi tiết chương trình: " + ex.Message;
+        }
+        isLoading = false;
+    }
+
+    private async Task SaveCampaignInfo()
+    {
+        if (Detail == null) return;
+
+        if (string.IsNullOrWhiteSpace(editName))
+        {
+            saveInfoError = "Tên chương trình không được để trống.";
+            return;
+        }
+        if (editEnd < editStart)
+        {
+            saveInfoError = "Ngày kết thúc phải sau ngày bắt đầu.";
+            return;
+        }
+
+        isSavingInfo = true;
+        saveInfoError = null;
+        StateHasChanged();
+
+        try
+        {
+            var dto = new GetCampaignInfo
+            {
+                Id = Detail.Id,
+                CampaignName = editName,
+                StartDate = editStart,
+                EndDate = editEnd
+            };
+
+            var isSuccess = await ApiClient.ChangeCampaignInfoAsync(dto);
+            if (isSuccess)
+            {
+                Detail.Name = editName;
+                Detail.StartAt = editStart;
+                Detail.EndAt = editEnd;
+                _ = ShowToast("Đã cập nhật chương trình");
+            }
+            else
+            {
+                saveInfoError = "Cập nhật thất bại, vui lòng thử lại.";
+            }
+        }
+        catch (Exception ex)
+        {
+            saveInfoError = "Lỗi hệ thống: " + ex.Message;
+        }
+
+        isSavingInfo = false;
+    }
+
+    // ===================== ADD CAMPAIGN =====================
+    private bool showAddModal = false;
+    private bool isSavingAdd = false;
+    private string? addError;
+    private GetCampaignInfo newCampaign = new();
+
+    private void OpenAddCampaign()
+    {
+        newCampaign = new GetCampaignInfo
+        {
+            StartDate = DateTime.Today,
+            EndDate = DateTime.Today.AddDays(30)
+        };
+        addError = null;
+        showAddModal = true;
+    }
+
+    private async Task ConfirmAddCampaign()
+    {
+        if (string.IsNullOrWhiteSpace(newCampaign.Id) || string.IsNullOrWhiteSpace(newCampaign.CampaignName))
+        {
+            addError = "Vui lòng nhập đủ mã và tên chương trình.";
+            return;
+        }
+        if (newCampaign.EndDate < newCampaign.StartDate)
+        {
+            addError = "Ngày kết thúc phải sau ngày bắt đầu.";
+            return;
+        }
+
+        isSavingAdd = true;
+        addError = null;
+        StateHasChanged();
+
+        try
+        {
+            var isSuccess = await ApiClient.AddCampaignAsync(newCampaign);
+            if (isSuccess)
+            {
+                showAddModal = false;
+                await LoadCampaignsAsync();
+                _ = ShowToast("Đã thêm chương trình mới");
+            }
+            else
+            {
+                addError = "Thêm chương trình thất bại, vui lòng thử lại.";
+            }
+        }
+        catch (Exception ex)
+        {
+            addError = "Lỗi hệ thống: " + ex.Message;
+        }
+
+        isSavingAdd = false;
+    }
+
+    // ===================== DELETE CAMPAIGN =====================
+    private bool showDeleteModal = false;
+    private bool isDeleting = false;
+    private string? deleteError;
+
+    private async Task ConfirmDeleteCampaign()
+    {
+        if (Detail == null) return;
+
+        isDeleting = true;
+        deleteError = null;
+        StateHasChanged();
+
+        try
+        {
+            var isSuccess = await ApiClient.DeleteCampaignAsync(Detail.Id);
+            if (isSuccess)
+            {
+                showDeleteModal = false;
+                await GoToList();
+                _ = ShowToast("Đã xóa chương trình");
+            }
+            else
+            {
+                deleteError = "Xóa thất bại, vui lòng thử lại.";
+            }
+        }
+        catch (Exception ex)
+        {
+            deleteError = "Lỗi hệ thống: " + ex.Message;
+        }
+
+        isDeleting = false;
+    }
+}
+
+<style>
+
+    .wheel-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: conic-gradient(#FB5607 0deg 90deg, #FFBE0B 90deg 180deg, #FF6B35 180deg 270deg, #F7C59F 270deg 360deg);
+        border: 2px solid rgba(255,255,255,0.25);
+    }
+
+    .wheel-badge-sm {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: conic-gradient(#FB5607 0deg 90deg, #FFBE0B 90deg 180deg, #FF6B35 180deg 270deg, #F7C59F 270deg 360deg);
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px #eee;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.65);
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.15s, color 0.15s;
+    }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #FB5607, #FFBE0B);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav-item.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+            .nav-item.disabled:hover {
+                background: none;
+                color: rgba(255,255,255,0.65);
+            }
+
+    .nav-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #fff;
+    }
+
+    .nav-dot-empty {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.3);
+    }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FB5607, #FFBE0B);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+
+            .btn-primary:hover {
+                opacity: 0.9;
+            }
+
+            .btn-primary:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+        .btn-secondary {
+            background: #fff;
+            color: #57534E;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1.5px solid #E7E5E4;
+            cursor: pointer;
+        }
+
+            .btn-secondary:hover {
+                background: #FAFAF9;
+            }
+
+            .btn-secondary:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+        .btn-danger {
+            background: #DC2626;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .btn-danger:hover {
+                opacity: 0.9;
+            }
+
+            .btn-danger:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+        .btn-ghost {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #FB5607;
+            background: #FFF3EB;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .btn-ghost:hover {
+                background: #FFE8D6;
+            }
+
+        .btn-back {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #57534E;
+            background: #F5F5F4;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .btn-back:hover {
+                background: #E7E5E4;
+            }
+
+        .campaign-id-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: #78716C;
+            background: #F5F5F4;
+            padding: 3px 8px;
+            border-radius: 999px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+
+        .status-badge-active {
+            color: #15803D;
+            background: #DCFCE7;
+        }
+
+        .status-badge-warning {
+            color: #C2410C;
+            background: #FFEDD5;
+        }
+
+        .status-badge-danger {
+            color: #B91C1C;
+            background: #FEE2E2;
+        }
+
+        .metric-card {
+            background: #FAFAF9;
+            border: 1px solid #E7E5E4;
+            border-radius: 14px;
+            padding: 16px 18px;
+        }
+
+        .metric-label {
+            font-size: 11.5px;
+            color: #A8A29E;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1C1917;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .detail-scrollview {
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 4px;
+            scrollbar-width: thin;
+            scrollbar-color: #D6D3D1 transparent;
+        }
+
+            .detail-scrollview::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .detail-scrollview::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .detail-scrollview::-webkit-scrollbar-thumb {
+                background-color: #D6D3D1;
+                border-radius: 999px;
+            }
+
+                .detail-scrollview::-webkit-scrollbar-thumb:hover {
+                    background-color: #A8A29E;
+                }
+
+        .detail-table-plain thead th {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1;
+        }
+
+        .scrollable-table {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #D6D3D1 transparent;
+        }
+
+            .scrollable-table::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .scrollable-table::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .scrollable-table::-webkit-scrollbar-thumb {
+                background-color: #D6D3D1;
+                border-radius: 999px;
+            }
+
+                .scrollable-table::-webkit-scrollbar-thumb:hover {
+                    background-color: #A8A29E;
+                }
+
+            .scrollable-table thead th {
+                position: sticky;
+                top: 0;
+                background: #fff;
+                z-index: 1;
+            }
+
+        .empty-box {
+            background: #fff;
+            border: 1.5px dashed #E7E5E4;
+            border-radius: 14px;
+            padding: 28px;
+            text-align: center;
+            color: #A8A29E;
+            font-size: 13px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1C1917;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 12px 18px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(28,25,23,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 18px;
+            padding: 28px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
+
+        .modal-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+            color: #1C1917;
+            margin-bottom: 18px;
+        }
+
+        .field-group {
+            margin-bottom: 14px;
+        }
+
+            .field-group label {
+                display: block;
+                font-size: 12.5px;
+                font-weight: 600;
+                color: #57534E;
+                margin-bottom: 5px;
+            }
+
+            .field-group input {
+                width: 100%;
+                height: 42px;
+                border: 1.5px solid #E7E5E4;
+                border-radius: 10px;
+                padding: 0 12px;
+                font-size: 13.5px;
+                outline: none;
+                box-sizing: border-box;
+            }
+
+                .field-group input:focus {
+                    border-color: #FB5607;
+                }
+
+                .field-group input:disabled {
+                    cursor: not-allowed;
+                }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 20px;
+        }
+</style>

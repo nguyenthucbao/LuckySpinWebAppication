@@ -1,0 +1,64 @@
+﻿using LuckySpin.Dto;
+using LuckySpin.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+[Route("api/[controller]")]
+[ApiController]
+public class MerchantController : ControllerBase
+{
+    private readonly LuckySpinContext _context;
+    public MerchantController(LuckySpinContext context)
+    {
+        _context = context;
+    }
+
+    [HttpGet("getstorebyid/{id}")]
+    public async Task<ActionResult<GetStoresInfo>> GetStoreById(string id)
+    {
+        var store = await _context.Stores.FindAsync(id);
+        if (store == null)
+            return NotFound();
+
+
+        var bills = await _context.Bills
+                .Include(b => b.RewardCode)
+                .Where(b => b.StoreId == store.Id)
+                .ToListAsync();
+
+        var rewardCodes = bills.Where(b => b.RewardCode != null).Select(b => b.RewardCode!).ToList();
+
+        var storePrizes = await _context.StoreCampaignPrizes
+            .Where(scp => scp.StoreId == store.Id)
+            .Include(scp => scp.Prize)
+            .ThenInclude(p => p.Campaign)
+            .ToListAsync();
+
+        var campaigns = storePrizes
+            .Where(scp => scp.Prize != null && scp.Prize.Campaign != null)
+            .GroupBy(scp => scp.Prize.Campaign)
+            .Select(g => new GetCampaignInfo
+            {
+                Id = g.Key.Id,
+                Name = g.Key.CampaignName,
+                StartAt = g.Key.StartDate ?? DateTime.MinValue,
+                EndAt = g.Key.EndDate ?? DateTime.MinValue
+            })
+            .ToList();
+
+        var result = new GetStoresInfo
+        {
+            Id = store.Id,
+            StoreLocate = store.StoreLocate,
+            StoreAmount = bills.Sum(x => x.TotalAmount),
+            StoreSpinCount = rewardCodes.Sum(x => x.SpinCount),
+            StoreUsedSpinCount = rewardCodes.Sum(x => x.SpinCount - x.RemainingSpins),
+            Campaigns = campaigns
+        };
+
+        return Ok(result);
+    }
+
+
+
+}

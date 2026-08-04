@@ -16,18 +16,29 @@ namespace LuckySpin.Services
 
         public async Task<int> RemoveStoreCampaignAsync(string storeId, string campaignId)
         {
+            var campaignStores = await _context.CampaignStores
+                    .Where(cs => cs.StoreId == storeId && cs.CampaignId == campaignId)
+                    .ToListAsync();
+
+
             // Get all StoreCampaignPrizes existing
             var storeCampaignPrizes = await _context.StoreCampaignPrizes
                 .Include(scp => scp.Prize)
                 .Where(scp => scp.StoreId == storeId && scp.Prize.CampaignId == campaignId)
                 .ToListAsync();
 
-            if (storeCampaignPrizes.Count == 0)
-                return 0;
 
-            // Remove all StoreCampaignPrizes
+            var prizes = await _context.Prizes
+                    .Where(p => p.CampaignId == campaignId && p.StoreId == storeId)
+                    .ToListAsync();
+
+            // Remove all StoreCampaignPrizes, CampaignStore, Prize
+            _context.CampaignStores.RemoveRange(campaignStores);
             _context.StoreCampaignPrizes.RemoveRange(storeCampaignPrizes);
+            _context.Prizes.RemoveRange(prizes);
             await _context.SaveChangesAsync();
+
+
 
             return storeCampaignPrizes.Count;
         }
