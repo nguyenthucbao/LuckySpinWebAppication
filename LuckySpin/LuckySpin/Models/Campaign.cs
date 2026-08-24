@@ -13,7 +13,7 @@ public partial class Campaign
 
     public DateTime? EndDate { get; set; }
 
-    public int? TotalRoll { get; set; }
+    public int? Totalroll { get; set; }
 
     public virtual ICollection<Prize> Prizes { get; set; } = new List<Prize>();
 }

@@ -1,6 +1,9 @@
 ﻿using LuckySpinAdmin.Dto;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
+
 
 namespace LuckySpinAdmin.Service;
 
@@ -69,14 +72,8 @@ public class LuckySpinApiClient(HttpClient http)
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<byte[]?> ExportStoresExcelAsync()
-    {
-        var response = await http.GetAsync("api/stores/admin/export-excel");
-        if (!response.IsSuccessStatusCode) return null;
-        return await response.Content.ReadAsByteArrayAsync();
 
-        
-    }
+   
 
 
     /// /////////////////////////////////////////////// CAMPAIGN API ////////////////////////////////

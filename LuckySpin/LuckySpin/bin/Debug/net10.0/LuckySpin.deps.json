@@ -15,7 +15,8 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.10",
           "Microsoft.OpenApi": "2.7.5",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "10.0.2",
-          "NuGet.Protocol": "6.12.5"
+          "NuGet.Protocol": "6.12.5",
+          "QRCoder": "1.4.3"
         },
         "runtime": {
           "LuckySpin.dll": {}
@@ -1798,6 +1799,14 @@
           }
         }
       },
+      "QRCoder/1.4.3": {
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {
+            "assemblyVersion": "1.4.3.0",
+            "fileVersion": "1.4.3.0"
+          }
+        }
+      },
       "RBush.Signed/4.0.0": {
         "runtime": {
           "lib/net8.0/RBush.dll": {
@@ -2746,6 +2755,13 @@
       "sha512": "sha512-9/Sniz+tzNAjcSziMmh62PIbF1mxaSC+P5Mdw1LgMleCbeaObjkkR/RUlduu6yCL3EfruACO/uknDJ5xCH3quQ==",
       "path": "nuget.versioning/6.12.5",
       "hashPath": "nuget.versioning.6.12.5.nupkg.sha512"
+    },
+    "QRCoder/1.4.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fWuFqjm8GTlEb2GqBl3Hi8HZZeZQwBSHxvRPtPjyNbT82H0ff0JwavKRBmMaXCno1Av6McPC8aJzri0Mj2w9Jw==",
+      "path": "qrcoder/1.4.3",
+      "hashPath": "qrcoder.1.4.3.nupkg.sha512"
     },
     "RBush.Signed/4.0.0": {
       "type": "package",

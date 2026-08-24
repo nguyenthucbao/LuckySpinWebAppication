@@ -55,7 +55,7 @@ public class CampaignsController : ControllerBase
         {
             Id = campaign.Id,
             Name = campaign.CampaignName,
-            TotalRoll = campaign.TotalRoll,
+            TotalRoll = campaign.Totalroll,
             StartAt = campaign.StartDate ?? DateTime.MinValue,
             EndAt = campaign.EndDate ?? DateTime.MinValue,
             Prizes = prizeincampaign.Select(p => new GetPrize
@@ -90,7 +90,7 @@ public class CampaignsController : ControllerBase
                 CampaignName = campaign.CampaignName,
                 StartDate = campaign.StartDate,
                 EndDate = campaign.EndDate,
-                TotalRoll = 0
+                Totalroll = 0
             };
 
             _context.Campaigns.Add(addcampaign);

@@ -173,8 +173,8 @@
   },
   {
     "ContainingType": "MerchantController",
-    "Method": "GetStoreById",
-    "RelativePath": "api/Merchant/getstorebyid/{id}",
+    "Method": "GetStorePrize",
+    "RelativePath": "api/Merchant/GetStorePrize/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -205,6 +205,32 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[LuckySpin.Models.Prize, LuckySpin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "LuckySpin.Controllers.PrizeController",
+    "Method": "GetPrizeById",
+    "RelativePath": "api/Prize/getprizesbyid/{campaignid}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "campaignid",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[LuckySpin.Models.Prize, LuckySpin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
@@ -266,6 +292,22 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "QrCodeController",
+    "Method": "GenerateQrCode",
+    "RelativePath": "api/QrCode/generate/{text}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "text",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "LuckySpin.Controllers.SpinController",
@@ -473,6 +515,32 @@
   },
   {
     "ContainingType": "LuckySpin.Controllers.StoresController",
+    "Method": "ImportFromExcel",
+    "RelativePath": "api/Stores/admin/prize-import-excel",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "CampaignId",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "StoreId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LuckySpin.Controllers.StoresController",
     "Method": "RemoveStoreCampaign",
     "RelativePath": "api/Stores/admin/removecampaignfromstore/{storeId}/{campaignId}",
     "HttpMethod": "DELETE",
@@ -573,36 +641,7 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 400
-      },
-      {
-        "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 404
-      },
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 500
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "WinnerSessionsController",
@@ -655,6 +694,22 @@
     "Parameters": [
       {
         "Name": "winnerId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WinnerSessionsController",
+    "Method": "GetKey",
+    "RelativePath": "api/WinnerSessions/getkey/{prizeId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "prizeId",
         "Type": "System.String",
         "IsRequired": true
       }

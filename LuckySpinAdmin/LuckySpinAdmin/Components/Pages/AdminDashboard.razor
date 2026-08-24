@@ -1,0 +1,35 @@
+@page "/admin/welcome"
+@layout AdminLayout
+@rendermode InteractiveServer
+@using LuckySpinAdmin.Dto
+@using LuckySpinAdmin.Service
+@inject LuckySpinApiClient ApiClient
+
+
+@if (isLoading)
+{
+    <div class="text-[13px] text-neutral-400">Đang tải...</div>
+}
+else if (!string.IsNullOrEmpty(loadError))
+{
+    <div class="text-[13px] text-red-500">@loadError</div>
+}
+
+@* ---------- BREADCRUMB ---------- *@
+<div class="flex items-center gap-2 text-[13px] text-neutral-500 mb-6">
+    svdsvscscscs
+</div>
+
+
+
+
+@code {
+   
+
+    private bool isLoading = false;
+    private string? loadError;
+    private string actionToast = "";
+
+    
+}
+

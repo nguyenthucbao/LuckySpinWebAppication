@@ -1,0 +1,107 @@
+﻿@page "/merchain-store"
+
+<div class="card login-card">
+    <!-- Header -->
+    <div class="login-header">
+        <div class="brand-icon">
+            <i class="bi bi-shop"></i>
+        </div>
+        <h4 class="fw-bold mb-1">PROMOTION ENGINE</h4>
+        <p class="small text-white-50 mb-0">Hệ thống Trả thưởng & Cửa hàng</p>
+    </div>
+
+    <!-- Body / Form -->
+    <div class="card-body p-4">
+        <form method="post">
+
+            <!-- Thông báo lỗi chung (để trống) -->
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2 small mb-3" role="alert"></div>
+
+            <!-- Trường 1: Chọn Chi nhánh / Store -->
+            <div class="mb-3">
+                <label asp-for="Input.StoreId" class="form-label fw-semibold small">Chi nhánh làm việc</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+                    <select asp-for="Input.StoreId" class="form-select">
+                        <option value="">-- Chọn chi nhánh --</option>
+                        <!-- Dữ liệu Store sẽ được bind dynamic từ Backend -->
+                    </select>
+                </div>
+                <span asp-validation-for="Input.StoreId" class="text-danger small"></span>
+            </div>
+
+            <!-- Trường 2: Tên đăng nhập / Mã nhân viên -->
+            <div class="mb-3">
+                <label asp-for="Input.Username" class="form-label fw-semibold small">Tài khoản / Mã nhân viên</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                    <input asp-for="Input.Username" class="form-control" placeholder="Nhập tên đăng nhập" autocomplete="username" />
+                </div>
+                <span asp-validation-for="Input.Username" class="text-danger small"></span>
+            </div>
+
+            <!-- Trường 3: Mật khẩu -->
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label fw-semibold small">Mật khẩu</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                    <input asp-for="Input.Password" type="password" class="form-control" placeholder="Nhập mật khẩu" autocomplete="current-password" />
+                </div>
+                <span asp-validation-for="Input.Password" class="text-danger small"></span>
+            </div>
+
+            <!-- Ghi nhớ phiên làm việc -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                    <input asp-for="Input.RememberMe" class="form-check-input" type="checkbox" id="rememberCheck" />
+                    <label class="form-check-label small" for="rememberCheck">
+                        Ghi nhớ máy này
+                    </label>
+                </div>
+            </div>
+
+            <!-- Nút bấm Đăng nhập -->
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                <i class="bi bi-box-arrow-in-right me-1"></i> ĐĂNG NHẬP POS
+            </button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer bg-light text-center py-3 border-0 rounded-bottom">
+        <span class="text-muted small">Hỗ trợ kỹ thuật: <strong class="text-dark">1900 xxxx</strong></span>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f4f6f9;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+    .login-header {
+        background-color: #0d6efd;
+        color: #ffffff;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        padding: 2rem 1.5rem 1.5rem;
+        text-align: center;
+    }
+    .brand-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .form-floating label {
+        color: #6c757d;
+    }
+</style>

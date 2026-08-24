@@ -9,5 +9,7 @@ public partial class Store
 
     public string? StoreLocate { get; set; }
 
+    public string? StorePassword { get; set; }
+
     public virtual ICollection<StoreCampaignPrize> StoreCampaignPrizes { get; set; } = new List<StoreCampaignPrize>();
 }

@@ -2,6 +2,7 @@
 {
     public class SpinRequest
     {
+        public string WinnerSessionId { get; set; } = string.Empty;
         public string RewardCode { get; set; } = string.Empty;
         public string CampaignId { get; set; } = string.Empty;
     }
@@ -16,7 +17,7 @@
 
     public class PrizeResult
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public string? Name { get; set; }
         public string? PrizeType { get; set; }
         public string? CampaignId { get; set; }

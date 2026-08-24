@@ -5,6 +5,8 @@ namespace LuckySpin.Dto
     public class SpinRequest
     {
         /// <summary>Mã quay thưởng của khách hàng.</summary>
+        /// 
+        public string WinnerSessionId { get; set; } = string.Empty;
         public string RewardCode { get; set; } = string.Empty;
 
         /// <summary>ID campaign đang chạy.</summary>

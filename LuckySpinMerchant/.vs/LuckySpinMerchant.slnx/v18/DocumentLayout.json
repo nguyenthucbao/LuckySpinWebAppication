@@ -1,0 +1,177 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinmerchant\\luckyspinmerchant\\components\\pages\\merchainstore.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|solutionrelative:luckyspinmerchant\\components\\pages\\merchainstore.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinmerchant\\luckyspinmerchant\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|solutionrelative:luckyspinmerchant\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinmerchant\\luckyspinmerchant\\components\\layout\\mainlayout.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|solutionrelative:luckyspinmerchant\\components\\layout\\mainlayout.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinmerchant\\luckyspinmerchant\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|solutionrelative:luckyspinmerchant\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinmerchant\\luckyspinmerchant\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|solutionrelative:luckyspinmerchant\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinmerchant\\luckyspinmerchant\\services\\luckyspinapiclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|solutionrelative:luckyspinmerchant\\services\\luckyspinapiclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinmerchant\\luckyspinmerchant\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|solutionrelative:luckyspinmerchant\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinmerchant\\luckyspinmerchant\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|solutionrelative:luckyspinmerchant\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|d:\\project\\gitpj\\luckyspinwebappication\\luckyspinmerchant\\luckyspinmerchant\\luckyspinmerchant.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{E67995D6-B580-14FB-41E2-10153A29530B}|LuckySpinMerchant\\LuckySpinMerchant.csproj|solutionrelative:luckyspinmerchant\\luckyspinmerchant.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 336,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainLayout.razor.css",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Layout\\MainLayout.razor.css",
+              "RelativeDocumentMoniker": "LuckySpinMerchant\\Components\\Layout\\MainLayout.razor.css",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Layout\\MainLayout.razor.css",
+              "RelativeToolTip": "LuckySpinMerchant\\Components\\Layout\\MainLayout.razor.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-08-11T03:30:37.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MerchainStore.razor",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Pages\\MerchainStore.razor",
+              "RelativeDocumentMoniker": "LuckySpinMerchant\\Components\\Pages\\MerchainStore.razor",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Pages\\MerchainStore.razor",
+              "RelativeToolTip": "LuckySpinMerchant\\Components\\Pages\\MerchainStore.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-07T08:14:29.704Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "LuckySpinMerchant\\Components\\Layout\\NavMenu.razor",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "LuckySpinMerchant\\Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-07T08:12:54.531Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "LuckySpinMerchant\\Components\\Layout\\MainLayout.razor",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "LuckySpinMerchant\\Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-07T08:12:12.88Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Home.razor",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "LuckySpinMerchant\\Components\\Pages\\Home.razor",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "LuckySpinMerchant\\Components\\Pages\\Home.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-08-07T02:30:02.28Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "LuckySpinApiClient.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Services\\LuckySpinApiClient.cs",
+              "RelativeDocumentMoniker": "LuckySpinMerchant\\Services\\LuckySpinApiClient.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Services\\LuckySpinApiClient.cs",
+              "RelativeToolTip": "LuckySpinMerchant\\Services\\LuckySpinApiClient.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-07T02:27:48.041Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LuckySpinMerchant.csproj",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\LuckySpinMerchant.csproj",
+              "RelativeDocumentMoniker": "LuckySpinMerchant\\LuckySpinMerchant.csproj",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\LuckySpinMerchant.csproj",
+              "RelativeToolTip": "LuckySpinMerchant\\LuckySpinMerchant.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-08-07T02:27:10.202Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\appsettings.json",
+              "RelativeDocumentMoniker": "LuckySpinMerchant\\appsettings.json",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\appsettings.json",
+              "RelativeToolTip": "LuckySpinMerchant\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-08-07T02:26:12.984Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Program.cs",
+              "RelativeDocumentMoniker": "LuckySpinMerchant\\Program.cs",
+              "ToolTip": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\Program.cs",
+              "RelativeToolTip": "LuckySpinMerchant\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-07T02:25:30.554Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

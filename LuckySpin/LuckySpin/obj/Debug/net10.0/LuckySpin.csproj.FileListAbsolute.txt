@@ -280,3 +280,4 @@ D:\Project\GitPJ\LuckySpinWebAppication\LuckySpin\LuckySpin\bin\Debug\net10.0\Ex
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpin\LuckySpin\bin\Debug\net10.0\RBush.dll
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpin\LuckySpin\bin\Debug\net10.0\SixLabors.Fonts.dll
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpin\LuckySpin\bin\Debug\net10.0\System.IO.Packaging.dll
+D:\Project\GitPJ\LuckySpinWebAppication\LuckySpin\LuckySpin\bin\Debug\net10.0\QRCoder.dll

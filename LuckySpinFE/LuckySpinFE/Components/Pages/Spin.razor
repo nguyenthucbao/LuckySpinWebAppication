@@ -168,14 +168,14 @@
                                     <span class="cart-item-time">@p.WonAt.ToString("HH:mm dd/MM/yyyy")</span>
                                 </div>
 
-                                @if (p.IsConfirmed)
+                                @if (p.IsConfirming)
                                 {
                                     <span class="cart-item-confirmed">✓ Đã xác nhận</span>
                                 }
                                 else
                                 {
                                     <button class="btn-confirm-item" @onclick="() => ConfirmItem(p)" disabled="@p.IsConfirming">
-                                        @(p.IsConfirming ? "..." : "Xác nhận")
+                                        @(p.IsConfirmed ? "..." : "Xác nhận")
                                     </button>
                                 }
 
@@ -354,13 +354,13 @@
             return;
         }
 
-        item.IsConfirming = true;
+        item.IsConfirmed = true;
         item.ErrorMessage = "";
 
         try
         {
             await ApiClient.AssignWinnerToPrizeAsync(CustomerId, item.PrizeId);
-            item.IsConfirmed = true;
+            item.IsConfirming = true;
 
             currentSignatureKey = item.SignatureKey;
             copied = false;
@@ -372,7 +372,7 @@
         }
         finally
         {
-            item.IsConfirming = false;
+            item.IsConfirmed = false;
         }
     }
 

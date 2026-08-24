@@ -86,9 +86,7 @@ public partial class LuckySpinContext : DbContext
             entity.Property(e => e.StartDate)
                 .HasColumnType("datetime")
                 .HasColumnName("start_date");
-            entity.Property(e => e.TotalRoll)
-                .HasDefaultValue(0)
-                .HasColumnName("totalroll");
+            entity.Property(e => e.Totalroll).HasColumnName("totalroll");
         });
 
         modelBuilder.Entity<CampaignStore>(entity =>
@@ -132,6 +130,10 @@ public partial class LuckySpinContext : DbContext
             entity.Property(e => e.IsActive)
                 .HasDefaultValue(true)
                 .HasColumnName("is_active");
+            entity.Property(e => e.KeycodeId)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("keycode_id");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -261,6 +263,10 @@ public partial class LuckySpinContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("store_locate");
+            entity.Property(e => e.StorePassword)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("store_password");
         });
 
         modelBuilder.Entity<StoreCampaignPrize>(entity =>

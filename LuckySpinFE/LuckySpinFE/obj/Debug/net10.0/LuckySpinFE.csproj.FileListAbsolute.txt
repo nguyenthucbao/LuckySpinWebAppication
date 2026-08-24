@@ -156,8 +156,6 @@ D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\compressed\9m331qbhni-{0}-63fj8s7r0e-63fj8s7r0e.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\compressed\q2lvve2wv8-{0}-0j3bgjxly4-0j3bgjxly4.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\compressed\w14gisgc18-{0}-abdmv1u4y3-abdmv1u4y3.gz
-D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\compressed\7fg6dcvua7-{0}-ne14ti1q68-ne14ti1q68.gz
-D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\compressed\ufuau7n2x8-{0}-ig5xotzpx5-ig5xotzpx5.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\compressed\um0fsyck6q-{0}-96dt5uurjn-96dt5uurjn.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\compressed\e9rj01mw3y-{0}-96dt5uurjn-96dt5uurjn.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\staticwebassets.build.json
@@ -171,3 +169,5 @@ D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\LuckySpinFE.pdb
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\LuckySpinFE.genruntimeconfig.cache
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\ref\LuckySpinFE.dll
+D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\compressed\7fg6dcvua7-{0}-f7fxoh55ae-f7fxoh55ae.gz
+D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinFE\LuckySpinFE\obj\Debug\net10.0\compressed\ufuau7n2x8-{0}-68qhiysw0j-68qhiysw0j.gz

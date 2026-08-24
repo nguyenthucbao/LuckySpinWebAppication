@@ -36,39 +36,18 @@ namespace LuckySpin.Controllers
                 return NotFound(new { message = "Mã quay thưởng không tồn tại." });
             if (rewardCode.RemainingSpins <= 0)
                 return BadRequest(new { message = "Mã quay thưởng đã hết lượt quay." });
-            //Validate input 
-
-
+            
 
             var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == rewardCode.BillId);
 
             if (bill == null)
                 return NotFound(new { message = "Không tìm thấy hóa đơn liên kết với mã này." });
 
-            // Lấy danh sách Store_Campaign_Prizes theo store + campaign
-            var storePrizes = await _context.StoreCampaignPrizes
-                .Where(scp =>
-                    scp.StoreId == bill.StoreId &&
-                    scp.IsActive == true)
-                .Join(
-                    _context.Prizes.Where(p =>
-                        p.CampaignId == request.CampaignId &&
-                        p.IsActive == true),
-                    scp => scp.PrizeId,
-                    prize => prize.Id,
-                    (scp, prize) => new
-                    {
-                        Prize = prize,
-                        Weight = scp.ProbabilityWeight
-                    })
-                .ToListAsync();
+            if (request.WinnerSessionId == null)
+                return BadRequest(new { message = "Vui lòng đăng nhập để quay thưởng" });
 
-            if (storePrizes == null || storePrizes.Count == 0)
-                return NotFound(new
-                {
-                    message = "Không có phần thưởng nào được cấu hình cho cửa hàng này trong campaign."
-                });
 
+           
 
             var avaiablePrizes = await _context.StoreCampaignPrizes
                 .Include(scp => scp.Prize)
@@ -76,8 +55,15 @@ namespace LuckySpin.Controllers
                            && scp.Prize != null
                            && scp.Prize.CampaignId == request.CampaignId
                            && scp.IsActive == true
-                           && scp.Prize.IsActive == true)
+                           && scp.Prize.IsActive == true
+                           && scp.Prize.WinnerId == null)
                 .ToListAsync();
+
+            if (!avaiablePrizes.Any())
+                return NotFound(new
+                {
+                    message = "Không có phần thưởng nào được cấu hình cho cửa hàng này trong campaign."
+                });
 
 
 
@@ -96,9 +82,6 @@ namespace LuckySpin.Controllers
                 })
                 .ToList();
 
-            if (!groupedPrizes.Any())
-                return NotFound(new { message = "ko có phần thưởng nào khả dụng tại cửa hàng này." });
-
 
 
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -109,7 +92,7 @@ namespace LuckySpin.Controllers
 
             var CampaignTotalRoll = await _context.Campaigns
                 .Where(c => c.Id == request.CampaignId)
-                .ExecuteUpdateAsync(s => s.SetProperty(r => r.TotalRoll, r => r.TotalRoll + 1)); /// +1 trên db
+                .ExecuteUpdateAsync(s => s.SetProperty(r => r.Totalroll, r => r.Totalroll + 1)); /// +1 trên db
 
             if (spinClaimed == 0)
             {
@@ -117,6 +100,8 @@ namespace LuckySpin.Controllers
                 return BadRequest(new { message = "Mã quay thưởng đã hết lượt quay." });
             }
 
+
+            ////////// Random roll logic ///////////////////////////////////////////////////////////////////////////////////////////
             var rng = new Random();
             const int totalWeight = 100;
             const int maxRetries = 5;
@@ -132,7 +117,8 @@ namespace LuckySpin.Controllers
                                && scp.Prize != null
                                && scp.Prize.CampaignId == request.CampaignId
                                && scp.IsActive == true
-                               && scp.Prize.IsActive == true)
+                               && scp.Prize.IsActive == true
+                               && scp.Prize.WinnerId == null)
                     .AsNoTracking()
                     .ToListAsync();
 
@@ -180,7 +166,7 @@ namespace LuckySpin.Controllers
                 // Chốt phần thưởng có điều kiện: chỉ set IsActive=false nếu vẫn đang active
                 var claimed = await _context.Prizes
                     .Where(p => p.Id == candidate.FirstPrize.Id && p.IsActive == true)
-                    .ExecuteUpdateAsync(s => s.SetProperty(p => p.IsActive, false));
+                    .ExecuteUpdateAsync(s => s.SetProperty(p => p.WinnerId, request.WinnerSessionId));
 
                 if (claimed == 1)
                 {
@@ -190,6 +176,7 @@ namespace LuckySpin.Controllers
                 // claim thất bại do bị người khác giành mất giữa lúc đọc và update
                 // -> vòng lặp tiếp theo sẽ đọc lại danh sách phần thưởng còn cập nhật và roll lại
             }
+            ////////// Random roll logic ///////////////////////////////////////////////////////////////////////////////////////////
 
             if (noPrizesConfigured)
             {
@@ -228,7 +215,7 @@ namespace LuckySpin.Controllers
         }
 
 
-
+        
 
         //Lấy danh sách campaign theo rewardcode
         [HttpGet("getcampaign/{rewardcode}")]

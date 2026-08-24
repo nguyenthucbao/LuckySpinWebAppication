@@ -5,6 +5,10 @@
 GET {{LuckySpin_HostAddress}}/api/prize/getprizes
 Accept: application/json
 
+###
+GET {{LuckySpin_HostAddress}}/api/prize/getprizesbyid/Cam001
+Accept: application/json
+
 
 ###
 POST {{LuckySpin_HostAddress}}/api/prize/resetprizes
@@ -73,7 +77,8 @@ Accept: application/json
 POST {{LuckySpin_HostAddress}}/api/spin/spinaction
 Content-Type: application/json
 {
-  "rewardCode": "LUCKY-784738D3",
+  "winnerSessionId": "CUSTOMER-CA8C4DDE",
+  "rewardCode": "LUCKY-B318F32C",
   "campaignId": "Cam001"
 }
 
@@ -99,7 +104,7 @@ POST {{LuckySpin_HostAddress}}/api/WinnerSessions/AssignWinnerToPrize
 Content-Type: application/json
 
 {
-  "WinnerId": "CUSTOMER-0C105D8C",
+  "WinnerId": "CUSTOMER-CA8C4DDE",
   "PrizeId": "Prize001"
 }
 
@@ -108,13 +113,20 @@ GET {{LuckySpin_HostAddress}}/api/WinnerSessions/GetCustomerList
 Accept: application/json
 
 ### Get customerinfo by phone
-GET {{LuckySpin_HostAddress}}/api/WinnerSessions/GetByPhoneNumber/111111111
+GET {{LuckySpin_HostAddress}}/api/WinnerSessions/GetByPhoneNumber/0901234456
 Accept: application/json
 
 ### Get prizes by customerid
-GET {{LuckySpin_HostAddress}}/api/WinnerSessions/GetCustomerPrizeById/CUSTOMER-C8DDE2AF
+GET {{LuckySpin_HostAddress}}/api/WinnerSessions/GetCustomerPrizeById/CUSTOMER-CA8C4DDE
+Accept: application/json
+
+### Get prizes key
+GET {{LuckySpin_HostAddress}}/api/WinnerSessions/getkey/Prize001
 Accept: application/json
 
 ###############################################################
 
 
+### Get qr code
+GET {{LuckySpin_HostAddress}}/api/QrCode/generate/nguyenthucbao
+Accept: application/json

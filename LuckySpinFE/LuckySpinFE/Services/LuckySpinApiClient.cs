@@ -58,15 +58,8 @@ public class LuckySpinApiClient(HttpClient http)
         }
     }
 
-    public class GetCustomerByPhoneResponse
-    {
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Mail { get; set; } = string.Empty;
-        public string? Address { get; set; }
-    }
 
-    public async Task<GetCustomerByPhoneResponse?> GetCustomerByPhoneAsync(string phone)
+    public async Task<GetAccountByPhoneRespone?> GetCustomerByPhoneAsync(string phone)
     {
         var response = await http.GetAsync($"api/WinnerSessions/GetByPhoneNumber/{phone}");
 
@@ -79,8 +72,23 @@ public class LuckySpinApiClient(HttpClient http)
             throw new Exception($"API lỗi ({(int)response.StatusCode}): {error}");
         }
 
-        return await response.Content.ReadFromJsonAsync<GetCustomerByPhoneResponse>();
+        return await response.Content.ReadFromJsonAsync<GetAccountByPhoneRespone>();
     }
+
+    public async Task<string?> GetKey(string keyId)
+    {
+        var response = await http.GetAsync($"api/WinnerSessions/getkey/{keyId}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
+    }
+
+    public async Task<bool?> CheckCampaignEndDate(string sprizeId)
+    {
+        var response = await http.GetAsync($"api/WinnerSessions/CheckEndDate/{sprizeId}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<bool>();
+    }
+
 
     public async Task<List<GetCustomerPrize>?> GetCustomerPrizeByIdAsync(string winnerId)
     {
@@ -94,4 +102,21 @@ public class LuckySpinApiClient(HttpClient http)
 
         return await response.Content.ReadFromJsonAsync<List<GetCustomerPrize>>();
     }
+
+    public async Task<string?> GetQRCode(string code)
+    {
+        var response = await http.GetAsync($"api/QrCode/generate/{Uri.EscapeDataString(code)}");
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        // Đọc binary bytes của file ảnh PNG
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+
+        // Convert sang Base64 Data URL
+        var base64 = Convert.ToBase64String(bytes);
+        return $"data:image/png;base64,{base64}";
+    }
+
+
 }

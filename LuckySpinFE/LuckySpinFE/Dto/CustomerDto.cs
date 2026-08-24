@@ -22,8 +22,10 @@
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string PrizeType { get; set; } = string.Empty;
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
+        public bool IsActive { get; set; }
         public string? SignatureKey { get; set; }
+        public string? KeyId { get; set; }
     }
 
 }

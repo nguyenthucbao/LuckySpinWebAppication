@@ -444,15 +444,12 @@ namespace LuckySpin.Controllers
         [HttpGet("admin/export-excel")]
         public async Task<IActionResult> ExportToExcel()
         {
-            // 1. Lấy trực tiếp danh sách Store từ Database qua _context
             var stores = await _context.Stores.AsNoTracking().ToListAsync();
 
-            // 2. Khởi tạo Workbook của ClosedXML
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Danh sách cửa hàng");
 
-                // 3. Tạo Tiêu đề các cột (Header)
                 worksheet.Cell(1, 1).Value = "ID Cửa Hàng";
                 worksheet.Cell(1, 2).Value = "Vị Trí Cửa Hàng";
 
@@ -490,6 +487,87 @@ namespace LuckySpin.Controllers
                 }
             }
         }
+
+
+        [HttpPost("admin/prize-import-excel")]
+        public async Task<IActionResult> ImportFromExcel(IFormFile file, [FromForm] string CampaignId, [FromForm] string StoreId)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Vui lòng chọn file Excel để upload.");
+
+            if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                return BadRequest("Định dạng file không hợp lệ. Chỉ chấp nhận file .xlsx.");
+
+            int addedCount = 0;
+            int updatedCount = 0;
+
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+
+                using (var workbook = new XLWorkbook(stream))
+                {
+                    // Lấy worksheet đầu tiên
+                    var worksheet = workbook.Worksheet(1);
+
+                    // Lấy các dòng có dữ liệu, bỏ qua dòng Header (Dòng 1)
+                    var rows = worksheet.RowsUsed().Skip(1);
+
+                    foreach (var row in rows)
+                    {
+                        // Đọc dữ liệu cột 1 (ID) và cột 2 (Vị trí)
+                        var id = row.Cell(1).GetValue<string>()?.Trim();
+                        var name = row.Cell(2).GetValue<string>()?.Trim();
+                        var type = row.Cell(3).GetValue<string>()?.Trim();
+                        var quantity = row.Cell(4).GetValue<int>();
+                        var key = row.Cell(5).GetValue<string>()?.Trim();
+
+                      
+                        // Nếu không có ID hoặc ID không tồn tại trong DB -> Thêm mới
+                        var newPrize = new Prize
+                        {
+                            Id = id,
+                            Name = name,
+                            CampaignId = CampaignId,
+                            PrizeType = type,
+                            ProbabilityWeight = 0,
+                            Quantity = quantity,
+                            IsActive = true,
+                            CreatedAt = DateTime.Now,
+                            WinnerId = null,
+                            SignatureKey = key,
+                            StoreId = StoreId,
+                            KeycodeId = null
+                        };
+
+
+                        var scp = new StoreCampaignPrize
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            StoreId = newPrize.StoreId,
+                            PrizeId = newPrize.Id,
+                            ProbabilityWeight = newPrize.ProbabilityWeight,
+                            IsActive = true,
+                        };
+
+
+                        _context.StoreCampaignPrizes.Add(scp);
+                        _context.Prizes.Add(newPrize);
+                        addedCount++;
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Import dữ liệu thành công!",
+                added = addedCount,
+                updated = updatedCount
+            });
+        }
+
 
 
     }

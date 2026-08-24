@@ -178,14 +178,16 @@
                                     }
                                 </div>
 
-                                @if (p.IsConfirmed)
+                                @if (p.IsConfirming && !p.IsConfirmed)
                                 {
-                                    <span class="cart-item-confirmed">✓ Đã xác nhận</span>
+                                    <button class="btn-confirm-item" @onclick="() => ConfirmItem(p)" disabled="@p.IsBusy">
+                                        @(p.IsBusy ? "..." : "Xác nhận")
+                                    </button>
                                 }
-                                else
+                                else if (!p.IsConfirming && p.IsConfirmed)
                                 {
-                                    <button class="btn-confirm-item" @onclick="() => ConfirmItem(p)" disabled="@p.IsConfirming">
-                                        @(p.IsConfirming ? "..." : "Xác nhận")
+                                    <button class="btn-confirm-item" @onclick="() => ShowPrizeKey(p)" disabled="@p.IsBusy">
+                                        @(p.IsBusy ? "..." : "Mã thưởng")
                                     </button>
                                 }
 
@@ -208,9 +210,26 @@
             <div class="popup">
                 <span class="big-emoji">🔑</span>
                 <h3>Mã nhận thưởng</h3>
-                <div class="signature-key-box">@currentSignatureKey</div>
+                <div class="signature-key-box">@currentKeyCode</div>
+
+                @* KHỐI HIỂN THỊ QR CODE *@
+                <div class="qr-box">
+                    @if (isLoadingQr)
+                    {
+                        <p class="qr-loading">Đang tạo mã QR...</p>
+                    }
+                    else if (!string.IsNullOrEmpty(qrCodeBase64))
+                    {
+                        <img src="@qrCodeBase64" alt="QR Code" class="qr-image" />
+                    }
+                    else
+                    {
+                        <p class="qr-error">Không thể tải mã QR</p>
+                    }
+                </div>
+
                 <div class="popup-actions">
-                    <button class="btn-continue" @onclick="CopySignatureKey">
+                    <button class="btn-continue" @onclick="CopyKeyCode">
                         @(copied ? "✅ Đã copy" : "📋 Copy mã")
                     </button>
                     <button class="btn-secondary" @onclick="CloseSignaturePopup">Đóng</button>
@@ -238,13 +257,14 @@
     private int? remainingSpins;
 
     // ===== Giỏ hàng phần thưởng =====
-
     private List<WonPrizeItem> wonPrizes = new();
     private bool showCart = false;
 
-    // ===== Popup mã nhận thưởng =====
+    // ===== Popup mã nhận thưởng & QR =====
     private bool showSignaturePopup = false;
-    private string? currentSignatureKey;
+    private string? currentKeyCode;
+    private string? qrCodeBase64;
+    private bool isLoadingQr = false;
     private bool copied = false;
 
     protected override async Task OnInitializedAsync()
@@ -259,21 +279,16 @@
         try
         {
             var serverPrizes = await ApiClient.GetCustomerPrizeByIdAsync(CustomerId) ?? new();
-
-            var confirmedItems = serverPrizes.Select(p => new WonPrizeItem
+            wonPrizes = serverPrizes.Select(p => new WonPrizeItem
             {
                 PrizeId = p.Id,
                 Name = p.Name,
                 SignatureKey = p.SignatureKey,
-                IsConfirmed = true
+                KeyCodeId = p.KeyId,
+                IsConfirming = p.IsActive,
+                IsConfirmed = !p.IsActive,
+
             }).ToList();
-
-            // Giữ lại các phần thưởng vừa quay nhưng chưa xác nhận, chưa có trong danh sách server
-            var pendingLocal = wonPrizes
-                .Where(w => !w.IsConfirmed && !confirmedItems.Any(c => c.PrizeId == w.PrizeId))
-                .ToList();
-
-            wonPrizes = confirmedItems.Concat(pendingLocal).ToList();
         }
         catch (Exception ex)
         {
@@ -322,17 +337,17 @@
         errorMessage = "";
         result = null;
 
-        await Task.Delay(2000);/////////////////////    DELAY
+        await Task.Delay(2000);
 
         try
         {
             result = await ApiClient.SpinAsync(new SpinRequest
             {
+                WinnerSessionId = CustomerId,
                 RewardCode = rewardCode,
                 CampaignId = selectedCampaign.Id
             });
 
-            // Chỉ thêm vào giỏ hàng khi thực sự trúng giải
             if (result != null && result.IsWin && result.WonPrize != null && !string.IsNullOrWhiteSpace(result.WonPrize.Id))
             {
                 wonPrizes.Add(new WonPrizeItem
@@ -383,23 +398,30 @@
 
     private async Task ConfirmItem(WonPrizeItem item)
     {
-        if (item.IsConfirmed || item.IsConfirming) return;
-
         if (string.IsNullOrWhiteSpace(CustomerId))
         {
             item.ErrorMessage = "Không xác định được khách hàng (thiếu customerId).";
             return;
         }
 
-        item.IsConfirming = true;
+        item.IsBusy = true;
         item.ErrorMessage = "";
 
         try
         {
             await ApiClient.AssignWinnerToPrizeAsync(CustomerId, item.PrizeId);
 
-            currentSignatureKey = item.SignatureKey;
+            currentKeyCode = await ApiClient.GetKey(item.PrizeId);
             copied = false;
+
+            // Lấy mã QR từ API bằng currentKeyCode
+            if (!string.IsNullOrEmpty(currentKeyCode))
+            {
+                isLoadingQr = true;
+                qrCodeBase64 = await ApiClient.GetQRCode(currentKeyCode);
+                isLoadingQr = false;
+            }
+
             showSignaturePopup = true;
 
             await RefreshCart();
@@ -410,21 +432,54 @@
         }
         finally
         {
-            item.IsConfirming = false;
+            item.IsBusy = false;
+            isLoadingQr = false;
         }
     }
 
-    private async Task CopySignatureKey()
+    private async Task ShowPrizeKey(WonPrizeItem item)
     {
-        if (string.IsNullOrEmpty(currentSignatureKey)) return;
-        await JS.InvokeVoidAsync("navigator.clipboard.writeText", currentSignatureKey);
+        item.IsBusy = true;
+        item.ErrorMessage = "";
+
+        try
+        {
+            currentKeyCode = await ApiClient.GetKey(item.PrizeId);
+            copied = false;
+
+            // Lấy mã QR từ API bằng currentKeyCode
+            if (!string.IsNullOrEmpty(currentKeyCode))
+            {
+                isLoadingQr = true;
+                qrCodeBase64 = await ApiClient.GetQRCode(currentKeyCode);
+                isLoadingQr = false;
+            }
+
+            showSignaturePopup = true;
+        }
+        catch (Exception ex)
+        {
+            item.ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            item.IsBusy = false;
+            isLoadingQr = false;
+        }
+    }
+
+    private async Task CopyKeyCode()
+    {
+        if (string.IsNullOrEmpty(currentKeyCode)) return;
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", currentKeyCode);
         copied = true;
     }
 
     private void CloseSignaturePopup()
     {
         showSignaturePopup = false;
-        currentSignatureKey = null;
+        currentKeyCode = null;
+        qrCodeBase64 = null;
         copied = false;
     }
 }
@@ -824,9 +879,9 @@
     .popup {
         background: #fff;
         border-radius: 20px;
-        padding: 2rem 1.75rem;
+        padding: 1.75rem 1.5rem;
         text-align: center;
-        width: 300px;
+        width: 320px;
         animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         box-sizing: border-box;
     }
@@ -844,9 +899,9 @@
     }
 
     .big-emoji {
-        font-size: 52px;
+        font-size: 48px;
         display: block;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
 
     .popup h3 {
@@ -1144,8 +1199,38 @@
         color: #FB5607;
         background: #fff8f0;
         border-radius: 10px;
-        padding: 12px 14px;
-        margin-bottom: 1.25rem;
+        padding: 10px 14px;
+        margin-bottom: 0.75rem;
         word-break: break-all;
+    }
+
+    /* ===== QR CODE STYLES ===== */
+    .qr-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 160px;
+        background: #fafafa;
+        border: 1.5px dashed #FFBE0B;
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 1.25rem;
+    }
+
+    .qr-image {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+
+    .qr-loading, .qr-error {
+        font-size: 12.5px;
+        color: #888;
+        margin: 0;
+    }
+
+    .qr-error {
+        color: #e24b4b;
     }
 </style>

@@ -13,8 +13,8 @@ public class MerchantController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("getstorebyid/{id}")]
-    public async Task<ActionResult<GetStoresInfo>> GetStoreById(string id)
+    [HttpGet("GetStorePrize/{id}")]
+    public async Task<ActionResult<GetStoresInfo>> GetStorePrize(string id)
     {
         var store = await _context.Stores.FindAsync(id);
         if (store == null)

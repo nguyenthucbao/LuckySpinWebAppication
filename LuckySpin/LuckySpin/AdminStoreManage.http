@@ -36,15 +36,15 @@ Accept: application/json
 POST {{LuckySpin_HostAddress}}/api/stores/admin/addprizetostore
 Content-Type: application/json
 {
-  "Id": "Prize007",
-  "Name": "Sandal Shoe",
-  "CampaignId": "Cam002",      
+  "Id": "Prize008",
+  "Name": "Sandal Shoe Plus",
+  "CampaignId": "Cam001",      
   "PrizeType": "PHYSICAL",
   "ProbabilityWeight": 0,
   "Quantity": 1,
   "IsActive": true,             
   "CreatedAt": "2026-01-01T00:00:00",
-  "SignatureKey": "SANDALSHOE",
+  "SignatureKey": "PRIZENAME2",
   "StoreId": "S001"
 }
 
@@ -75,3 +75,8 @@ GET {{LuckySpin_HostAddress}}/api/stores/admin/export-excel
 Accept: application/json
 
 
+
+
+### import
+POST {{LuckySpin_HostAddress}}/api/stores/admin/import-excel
+Accept: application/json

@@ -28,6 +28,12 @@ namespace LuckySpin.Controllers
             return await _context.Prizes.ToListAsync();
         }
 
+        [HttpGet("getprizesbyid/{campaignid}")]
+        public async Task<ActionResult<IEnumerable<Prize>>> GetPrizeById(string campaignid)
+        {
+            var result = await _context.Prizes.Where(b => b.CampaignId == campaignid).ToListAsync();
+            return result;
+        }
 
         /// DEBUNGING
         [HttpPost("resetprizes")]
@@ -41,11 +47,14 @@ namespace LuckySpin.Controllers
             await _context.Prizes // reset prize to default values
                 .ExecuteUpdateAsync(setters => setters
                 .SetProperty(p => p.WinnerId, (string)null) 
-                .SetProperty(p => p.IsActive, true));
+                .SetProperty(p => p.IsActive, true)
+                .SetProperty(p => p.KeycodeId, (string)null));
 
             var rewardCodes = await _context.RewardCodes // reset reward codes to default values
                 .Include(rc => rc.Bill)
                 .ToListAsync();
+
+            var keycode = await _context.PrizeKeys.ExecuteUpdateAsync(s => s.SetProperty(r => r.IsActive, true));// reset keycode
 
             foreach (var rc in rewardCodes)
             {

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "mIey7a2Ui50=",
+  "success": true,
+  "projectFilePath": "D:\\Project\\GitPJ\\LuckySpinWebAppication\\LuckySpinMerchant\\LuckySpinMerchant\\LuckySpinMerchant.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ACER\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.10\\microsoft.aspnetcore.app.internal.assets.10.0.10.nupkg.sha512"
+  ],
+  "logs": []
+}

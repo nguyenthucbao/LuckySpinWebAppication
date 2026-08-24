@@ -27,6 +27,8 @@ public partial class Prize
 
     public string? StoreId { get; set; }
 
+    public string? KeycodeId { get; set; }
+
     public virtual Campaign? Campaign { get; set; }
 
     public virtual ICollection<StoreCampaignPrize> StoreCampaignPrizes { get; set; } = new List<StoreCampaignPrize>();

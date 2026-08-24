@@ -154,8 +154,6 @@ D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\bjulge5wuv-{0}-63fj8s7r0e-63fj8s7r0e.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\o4nl2323rr-{0}-0j3bgjxly4-0j3bgjxly4.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\ykziasns3d-{0}-abdmv1u4y3-abdmv1u4y3.gz
-D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\9fxol0rmx7-{0}-ne14ti1q68-ne14ti1q68.gz
-D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\2hzjjaya6o-{0}-ig5xotzpx5-ig5xotzpx5.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\staticwebassets.build.json
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\staticwebassets.build.json.cache
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\staticwebassets.development.json
@@ -170,3 +168,5 @@ D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\x8tq0d7blt-{0}-u31y0wfcze-u31y0wfcze.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\vj39n40wx3-{0}-h5mevfadsx-h5mevfadsx.gz
 D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\eu80xzkn1a-{0}-h5mevfadsx-h5mevfadsx.gz
+D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\9fxol0rmx7-{0}-f7fxoh55ae-f7fxoh55ae.gz
+D:\Project\GitPJ\LuckySpinWebAppication\LuckySpinAdmin\LuckySpinAdmin\obj\Debug\net10.0\compressed\2hzjjaya6o-{0}-68qhiysw0j-68qhiysw0j.gz

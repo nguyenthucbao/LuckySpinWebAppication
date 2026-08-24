@@ -32,7 +32,7 @@ else if (!string.IsNullOrEmpty(loadError))
 {
     <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">Chương trình khuyến mãi</h1>
+            <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">Quản lý sự kiện</h1>
             <p class="text-[13px] text-neutral-500 mt-0.5">@Campaigns.Count chương trình trong hệ thống</p>
         </div>
         <button class="btn-primary" @onclick="OpenAddCampaign">
@@ -182,7 +182,7 @@ else if (!string.IsNullOrEmpty(loadError))
         <h2 class="text-[15px] font-bold text-neutral-800" style="font-family:'Manrope',sans-serif;">
             Danh sách phần thưởng 
         </h2>
-        <span class="campaign-id-badge">@Detail.Prizes.Count prizes</span>
+        <span class="campaign-id-badge">@Detail.Prizes.Count vật phẩm</span>
     </div>
 
     @if (Detail.Prizes.Count == 0)

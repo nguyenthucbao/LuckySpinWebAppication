@@ -6,6 +6,8 @@
 @inject LuckySpinApiClient ApiClient
 @inject IJSRuntime JS
 @inject NavigationManager Nav
+@inject IConfiguration Config
+@inject HttpClient Http
 
 @if (isLoading)
 {
@@ -19,14 +21,14 @@ else if (!string.IsNullOrEmpty(loadError))
 @* ---------- BREADCRUMB ---------- *@
 <div class="flex items-center gap-2 text-[13px] text-neutral-500 mb-6">
     <span class="@(CurrentView == ViewState.StoreList ? "text-neutral-900 font-semibold" : "cursor-pointer hover:text-neutral-800")"
-          @onclick="GoToStoreList">
+    @onclick="GoToStoreList">
         Chi nhánh
     </span>
     @if (CurrentView is ViewState.StoreDetail or ViewState.PrizeList)
     {
         <span>/</span>
         <span class="@(CurrentView == ViewState.StoreDetail ? "text-neutral-900 font-semibold" : "cursor-pointer hover:text-neutral-800")"
-              @onclick="() => GoToStoreDetail(SelectedStoreId!)">
+        @onclick="() => GoToStoreDetail(SelectedStoreId!)">
             @SelectedStore?.StoreLocate
         </span>
     }
@@ -42,7 +44,7 @@ else if (!string.IsNullOrEmpty(loadError))
 {
     <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">Chi nhánh cửa hàng</h1>
+            <h1 class="text-[22px] font-extrabold text-neutral-900" style="font-family:'Manrope',sans-serif;">Quản lý chi nhánh</h1>
             <p class="text-[13px] text-neutral-500 mt-0.5">@Stores.Count chi nhánh đang hoạt động trong hệ thống</p>
         </div>
         <div class="flex items-center gap-2">
@@ -167,9 +169,18 @@ else if (!string.IsNullOrEmpty(loadError))
                 <p class="text-[13px] text-neutral-500 mt-0.5">Chi nhánh @SelectedStore?.StoreLocate</p>
             </div>
         </div>
-        <button class="btn-primary" @onclick="SaveProbabilityChanges" disabled="@isSavingPrizes">
-            @(isSavingPrizes ? "Đang lưu..." : "Lưu")
-        </button>
+
+        <div class="flex items-center gap-2">
+            <button type="button" class="btn-secondary" @onclick="TriggerFileInput">
+                <i class="bi bi-file-earmark-arrow-up"></i> Nhập
+            </button>
+
+            <InputFile id="excelFileInput" OnChange="ImportStorePrize" accept=".xlsx" style="display: none;" />
+
+            <button class="btn-primary" @onclick="SaveProbabilityChanges" disabled="@isSavingPrizes">
+                @(isSavingPrizes ? "Đang lưu..." : "Lưu")
+            </button>
+        </div>
     </div>
 
     @if (CampaignPrizes.Count == 0)
@@ -318,7 +329,7 @@ else if (!string.IsNullOrEmpty(loadError))
                         {
                             <label class="campaign-pick">
                                 <input type="checkbox" checked="@pickedCampaignIds.Contains(c.Id)"
-                                       @onchange="e => ToggleCampaignPick(c.Id, (bool)e.Value!)" />
+                                @onchange="e => ToggleCampaignPick(c.Id, (bool)e.Value!)" />
                                 <div class="flex flex-col">
                                     <span class="font-semibold text-neutral-900 text-[13px]">@c.CampaignName</span>
                                     <span class="text-neutral-400 text-[11.5px]">ID: @c.Id · @c.StartDate.ToString("dd/MM/yyyy") – @c.EndDate.ToString("dd/MM/yyyy")</span>
@@ -427,9 +438,63 @@ else if (!string.IsNullOrEmpty(loadError))
     // ===================== EXPORT EXCEL (CÁCH MỚI KHÔNG LỖI SIGNALR) =====================
     private async Task ExportStoresExcel()
     {
-        // Gọi JS kích hoạt trình duyệt mở API tải file trực tiếp
-        await JS.InvokeVoidAsync("open", "/api/stores/admin/export-excel", "_blank");
+        string baseUrl = Config["ApiHosts:LuckySpin"] ?? "";
+        string apiUrl = $"{baseUrl.TrimEnd('/')}/api/stores/admin/export-excel";
+
+        await JS.InvokeVoidAsync("open", apiUrl, "_blank");
     }
+
+
+    // ===================== EXPORT IMPORT =====================
+    private async Task TriggerFileInput()
+    {
+        await JS.InvokeVoidAsync("eval", "document.getElementById('excelFileInput').click()");
+    }
+
+    private async Task ImportStorePrize(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+
+        try
+        {
+            long maxFileSize = 1024 * 1024 * 10;
+
+            using var content = new MultipartFormDataContent();
+            using var fileStream = file.OpenReadStream(maxFileSize);
+            var streamContent = new StreamContent(fileStream);
+
+            streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+
+            // Gửi 'file', 'campaignId' và 'storeId'
+            content.Add(streamContent, "file", file.Name);
+            content.Add(new StringContent(SelectedCampaign.Id), "campaignId");
+            content.Add(new StringContent(SelectedStoreId), "storeId");
+
+            // Build 
+            string baseUrl = Config["ApiHosts:LuckySpin"] ?? "";
+            string apiUrl = $"{baseUrl.TrimEnd('/')}/api/stores/admin/import-excel";
+
+            var response = await Http.PostAsync(apiUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await JS.InvokeVoidAsync("alert", "Import danh sách quà thành công!");
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            }
+            else
+            {
+                var errorMsg = await response.Content.ReadAsStringAsync();
+                await JS.InvokeVoidAsync("alert", $"Import thất bại: {errorMsg}");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"Lỗi khi tải file: {ex.Message}");
+        }
+    }
+
+
 
     // ===================== MODAL: ADD STORE =====================
     private bool showAddStoreModal = false;

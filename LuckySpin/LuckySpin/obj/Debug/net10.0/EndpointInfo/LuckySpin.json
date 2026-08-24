@@ -199,7 +199,7 @@
         }
       }
     },
-    "/api/Merchant/getstorebyid/{id}": {
+    "/api/Merchant/GetStorePrize/{id}": {
       "get": {
         "tags": [
           "Merchant"
@@ -234,6 +234,28 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/QrCode/generate/{text}": {
+      "get": {
+        "tags": [
+          "QrCode"
+        ],
+        "parameters": [
+          {
+            "name": "text",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -321,49 +343,28 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
+          }
+        }
+      }
+    },
+    "/api/WinnerSessions/getkey/{prizeId}": {
+      "get": {
+        "tags": [
+          "WinnerSessions"
+        ],
+        "parameters": [
+          {
+            "name": "prizeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -557,6 +558,54 @@
       "get": {
         "tags": [
           "Prize"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Prize"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Prize"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Prize"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Prize/getprizesbyid/{campaignid}": {
+      "get": {
+        "tags": [
+          "Prize"
+        ],
+        "parameters": [
+          {
+            "name": "campaignid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -1078,6 +1127,54 @@
           }
         }
       }
+    },
+    "/api/Stores/admin/prize-import-excel": {
+      "post": {
+        "tags": [
+          "Stores"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "file": {
+                        "$ref": "#/components/schemas/IFormFile"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "CampaignId": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "StoreId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1229,7 +1326,7 @@
             ],
             "format": "date-time"
           },
-          "totalRoll": {
+          "totalroll": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
               "null",
@@ -1492,6 +1589,10 @@
           }
         }
       },
+      "IFormFile": {
+        "type": "string",
+        "format": "binary"
+      },
       "PostBillRequest": {
         "type": "object",
         "properties": {
@@ -1612,6 +1713,12 @@
             ]
           },
           "storeId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "keycodeId": {
             "type": [
               "null",
               "string"
@@ -1792,6 +1899,9 @@
       "SpinRequest": {
         "type": "object",
         "properties": {
+          "winnerSessionId": {
+            "type": "string"
+          },
           "rewardCode": {
             "type": "string"
           },
@@ -1807,6 +1917,12 @@
             "type": "string"
           },
           "storeLocate": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "storePassword": {
             "type": [
               "null",
               "string"
@@ -1883,6 +1999,9 @@
     },
     {
       "name": "Merchant"
+    },
+    {
+      "name": "QrCode"
     },
     {
       "name": "WinnerSessions"
